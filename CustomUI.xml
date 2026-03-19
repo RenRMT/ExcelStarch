@@ -1,0 +1,313 @@
+<!--RibbonX Visual Designer 1.94 for Microsoft Excel 15.0. XML Code produced on 2017/02/02-->
+<customUI  xmlns="http://schemas.microsoft.com/office/2006/01/customui" >
+	<ribbon >
+		<tabs >
+			<tab 
+				id="Tab1"
+				label="INSO Chart Styles">
+				<group 
+					id="ColumnGroup"
+					label="Column">
+					<button 
+						id="Column"
+						image="i_chart_vbar"
+						label="Column Chart"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="Column_onAction"/>
+					<button 
+						id="ColumnwithBlueRamp"
+						image="i_chart_vbar_blue"
+						label="Column with Blue Ramp"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="ColumnwithBlueRamp_onAction"/>
+					<button 
+						id="StackedColumn"
+						image="i_chart_stacked_bar"
+						label="Stacked Column"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="StackedColumn_onAction"/>
+					<button 
+						id="StackedColumnwithBlueRamp"
+						image="i_chart_stacked_bar_blue"
+						label="Stacked Column with Blue Ramp"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="StackedColumnwithBlueRamp_onAction"/>
+				</group >
+				<group 
+					id="LineGroup"
+					label="Line">
+					<button 
+						id="LineChart"
+						image="i_chart_line"
+						label="Line Chart"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="LineChart_onAction"/>
+					<button 
+						id="LinewithMarkers"
+						image="ExcelMenuGraphs_LineChartwithMarkers_png"
+						label="Line with Markers"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="LinewithMarkers_onAction"/>
+				</group >
+				<group 
+					id="BarGroup"
+					label="Bar">
+					<button 
+						id="Bar"
+						image="i_chart_hbar"
+						label="Bar Chart"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="Bar_onAction"/>
+					<button 
+						id="BarwithBlueRamp"
+						image="i_chart_hbar_blue"
+						label="Bar with Blue Ramp"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="BarwithBlueRamp_onAction"/>
+					<button 
+						id="StackedBar"
+						image="i_chart_stacked_bar"
+						label="Stacked Bar"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="StackedBar_onAction"/>
+					<button 
+						id="StackedBarwithBlueRamp"
+						image="i_chart_stacked_bar_blue"
+						label="Stacked Bar with Blue Ramp"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="StackedBarwithBlueRamp_onAction"/>
+				</group >
+				<group 
+					id="AreaGroup"
+					label="Area">
+					<button 
+						id="Area"
+						image="ExcelMenuGraphs_AreaChart_png"
+						label="Area Chart"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="Area_onAction"/>
+					<button 
+						id="AreawithBlueRamp"
+						image="ExcelMenuGraphs_AreaChartBlueRamp_png"
+						label="Area with Blue Ramp"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="AreawithBlueRamp_onAction"/>
+				</group >
+				<group 
+					id="OtherGraphs"
+					label="Other Graphs">
+					<button 
+						id="Scatter"
+						image="ExcelMenuGraphs_Scatterplot_png"
+						label="Scatterplot"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="Scatter_onAction"/>
+					<button 
+						id="Pie"
+						image="i_chart_pie"
+						label="Pie Chart"
+						size="large"
+						supertip="Style a chart following the INSO standards"
+						onAction="Pie_onAction"/>
+					<button 
+						id="StyleSlopeChart"
+						image="ExcelMenuGraphs_SlopeChart_png"
+						label="Slope Chart"
+						size="large"
+						supertip="Use this button to create a Slope Chart in INSO style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Slope Chart. You can then insert your own data into the worksheet."
+						onAction="StyleSlopeChart_onAction"/>
+					<button 
+						id="StyleDotPlot"
+						image="ExcelMenuGraphs_DotPlot_png"
+						label="Dot Plot"
+						size="large"
+						supertip="Use this button to create a Dot Plot in INSO style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Dot Plot. You can then insert your own data into the worksheet."
+						onAction="StyleDotPlot_onAction"/>
+				</group >
+				<group 
+					id="FillColors"
+					label="Fill Colors">
+					<button 
+						id="OceanFill"
+						image="i_fill_ocean"
+						size="normal"
+						supertip="Ocean fill color"
+						onAction="Format_onAction" 
+						tag="Fill:ocean"/>
+					<button 
+						id="CoralFill"
+						image="i_fill_coral"
+						size="normal"
+						supertip="Coral fill color"
+						onAction="Format_onAction"
+						tag="Fill:coral"/>
+					<button 
+						id="SkyFill"
+						image="i_fill_sky"
+						size="normal"
+						supertip="Sky fill color"
+						onAction="Format_onAction" 
+						tag="Fill:sky"/>
+					<button 
+						id="PineFill"
+						image="i_fill_pine"
+						size="normal"
+						supertip="Pine fill color"
+						onAction="Format_onAction" 
+						tag="Fill:pine"/>
+					<button 
+						id="GoldFill"
+						image="i_fill_gold"
+						size="normal"
+						supertip="Gold fill color"
+						onAction="Format_onAction" 
+						tag="Fill:gold"/>
+					<button 
+						id="RustFill"
+						image="i_fill_rust"
+						size="normal"
+						supertip="Rust fill color"
+						onAction="Format_onAction" 
+						tag="Fill:rust"/>
+					<button 
+						id="LavenderFill"
+						image="i_fill_lavender"
+						size="normal"
+						supertip="Lavender fill color"
+						onAction="Format_onAction" 
+						tag="Fill:lavender"/>
+					<button 
+						id="SilverFill"
+						image="i_fill_silver"
+						size="normal"
+						supertip="Silver fill color"
+						onAction="Format_onAction" 
+						tag="Fill:silver"/>
+					<button 
+						id="WhiteFill"
+						image="i_fill_white"
+						size="normal"
+						supertip="White fill color"
+						onAction="Format_onAction" 
+						tag="Fill:white"/>
+				</group >
+				<group 
+					id="OutlineColors"
+					label="Outline Colors">
+					<button 
+						id="OceanOutline"
+						image="i_outline_ocean"
+						size="normal"
+						supertip="Ocean outline color"
+						onAction="Format_onAction" 
+						tag="Outline:ocean"/>
+					<button 
+						id="CoralOutline"
+						image="i_outline_coral"
+						size="normal"
+						supertip="Coral outline color"
+						onAction="Outline_onAction"
+						tag="Outline:coral"/>
+					<button 
+						id="SkyOutline"
+						image="i_outline_sky"
+						size="normal"
+						supertip="Sky outline color"
+						onAction="Format_onAction" 
+						tag="Outline:sky"/>
+					<button 
+						id="PineOutline"
+						image="i_outline_pine"
+						size="normal"
+						supertip="Pine outline color"
+						onAction="Format_onAction" 
+						tag="Outline:pine"/>
+					<button 
+						id="GoldOutline"
+						image="i_outline_gold"
+						size="normal"
+						supertip="Gold outline color"
+						onAction="Format_onAction" 
+						tag="Outline:RGB(255,221,51)"/>
+					<button 
+						id="RustOutline"
+						image="i_outline_rust"
+						size="normal"
+						supertip="Rust outline color"
+						onAction="Format_onAction" 
+						tag="Outline:rust"/>
+					<button 
+						id="LavenderOutline"
+						image="i_outline_lavender"
+						size="normal"
+						supertip="Lavender outline color"
+						onAction="Format_onAction" 
+						tag="Outline:lavender"/>
+					<button 
+						id="SilverOutline"
+						image="i_outline_silver"
+						size="normal"
+						supertip="Silver outline color"
+						onAction="Format_onAction" 
+						tag="Outline:silver"/>
+					<button 
+						id="NoOutline"
+						image="i_menu_none"
+						size="normal"
+						supertip="No outline color"
+						onAction="Format_onAction" 
+						tag="Outline:NONE"/>
+				</group >
+				<group  id="StartwithGray" >
+					<button 
+						id="StartWithGrayButton"
+						image="i_menu_grey"
+						label="Reset to Grey"
+						size="large"
+						supertip="Reset all chartobjects to grey."
+						onAction="StartWithGrayButton_onAction"/>
+				</group >
+				<group  id="LabelLastPoint" >
+					<button 
+						id="LabelLastPointButton"
+						image="i_menu_labels"
+						label="Label Last Point"
+						size="large"
+						supertip="Add series names to the last point on the graph."
+						onAction="LabelLastPointButton_onAction"/>
+				</group >
+				<group  id="ChartExportButton" >
+					<button 
+						id="ChartExport"
+						image="i_menu_export"
+						label="Chart Export"
+						size="large"
+						supertip="Export chart as PNG, GIF, JPG, BMP, SVG, or PDF. Note that this will *not* warn you to overwrite an existing file."
+						onAction="ChartExport_onAction"/>
+				</group >
+				<group  id="Notes" >
+					<button 
+						id="NotesButton"
+						imageMso="ReviewEditComment"
+						label="Notes"
+						size="large"
+						supertip="Various notes and explanations about this Excel add-in."
+						onAction="NotesButton_onAction"/>
+				</group >
+			</tab >
+		</tabs >
+	</ribbon >
+</customUI >
