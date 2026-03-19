@@ -1,7 +1,7 @@
 Attribute VB_Name = "modChartBar"
 Option Explicit
 
-Private Sub BuildBarChart()
+Private Sub BuildBarChart(Optional ByVal colorMode As String = "FILL")
     Dim cht As Chart
 
     ActiveSheet.Shapes.AddChart2(-1, xlBarClustered).Select
@@ -11,7 +11,7 @@ Private Sub BuildBarChart()
     If cht Is Nothing Then Exit Sub
 
     ' Shared formatting pipeline
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, colorMode
 
     ' Bar-specific: remove series shadows
     Call RemoveShadow(cht)
@@ -31,4 +31,12 @@ End Sub
 
 Public Sub Bar_onAction(control As IRibbonControl)
     BuildBarChart
+End Sub
+
+Sub BarChartBlueRamp()
+    BuildBarChart "BLUERAMP"
+End Sub
+
+Public Sub BarWithBlueRamp_onAction(control As IRibbonControl)
+    BuildBarChart "BLUERAMP"
 End Sub

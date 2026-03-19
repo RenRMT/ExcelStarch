@@ -171,6 +171,22 @@ Public Const dataLabelFontSize_web As Double = 12   ' primary label size (web) â
 Public Const dataLabelFontSize_secondary As Double = 11  ' secondary/normal label text (web)
 Public Const dataLabelFontSize_print As Double = 9.5     ' primary label size (print)
 
+'=== modLabelLastPoint: BuildLabelLastPoint ===
+Public Const labelLastPointPlotWidthInset As Long = 50    ' narrowed for end labels on line charts
+Public Const labelLastPointPlotTop As Long = 80
+Public Const labelLastPointPlotWidthRatio_web As Double = 0.98
+Public Const labelLastPointPlotWidthRatio_print As Double = 0.9
+Public Const labelLastPointTitleNudge As Long = -10
+
+'=== modChartDotPlot: BuildDotPlot ===
+Public Const dotPlotLabelFontSize As Double = 8
+Public Const dotPlotMarkerSize As Long = 6
+Public Const dotPlotChartTop As Long = 10
+Public Const dotPlotChartLeft As Long = 350
+
+'=== modChartScatter: BuildScatterChart ===
+Public Const scatterMarkerSize As Long = 7
+
 '=== modExport ===
 Public Const exportAppName As String = "INSO Chart Styles"
 Public Const exportSection As String = "Chart Export"
