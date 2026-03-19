@@ -4,7 +4,6 @@ Option Explicit
 Private Sub BuildDotPlot()
     Dim inputValue As Variant
     Dim maxcell As Double
-    Dim answer As Integer
     Dim ipts As Long
     Dim pointscount As Long
     Dim srs As Series
@@ -99,7 +98,7 @@ Private Sub BuildDotPlot()
         Range("C1:D" & maxcell + 1).Select
         With Selection.Interior
             .Pattern = xlSolid
-            .Color = giRGBbluecolor1
+            .Color = rampOcean1
         End With
 
         Range("C2:C" & maxcell + 1, "D2:D" & maxcell + 1).Select
@@ -214,7 +213,7 @@ Private Sub BuildDotPlot()
     cht.SeriesCollection(2).ErrorBars.Select
     With Selection.Format.Line
         .Visible = msoTrue
-        .ForeColor.rgb = giRGBbluecolor5
+        .ForeColor.rgb = rampOcean5
         .transparency = 0
     End With
 
@@ -228,7 +227,7 @@ Private Sub BuildDotPlot()
         End With
         With Selection.Format.Fill
             .Visible = msoTrue
-            .ForeColor.rgb = giRGBbluecolor5
+            .ForeColor.rgb = rampOcean5
         End With
         With Selection
             .MarkerForegroundColorIndex = -4142
@@ -236,6 +235,78 @@ Private Sub BuildDotPlot()
     Next imarker
 
     Range("A1").Select
+End Sub
+
+
+Private Sub DotPlotStyles(cht As Chart)
+    ' Applies bold/size formatting to left-side data labels (series 1) and right-side labels (series 2).
+    ' Label text is "<GroupName> <Value>" with a space separator. Character offsets shift when
+    ' point count reaches 9 or 10+, because the rank number in the label gains an extra digit:
+    '   ptscount < 9:  value starts at char 8  (3-char field)
+    '   ptscount = 9:  points 1-8 use char 8, point 9 uses char 8 with 4-char field
+    '   ptscount > 9:  points 1-8 use char 8 (3), point 9 uses char 8 (4), points 10+ use char 9 (4)
+    Dim ptscount As Long
+    Dim ipts As Long
+
+    ptscount = cht.SeriesCollection(1).Points.Count
+
+    If ptscount < 9 Then
+        For ipts = 1 To ptscount
+            cht.SeriesCollection(1).DataLabels.Select
+            cht.SeriesCollection(1).Points(ipts).DataLabel.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+            Selection.Format.TextFrame2.TextRange.Characters(1, 7).Font.Bold = msoTrue
+            Selection.Format.TextFrame2.TextRange.Characters(8, 3).Font.Size = dataLabelFontSize_secondary
+            cht.SeriesCollection(2).DataLabels.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+        Next
+    ElseIf ptscount = 9 Then
+        For ipts = 1 To 8
+            cht.SeriesCollection(1).DataLabels.Select
+            cht.SeriesCollection(1).Points(ipts).DataLabel.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+            Selection.Format.TextFrame2.TextRange.Characters(1, 7).Font.Bold = msoTrue
+            Selection.Format.TextFrame2.TextRange.Characters(8, 3).Font.Size = dataLabelFontSize_secondary
+            cht.SeriesCollection(2).DataLabels.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+        Next
+        ' Point 9: single-digit rank but value field is 4 chars
+        cht.SeriesCollection(1).DataLabels.Select
+        cht.SeriesCollection(1).Points(9).DataLabel.Select
+        Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+        Selection.Format.TextFrame2.TextRange.Characters(1, 7).Font.Bold = msoTrue
+        Selection.Format.TextFrame2.TextRange.Characters(8, 4).Font.Size = dataLabelFontSize_secondary
+        cht.SeriesCollection(2).DataLabels.Select
+        Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+    ElseIf ptscount > 9 Then
+        For ipts = 1 To 8
+            cht.SeriesCollection(1).DataLabels.Select
+            cht.SeriesCollection(1).Points(ipts).DataLabel.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+            Selection.Format.TextFrame2.TextRange.Characters(1, 7).Font.Bold = msoTrue
+            Selection.Format.TextFrame2.TextRange.Characters(8, 3).Font.Size = dataLabelFontSize_secondary
+            cht.SeriesCollection(2).DataLabels.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+        Next
+        ' Point 9: single-digit rank but value field is 4 chars
+        cht.SeriesCollection(1).DataLabels.Select
+        cht.SeriesCollection(1).Points(9).DataLabel.Select
+        Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+        Selection.Format.TextFrame2.TextRange.Characters(1, 7).Font.Bold = msoTrue
+        Selection.Format.TextFrame2.TextRange.Characters(8, 4).Font.Size = dataLabelFontSize_secondary
+        cht.SeriesCollection(2).DataLabels.Select
+        Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+        ' Points 10+: two-digit rank shifts value start by one position
+        For ipts = 10 To ptscount
+            cht.SeriesCollection(1).DataLabels.Select
+            cht.SeriesCollection(1).Points(ipts).DataLabel.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = axisFontSize
+            Selection.Format.TextFrame2.TextRange.Characters(1, 8).Font.Bold = msoTrue
+            Selection.Format.TextFrame2.TextRange.Characters(9, 4).Font.Size = dataLabelFontSize_secondary
+            cht.SeriesCollection(2).DataLabels.Select
+            Selection.Format.TextFrame2.TextRange.Font.Size = dataLabelFontSize_secondary
+        Next
+    End If
 End Sub
 
 

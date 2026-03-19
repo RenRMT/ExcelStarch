@@ -8,9 +8,10 @@ Private Sub BuildLabelLastPoint()
     Dim cht As Chart
     Dim srs As Series
     Dim plHeight As Double
-    Dim plWidth As Long
+    Dim plWidth As Double
     Dim shp As Shape
     Dim iColor As Long
+    Dim lbl As DataLabel
 
     If ActiveChart Is Nothing Then
         MsgNoActiveChart
@@ -40,18 +41,12 @@ Private Sub BuildLabelLastPoint()
     End If
 
     ' Adjust plot area dimensions
-    With cht.PlotArea.Select
-        plHeight = cht.PlotArea.Height
-        plWidth = cht.PlotArea.Width
-        cht.PlotArea.Select
-        Selection.Top = labelLastPointPlotTop
-        If gWebVersion Then
-            Selection.Width = plWidth * labelLastPointPlotWidthRatio_web
-        Else
-            Selection.Width = plWidth * labelLastPointPlotWidthRatio_print
-        End If
-        Selection.Height = plHeight
-    End With
+    cht.PlotArea.Select
+    plHeight = cht.PlotArea.Height
+    plWidth = cht.PlotArea.Width
+    Selection.Top = labelLastPointPlotTop
+    Selection.Width = plWidth * labelLastPointPlotWidthRatio_web
+    Selection.Height = plHeight
 
     ' Remove legend (labels replace it)
     If cht.HasLegend Then
@@ -86,7 +81,6 @@ Private Sub BuildLabelLastPoint()
                     On Error GoTo 0
 
                     If bLabeled Then
-                        Dim lbl As DataLabel
                         Set lbl = srs.Points(ipts).DataLabel
                         lbl.Font.Bold = msoTrue
 
@@ -106,7 +100,7 @@ Private Sub BuildLabelLastPoint()
                         End Select
 
                         lbl.Font.Color = iColor
-                        lbl.Font.Size = IIf(gWebVersion, axisFontSize, dataLabelFontSize_print)
+                        lbl.Font.Size = axisFontSize
                     End If
                 Next ipts
             End If

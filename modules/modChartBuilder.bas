@@ -2,7 +2,19 @@ Attribute VB_Name = "modChartBuilder"
 Option Explicit
 
 ' Shared formatting pipeline applied to every chart type.
-' colorMode: "FILL" for bar/column; "LINE" for line charts.
+' colorMode: "FILL" for bar/column charts; "LINE" for line/slope/scatter charts.
+'
+' Step order matters:
+'   1. OuterFormat    — sets chart size and plot area geometry first; everything else depends on it
+'   2. FormatXAxisTitle — positions relative to plot area InsideTop/InsideHeight, so must follow OuterFormat
+'   3. InsertLogo     — anchored to chart bottom-right; independent of plot area
+'   4. InsertSource   — anchored to chart bottom-left; must exist before FormatTitle so boxes don't overlap
+'   5. FormatTitle    — adds title/subtitle/y-axis label text boxes at top-left
+'   6. FormatGridlines — applies major gridline style to value axis
+'   7. FormatXAxis    — sizes and colors axis tick labels; runs after gridlines to avoid selection conflicts
+'   8. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
+'
+' Chart types that skip steps (slope, dot plot, scatter) call individual functions directly.
 Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String)
     Call OuterFormat(cht)
     Call FormatXAxisTitle(cht)
@@ -21,7 +33,7 @@ Function OuterFormat(cht As Chart) As Boolean
     Dim seriescount As Long
 
     'Font
-    cht.ChartArea.Font.name = FontStyle
+    cht.ChartArea.Font.name = gsPRIMARY_FONT
 
     'Hide Y-axis line
     If cht.HasAxis(xlValue) Then
@@ -29,8 +41,12 @@ Function OuterFormat(cht As Chart) As Boolean
     End If
 
     'Remove axis titles
-    If cht.Axes(xlValue).HasTitle Then cht.Axes(xlValue).AxisTitle.Delete
-    If cht.Axes(xlCategory).HasTitle Then cht.Axes(xlCategory).AxisTitle.Delete
+    If cht.HasAxis(xlValue) Then
+        If cht.Axes(xlValue).HasTitle Then cht.Axes(xlValue).AxisTitle.Delete
+    End If
+    If cht.HasAxis(xlCategory) Then
+        If cht.Axes(xlCategory).HasTitle Then cht.Axes(xlCategory).AxisTitle.Delete
+    End If
 
     'Chart size
     If TypeName(cht.Parent) = "ChartObject" Then
@@ -57,7 +73,7 @@ Function OuterFormat(cht As Chart) As Boolean
         If cht.hasLegend Then cht.Legend.Delete
 
         pa.Height = plotAreaHeight
-        pa.Top = plotAreaTop_legend
+        pa.Top = plotAreaTop_default
         pa.Width = plotAreaWidth
         pa.Left = plotAreaLeft
 
@@ -65,11 +81,12 @@ Function OuterFormat(cht As Chart) As Boolean
 
         If cht.hasLegend Then
 
-            cht.Legend.Position = xlLegendPositionBottom
+            cht.Legend.Position = xlLegendPositionTop
+            cht.Legend.Left = legend_leftPad
             cht.Legend.Font.color = colorBlack
 
             pa.Height = plotAreaHeight
-            pa.Top = plotAreaTop_legend
+            pa.Top = plotAreaTop_default
             pa.Width = plotAreaWidth
             pa.Left = plotAreaLeft
 
@@ -98,7 +115,6 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     Dim shp As Shape
     Dim plt As PlotArea
     Dim tr As TextRange2
-    Dim legendHeight As Single
     Dim seriescount As Long
 
     Set plt = cht.PlotArea
@@ -120,7 +136,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     With tr.Font
         .Italic = msoTrue
         .Size = axisFontSize
-        .name = FontStyle
+        .name = gsPRIMARY_FONT
     End With
 
     With shp.TextFrame2
@@ -129,29 +145,18 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
         .AutoSize = msoAutoSizeShapeToFitText
     End With
 
-    ' Position relative to legend or bottom
-    If cht.hasLegend Then
-        cht.Legend.Position = xlLegendPositionBottom
-        legendHeight = cht.Legend.Top
-        shp.Top = legendHeight - shp.Height - xAxisTitle_legendGap
-    Else
-        shp.Top = cht.Parent.Height
-    End If
-
-    ' Center horizontally using plot area
+    ' Position below plot area, centered.
+    ' InsideTop/InsideHeight refer to the inner plot boundary (excluding axis tick labels),
+    ' so this places the title just below where the data ends, not below the axis labels.
+    shp.Top = plt.InsideTop + plt.InsideHeight + xAxisTitle_legendGap
     shp.Left = plt.InsideLeft + (plt.InsideWidth - shp.Width) / 2
-
-    ' Adjust for single-series charts
-    If seriescount = 1 Then
-        shp.Top = shp.Top - xAxisTitle_singleOffset
-    End If
 
     ' Legend repositioning
     If cht.hasLegend Then
         With cht.Legend
             .Font.Size = axisFontSize
             .Top = legend_top
-            .Left = (gdChartWidth_web - .Width) / 2 - plt.InsideLeft + legend_leftPad
+            .Left = legend_leftPad
         End With
     Else
         ' Adjust plot area when no legend
@@ -174,7 +179,6 @@ Fail:
 End Function
 
 
-'insert logo
 Public Function InsertLogo(cht As Chart) As Boolean
     On Error GoTo Fail
 
@@ -238,11 +242,9 @@ End Function
 Function InsertSource(cht As Chart) As Boolean
     Dim sourceB As TextBox
     Dim chHeight As Long
-    Dim chWidth As Long
 
     'Chart dimensions
     chHeight = cht.Parent.Height
-    chWidth = cht.Parent.Width
 
     'Add textbox at bottom-left
     Set sourceB = cht.TextBoxes.Add(0, chHeight, sourceBoxWidth, sourceBoxHeight)
@@ -252,7 +254,7 @@ Function InsertSource(cht As Chart) As Boolean
         .Text = "Source: Source text goes here." & vbNewLine & _
                 "Notes: Notes text goes here."
         .Font.Size = sourceTextFontSize
-        .Font.name = FontStyle
+        .Font.name = gsPRIMARY_FONT
         .Font.Bold = msoTrue
     End With
 
@@ -261,9 +263,9 @@ Function InsertSource(cht As Chart) As Boolean
     With Selection
         .VerticalAlignment = xlBottom
 
-        'Un-bold specific text segments
-        .ShapeRange(1).TextFrame2.TextRange.Characters(7, 24).Font.Bold = msoFalse
-        .ShapeRange(1).TextFrame2.TextRange.Characters(37, 22).Font.Bold = msoFalse
+        'Un-bold the colon and body text, leaving "Source" and "Notes" labels bold
+        .ShapeRange(1).TextFrame2.TextRange.Characters(sourceBox_sourceUnboldStart, sourceBox_sourceUnboldLen).Font.Bold = msoFalse
+        .ShapeRange(1).TextFrame2.TextRange.Characters(sourceBox_notesUnboldStart, sourceBox_notesUnboldLen).Font.Bold = msoFalse
     End With
 
     ' padding
@@ -306,7 +308,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Title in 20pt sentence case"
             With .Font
                 .Size = titleFontSize
-                .name = FontStyle
+                .name = gsPRIMARY_FONT
                 .Bold = msoTrue
             End With
         End With
@@ -327,7 +329,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Subtitle in 16pt sentence case"
             With .Font
                 .Size = subTitleFontSize
-                .name = FontStyle
+                .name = gsPRIMARY_FONT
                 .Bold = msoFalse
             End With
         End With
@@ -355,7 +357,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Y axis title (unit)"
             With .Font
                 .Size = axisFontSize
-                .name = FontStyleItalic
+                .name = gsPRIMARY_ITALICS_FONT
                 .Bold = msoFalse
                 .Italic = msoTrue
             End With
@@ -404,20 +406,14 @@ Function FormatXAxis(cht As Chart) As Boolean
 
     'Format size of x-axis & y-axis tick mark labels
     If cht.HasAxis(xlCategory) = True Then
-        If gWebVersion Then
-            With cht.Axes(xlCategory).TickLabels.Font
-                .Size = axisFontSize
-            End With
-        Else
-            With cht.Axes(xlCategory).TickLabels.Font
-                .Size = tickLabelSize_print
-            End With
-        End If
+        cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
         cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = colorBlack
 
         'Change x-axis line color
+        ' Note: Excel does not expose Format.Line on an Axis object directly —
+        ' the property is only accessible via Selection after .Select
         cht.Axes(xlCategory).Select
         With Selection.Format.Line
             .Visible = msoTrue
@@ -430,15 +426,7 @@ Function FormatXAxis(cht As Chart) As Boolean
     End If
 
     If cht.HasAxis(xlValue) = True Then
-        If gWebVersion Then
-            With cht.Axes(xlValue).TickLabels.Font
-                .Size = axisFontSize
-            End With
-        Else
-            With cht.Axes(xlValue).TickLabels.Font
-                .Size = tickLabelSize_print
-            End With
-        End If
+        cht.Axes(xlValue).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
         cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = colorBlack

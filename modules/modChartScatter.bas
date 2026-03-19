@@ -3,7 +3,6 @@ Option Explicit
 
 Private Sub BuildScatterChart()
     Dim cht As Chart
-    Dim txtB As Shape
     Dim seriescount As Long
     Dim imarker As Long
 
@@ -39,18 +38,7 @@ Private Sub BuildScatterChart()
 
     ' Apply brand palette to markers (up to 7 series)
     If seriescount > 7 Then
-        Set txtB = cht.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, pieErrorBoxWidth, pieErrorBoxHeight)
-        With txtB
-            .Name = "TitleBox"
-            With .TextFrame2.TextRange
-                .Text = "You have too many data series for this chart type. Please contact the Communications Department for further guidance."
-                .Font.Size = pieErrorFontSize
-                .Font.Name = FontStyle
-                .Font.Fill.ForeColor.rgb = vbRed
-                .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
-            End With
-            .Fill.ForeColor.rgb = vbYellow
-        End With
+        MsgTooManySeries cht
     Else
         Dim palette(1 To 7) As Long
         palette(1) = colorOcean
@@ -70,6 +58,34 @@ Private Sub BuildScatterChart()
             End With
         Next i
     End If
+End Sub
+
+
+Private Sub ScatterplotStyles(cht As Chart)
+    ' Format vertical gridlines
+    If Not cht.Axes(xlCategory).HasMajorGridlines Then
+        cht.SetElement (msoElementPrimaryCategoryGridLinesMajor)
+    End If
+    cht.Axes(xlCategory).MajorGridlines.Select
+    With Selection.Format.Line
+        .Visible = msoTrue
+        .Weight = gridlineWeight
+        .DashStyle = msoLineSysDot
+        .ForeColor.rgb = giRGBgridlinesweb
+    End With
+
+    ' Format horizontal gridlines
+    If Not cht.Axes(xlValue).HasMajorGridlines Then
+        cht.PlotArea.Select
+        cht.SetElement (msoElementPrimaryValueGridLinesMajor)
+    End If
+    cht.Axes(xlValue).MajorGridlines.Select
+    With Selection.Format.Line
+        .Visible = msoTrue
+        .Weight = gridlineWeight
+        .DashStyle = msoLineSysDot
+        .ForeColor.rgb = giRGBgridlinesweb
+    End With
 End Sub
 
 

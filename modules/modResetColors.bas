@@ -1,4 +1,4 @@
-Attribute VB_Name = "modResetColours"
+Attribute VB_Name = "modResetColors"
 Option Explicit
 
 ' Core: make all series on the chart gray (line + fill).

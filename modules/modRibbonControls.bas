@@ -2,6 +2,14 @@ Attribute VB_Name = "modRibbonControls"
 '==== Module: modRibbonHandlers ====
 Option Explicit
 
+' Ribbon handler for all fill/outline color buttons.
+' Tag format (set in ribbon XML):
+'   "FILL:ColorName"          — solid fill, no transparency
+'   "FILL:ColorName|0.3"      — fill with 30% transparency
+'   "FILL:NONE"               — remove fill
+'   "OUTLINE:ColorName|2"     — outline with weight 2pt
+'   "OUTLINE:NONE"            — remove outline
+' Valid color names: OCEAN, CORAL, SKY, PINE, GOLD, RUST, LAVENDER, SILVER, WHITE
 Public Sub Format_onAction(control As IRibbonControl)
     Dim tagValue As String
     tagValue = Trim$(control.Tag)
@@ -81,5 +89,5 @@ End Function
 
 ' reset colors to grey button
 Public Sub StartWithGrayButton_onAction(control As IRibbonControl)
-    GrayOutChart cht:=Nothing, duplicateChart:=True, grayColor:=colorSilver
+    StartWithGray
 End Sub

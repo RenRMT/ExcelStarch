@@ -58,6 +58,7 @@ Public Sub RunChartExport()
         Case "png": FileFilter = "PNG"
         Case "jpeg", "jpe", "jpg": FileFilter = "JPG"
         Case "bmp": FileFilter = "BMP"
+        Case "gif": FileFilter = "GIF"
         Case "svg": FileFilter = "SVG"
         Case "pdf": bPDF = True
         Case Else

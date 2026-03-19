@@ -76,27 +76,18 @@ End Function
 
 
 ' Applies the ocean ramp palette with count-dependent color selection (1-6 series).
+' Rather than always using ramp steps 1-N, the selection is spread across the full ramp
+' to maximise contrast for small series counts. For example, with 2 series the darkest
+' (rampOcean5) and lightest (rampOcean2) steps are used rather than adjacent shades.
 Private Sub ApplyBlueRampColors(cht As Chart)
     Dim n As Long, i As Long
     Dim ramp(1 To 6) As Long
-    Dim txtB As Shape
 
     n = cht.SeriesCollection.Count
     If n = 0 Then Exit Sub
 
     If n > 6 Then
-        Set txtB = cht.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, pieErrorBoxWidth, pieErrorBoxHeight)
-        With txtB
-            .Name = "TitleBox"
-            With .TextFrame2.TextRange
-                .Text = "You have too many data series for this chart type. Please contact the Communications Department for further guidance."
-                .Font.Size = pieErrorFontSize
-                .Font.Name = FontStyle
-                .Font.Fill.ForeColor.rgb = vbRed
-                .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
-            End With
-            .Fill.ForeColor.rgb = vbYellow
-        End With
+        MsgTooManySeries cht
         Exit Sub
     End If
 

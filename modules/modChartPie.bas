@@ -3,7 +3,6 @@ Option Explicit
 
 Private Sub BuildPieChart()
     Dim cht As Chart
-    Dim txtB As Shape
     Dim pointscount As Long
 
     ActiveSheet.Shapes.AddChart2(-1, xlPie).Select
@@ -24,18 +23,7 @@ Private Sub BuildPieChart()
     pointscount = cht.SeriesCollection(1).Points.Count
 
     If pointscount > 5 Then
-        Set txtB = cht.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, pieErrorBoxWidth, pieErrorBoxHeight)
-        With txtB
-            .Name = "TitleBox"
-            With .TextFrame2.TextRange
-                .Text = "You have too many data series for this chart type. Please contact the Communications Department for further guidance."
-                .Font.Size = pieErrorFontSize
-                .Font.Name = FontStyle
-                .Font.Fill.ForeColor.rgb = vbRed
-                .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
-            End With
-            .Fill.ForeColor.rgb = vbYellow
-        End With
+        MsgTooManySeries cht
     Else
         Dim palette(1 To 5) As Long
         palette(1) = colorOcean
@@ -61,6 +49,85 @@ Private Sub ApplyPieSliceColor(cht As Chart, ByVal idx As Long, ByVal clr As Lon
         End With
         .Line.Visible = msoFalse
     End With
+End Sub
+
+
+Private Sub SetPieChartSizeandTitle(cht As Chart)
+    Dim titleB1 As TextBox
+    Dim titleB2 As TextBox
+    Dim titleB3 As TextBox
+    Dim chtObj As ChartObject
+    Dim chtHeight As Double
+    Dim chtWidth As Double
+    Dim pltWidth As Double
+    Dim pltHeight As Double
+    Dim plotSize As Long
+
+    ' Set chart dimensions
+    With cht.Parent
+        .Width = gdChartWidth_web
+        .Height = gdChartHeight_web
+    End With
+
+    cht.ChartArea.Font.Name = gsPRIMARY_FONT
+
+    ' Remove built-in title; replace with text boxes
+    If cht.HasTitle Then cht.ChartTitle.Delete
+
+    Set titleB1 = cht.TextBoxes.Add(0, 0, titleBoxWidth, pieTitleBoxHeight)
+    With titleB1
+        .Name = "TitleBox"
+        .Text = "Title in 18pt Title Case"
+        .Font.Size = pieTitleFontSize
+        .Font.Name = gsPRIMARY_FONT
+        .Font.Bold = msoFalse
+    End With
+
+    Set titleB2 = cht.TextBoxes.Add(0, pieSubtitleBoxTop, titleBoxWidth, pieSubtitleBoxHeight)
+    With titleB2
+        .Name = "SubTitleBox"
+        .Text = "Subtitle in 14pt sentence case"
+        .Font.Size = pieSubtitleFontSize
+        .Font.Name = gsPRIMARY_FONT
+        .Font.Bold = msoFalse
+    End With
+
+    Set titleB3 = cht.TextBoxes.Add(0, pieYAxisLabelBoxTop, titleBoxWidth, yAxisLabel_noLegendHeight)
+    With titleB3
+        .Name = "YAxisLabelBox"
+        .Text = "Y axis title (unit)"
+        .Font.Size = axisFontSize
+        .Font.Name = gsPRIMARY_ITALICS_FONT
+        .Font.Bold = msoFalse
+        .Font.Italic = msoTrue
+    End With
+
+    ' Size the pie chart plot area
+    plotSize = IIf(cht.HasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
+    cht.PlotArea.Select
+    Selection.Width = plotSize
+    Selection.Height = plotSize
+    Selection.Left = piePlotAreaLeft_web
+    Selection.Top = piePlotAreaTop_web
+
+    ' Center pie chart horizontally
+    Set chtObj = cht.Parent
+    With chtObj
+        chtHeight = .Chart.ChartArea.Height
+        chtWidth = .Chart.ChartArea.Width
+        pltHeight = .Chart.PlotArea.Height
+        pltWidth = .Chart.PlotArea.Width
+        .Chart.PlotArea.Top = (chtHeight - pltHeight) * piePlotTopRatio_web
+        .Chart.PlotArea.Left = (chtWidth - pltWidth) / 2
+    End With
+
+    ' Position the legend
+    If cht.HasLegend Then
+        cht.Legend.Position = xlLegendPositionTop
+        cht.Legend.Select
+        Selection.Top = pieLegendTop_web
+        Selection.Font.Size = axisFontSize
+    End If
 End Sub
 
 
