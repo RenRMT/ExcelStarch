@@ -2,8 +2,6 @@
 
 A custom Excel add-in that applies organisational chart style standards from a dedicated ribbon tab. Select a data range, click a chart type, and the add-in creates a fully formatted chart — correct colours, fonts, sizing, layout, and branding — ready for publication.
 
-## Inspiration
-
 This add-in was inspired by the [Urban Institute Data Visualisation Style Guide Excel Add-in](https://medium.com/urban-institute/introducing-the-urban-institute-data-visualization-style-guides-open-source-excel-add-in-14dfdfa50ebb), created by Jonathan Schwabish.
 
 ## Core Functionality
@@ -21,7 +19,7 @@ The ribbon provides buttons for the chart types in active use. Clicking a button
 | | Lollipop Chart | Horizontal lollipop (bar chart with error-bar sticks and dot markers) |
 | <img src="icons/i_chart_line.png" height="28"> | Line Chart | Standard line chart |
 | <img src="icons/i_chart_pie.png" height="28"> | Pie Chart | Pie chart |
-| <img src="icons/i_chart_pie.png" height="28"> | Donut Chart | Doughnut chart |
+| <img src="icons/i_chart_donut.png" height="28"> | Donut Chart | Donut chart |
 
 Each chart is created by duplicating a raw chart object, so the original data selection is preserved. The pipeline then applies: outer chart area formatting, plot area dimensions, axis styling, gridlines, series colours, title and subtitle text boxes, y-axis label box, logo, and source/notes placeholder.
 
