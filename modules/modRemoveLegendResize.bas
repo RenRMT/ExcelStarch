@@ -24,7 +24,3 @@ End Sub
 Sub RemoveLegendResizeButton()
     BuildRemoveLegendResize
 End Sub
-
-Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl)
-    BuildRemoveLegendResize
-End Sub

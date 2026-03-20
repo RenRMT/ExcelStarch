@@ -29,14 +29,6 @@ Sub BarChart()
     BuildBarChart
 End Sub
 
-Public Sub Bar_onAction(control As IRibbonControl)
-    BuildBarChart
-End Sub
-
 Sub BarChartBlueRamp()
-    BuildBarChart "BLUERAMP"
-End Sub
-
-Public Sub BarWithBlueRamp_onAction(control As IRibbonControl)
     BuildBarChart "BLUERAMP"
 End Sub

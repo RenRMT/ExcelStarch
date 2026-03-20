@@ -219,7 +219,7 @@
 						image="i_outline_coral"
 						size="normal"
 						supertip="Coral outline color"
-						onAction="Outline_onAction"
+						onAction="Format_onAction"
 						tag="Outline:coral"/>
 					<button 
 						id="SkyOutline"
@@ -241,7 +241,7 @@
 						size="normal"
 						supertip="Gold outline color"
 						onAction="Format_onAction" 
-						tag="Outline:RGB(255,221,51)"/>
+						tag="Outline:gold"/>
 					<button 
 						id="RustOutline"
 						image="i_outline_rust"
@@ -288,6 +288,13 @@
 						size="large"
 						supertip="Add series names to the last point on the graph."
 						onAction="LabelLastPointButton_onAction"/>
+					<button
+						id="RemoveLegendResizeButton"
+						imageMso="LegendNone"
+						label="Remove Legend"
+						size="large"
+						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
+						onAction="RemoveLegendResizeButton_onAction"/>
 				</group >
 				<group  id="ChartExportButton" >
 					<button 

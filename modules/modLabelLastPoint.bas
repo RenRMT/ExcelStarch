@@ -115,7 +115,3 @@ End Sub
 Sub LabelLastPointButton()
     BuildLabelLastPoint
 End Sub
-
-Public Sub LabelLastPointButton_onAction(control As IRibbonControl)
-    BuildLabelLastPoint
-End Sub

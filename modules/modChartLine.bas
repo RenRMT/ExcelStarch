@@ -26,7 +26,3 @@ End Sub
 Sub LineChart()
     BuildLineChart
 End Sub
-
-Public Sub LineChart_onAction(control As IRibbonControl)
-    BuildLineChart
-End Sub

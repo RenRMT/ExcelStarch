@@ -92,7 +92,3 @@ End Sub
 Sub ScatterChart()
     BuildScatterChart
 End Sub
-
-Public Sub Scatter_onAction(control As IRibbonControl)
-    BuildScatterChart
-End Sub

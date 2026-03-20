@@ -39,7 +39,3 @@ End Sub
 Sub MarkersLineChart()
     BuildMarkersLineChart
 End Sub
-
-Public Sub LinewithMarkers_onAction(control As IRibbonControl)
-    BuildMarkersLineChart
-End Sub

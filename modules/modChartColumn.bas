@@ -29,14 +29,6 @@ Sub ColumnChart()
     BuildColumnChart
 End Sub
 
-Public Sub Column_onAction(control As IRibbonControl)
-    BuildColumnChart
-End Sub
-
 Sub ColumnChartBlueRamp()
-    BuildColumnChart "BLUERAMP"
-End Sub
-
-Public Sub ColumnWithBlueRamp_onAction(control As IRibbonControl)
     BuildColumnChart "BLUERAMP"
 End Sub

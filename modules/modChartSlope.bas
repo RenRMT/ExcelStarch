@@ -212,7 +212,3 @@ End Sub
 Sub SlopeChart()
     BuildSlopeChart
 End Sub
-
-Public Sub StyleSlopeChart_onAction(control As IRibbonControl)
-    BuildSlopeChart
-End Sub

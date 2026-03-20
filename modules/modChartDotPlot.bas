@@ -313,7 +313,3 @@ End Sub
 Sub DotPlot()
     BuildDotPlot
 End Sub
-
-Public Sub StyleDotPlot_onAction(control As IRibbonControl)
-    BuildDotPlot
-End Sub

@@ -26,14 +26,6 @@ Sub StackedColumnChart()
     BuildStackedColumnChart
 End Sub
 
-Public Sub StackedColumn_onAction(control As IRibbonControl)
-    BuildStackedColumnChart
-End Sub
-
 Sub StackedColumnChartBlueRamp()
-    BuildStackedColumnChart "BLUERAMP"
-End Sub
-
-Public Sub StackedColumnWithBlueRamp_onAction(control As IRibbonControl)
     BuildStackedColumnChart "BLUERAMP"
 End Sub

@@ -134,7 +134,3 @@ End Sub
 Sub PieChart()
     BuildPieChart
 End Sub
-
-Public Sub Pie_onAction(control As IRibbonControl)
-    BuildPieChart
-End Sub

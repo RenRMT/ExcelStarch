@@ -25,14 +25,6 @@ Sub AreaChart()
     BuildAreaChart
 End Sub
 
-Public Sub Area_onAction(control As IRibbonControl)
-    BuildAreaChart
-End Sub
-
 Sub AreaChartBlueRamp()
-    BuildAreaChart "BLUERAMP"
-End Sub
-
-Public Sub AreaWithBlueRamp_onAction(control As IRibbonControl)
     BuildAreaChart "BLUERAMP"
 End Sub

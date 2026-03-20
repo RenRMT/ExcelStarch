@@ -26,14 +26,6 @@ Sub StackedBarChart()
     BuildStackedBarChart
 End Sub
 
-Public Sub StackedBar_onAction(control As IRibbonControl)
-    BuildStackedBarChart
-End Sub
-
 Sub StackedBarChartBlueRamp()
-    BuildStackedBarChart "BLUERAMP"
-End Sub
-
-Public Sub StackedBarWithBlueRamp_onAction(control As IRibbonControl)
     BuildStackedBarChart "BLUERAMP"
 End Sub

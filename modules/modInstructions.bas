@@ -20,7 +20,3 @@ End Sub
 Sub NotesButton()
     ShowNotes
 End Sub
-
-Public Sub NotesButton_onAction(control As IRibbonControl)
-    ShowNotes
-End Sub

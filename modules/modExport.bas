@@ -93,7 +93,3 @@ End Sub
 Sub ExportChart()
     RunChartExport
 End Sub
-
-Public Sub ChartExport_onAction(control As IRibbonControl)
-    RunChartExport
-End Sub
