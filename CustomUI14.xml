@@ -201,7 +201,7 @@
                     label="Fill Actions">
 					<button
 						id="TogglePaletteOrder"
-						image="i_menu_none"
+						image="i_menu_order"
 						size="large"
 						label="Toggle Palette Order"
 						supertip="Switch the series colour order between Contrasting and Complementary."
@@ -231,7 +231,7 @@
 						onAction="LabelLastPointButton_onAction"/>
 					<button
 						id="ToggleGridlinesButton"
-						image="i_menu_none"
+						image="i_menu_gridlines"
 						label="Toggle Gridlines"
 						size="large"
 						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."

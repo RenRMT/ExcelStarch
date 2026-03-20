@@ -12,16 +12,16 @@ This add-in was inspired by the [Urban Institute Data Visualisation Style Guide 
 
 The ribbon provides buttons for the chart types in active use. Clicking a button creates a new chart from the current selection and applies the full formatting pipeline automatically.
 
-| Button | Chart Type |
-|---|---|
-| Column Chart | Clustered vertical bar |
-| Stacked Column | 100% or absolute stacked vertical bar |
-| Bar Chart | Clustered horizontal bar |
-| Stacked Bar | 100% or absolute stacked horizontal bar |
-| Lollipop Chart | Horizontal lollipop (bar chart with error-bar sticks and dot markers) |
-| Line Chart | Standard line chart |
-| Pie Chart | Pie chart |
-| Donut Chart | Doughnut chart |
+| | Button | Chart Type |
+|---|---|---|
+| <img src="icons/i_chart_vbar.png" height="28"> | Column Chart | Clustered vertical bar |
+| <img src="icons/i_chart_stacked_col.png" height="28"> | Stacked Column | 100% or absolute stacked vertical bar |
+| <img src="icons/i_chart_hbar.png" height="28"> | Bar Chart | Clustered horizontal bar |
+| <img src="icons/i_chart_stacked_bar.png" height="28"> | Stacked Bar | 100% or absolute stacked horizontal bar |
+| | Lollipop Chart | Horizontal lollipop (bar chart with error-bar sticks and dot markers) |
+| <img src="icons/i_chart_line.png" height="28"> | Line Chart | Standard line chart |
+| <img src="icons/i_chart_pie.png" height="28"> | Pie Chart | Pie chart |
+| <img src="icons/i_chart_pie.png" height="28"> | Donut Chart | Doughnut chart |
 
 Each chart is created by duplicating a raw chart object, so the original data selection is preserved. The pipeline then applies: outer chart area formatting, plot area dimensions, axis styling, gridlines, series colours, title and subtitle text boxes, y-axis label box, logo, and source/notes placeholder.
 
@@ -31,17 +31,17 @@ The lollipop chart is built on top of the bar chart pipeline. After standard for
 
 Seven data colours form the core palette:
 
-| Name | Swatch |
-|---|---|
-| Ocean | Primary blue |
-| Coral | Warm orange-red |
-| Sky | Light blue |
-| Pine | Teal-green |
-| Gold | Yellow |
-| Rust | Dark burnt orange |
-| Lavender | Soft purple |
+| | Name | Description |
+|---|---|---|
+| <img src="icons/i_fill_ocean.png" height="28"> | Ocean | Primary blue |
+| <img src="icons/i_fill_coral.png" height="28"> | Coral | Warm orange-red |
+| <img src="icons/i_fill_sky.png" height="28"> | Sky | Light blue |
+| <img src="icons/i_fill_pine.png" height="28"> | Pine | Teal-green |
+| <img src="icons/i_fill_gold.png" height="28"> | Gold | Yellow |
+| <img src="icons/i_fill_rust.png" height="28"> | Rust | Dark burnt orange |
+| <img src="icons/i_fill_lavender.png" height="28"> | Lavender | Soft purple |
 
-Silver and White are available as neutral fills. Series beyond seven fall back to Silver.
+<img src="icons/i_fill_silver.png" height="28"> Silver and <img src="icons/i_fill_white.png" height="28"> White are available as neutral fills. Series beyond seven fall back to Silver.
 
 **Palette ordering** can be toggled between two arrangements via the *Toggle Palette Order* button:
 
@@ -62,18 +62,23 @@ The **Invert** button reverses the current fill colour assignment across all ser
 
 Per-colour buttons in the *Fill Colors* group apply a brand colour as a solid fill to any selected shape or chart element. Transparency can be specified via the button tag in the ribbon XML. A no-fill action removes the fill entirely.
 
+| | | | | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| <img src="icons/i_fill_ocean.png" height="28"> | <img src="icons/i_fill_coral.png" height="28"> | <img src="icons/i_fill_sky.png" height="28"> | <img src="icons/i_fill_pine.png" height="28"> | <img src="icons/i_fill_gold.png" height="28"> | <img src="icons/i_fill_rust.png" height="28"> | <img src="icons/i_fill_lavender.png" height="28"> | <img src="icons/i_fill_silver.png" height="28"> | <img src="icons/i_fill_white.png" height="28"> |
+| Ocean | Coral | Sky | Pine | Gold | Rust | Lavender | Silver | White |
+
 ### Chart Tools
 
-| Button | Effect |
-|---|---|
-| Reset to Grey | Resets all chart series fills to Silver |
-| Label Last Point | Adds series name labels to the final data point on line charts and narrows the plot area to make room |
-| Toggle Gridlines | Cycles the active chart through four gridline states: none → horizontal → vertical → both |
-| Remove Legend | Deletes the chart legend and resizes the plot area to standard web dimensions |
+| | Button | Effect |
+|---|---|---|
+| <img src="icons/i_menu_grey.png" height="28"> | Reset to Grey | Resets all chart series fills to Silver |
+| <img src="icons/i_menu_labels.png" height="28"> | Label Last Point | Adds series name labels to the final data point on line charts and narrows the plot area to make room |
+| <img src="icons/i_menu_gridlines.png" height="28"> | Toggle Gridlines | Cycles the active chart through four gridline states: none → horizontal → vertical → both |
+| <img src="icons/i_menu_none.png" height="28">  | Remove Legend | Deletes the chart legend and resizes the plot area to standard web dimensions |
 
 ### Export
 
-The *Chart Export* button exports the active chart object as an image or PDF. Supported formats: PNG, GIF, JPG, BMP, SVG, PDF. The chosen format is remembered between sessions. The export does not warn before overwriting an existing file.
+The <img src="icons/i_menu_export.png" height="20"> *Chart Export* button exports the active chart object as an image or PDF. Supported formats: PNG, GIF, JPG, BMP, SVG, PDF. The chosen format is remembered between sessions. The export does not warn before overwriting an existing file.
 
 ---
 
@@ -97,6 +102,8 @@ The *Chart Export* button exports the active chart object as an image or PDF. Su
 | `modChartStackedBar.bas` | Stacked bar chart creation |
 | `modChartLine.bas` | Line chart creation |
 | `modChartPie.bas` | Pie chart creation |
+| `modChartDonut.bas` | Donut chart creation |
+| `modChartLollipop.bas` | Lollipop chart creation — wraps the bar chart pipeline, then replaces bars with error-bar sticks and oval arrowhead dots |
 | `modFormatSeries.bas` | Brand palette application to chart series (fill and line modes); palette order toggle |
 | `modFormatFill.bas` | Solid fill application and removal for selected shapes |
 | `modRamp.bas` | Single-hue sequential ramps, diverging ramps, and ramp inversion |
