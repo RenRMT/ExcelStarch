@@ -1,7 +1,7 @@
 Attribute VB_Name = "modChartColumn"
 Option Explicit
 
-Private Sub BuildColumnChart(Optional ByVal colorMode As String = "FILL")
+Private Sub BuildColumnChart()
     Dim cht As Chart
 
     ActiveSheet.Shapes.AddChart2(-1, xlColumnClustered).Select
@@ -11,7 +11,7 @@ Private Sub BuildColumnChart(Optional ByVal colorMode As String = "FILL")
     If cht Is Nothing Then Exit Sub
 
     ' Shared formatting pipeline
-    ApplyChartPipeline cht, colorMode
+    ApplyChartPipeline cht, "FILL"
 
     ' Column-specific: remove series shadows
     Call RemoveShadow(cht)
@@ -29,6 +29,3 @@ Sub ColumnChart()
     BuildColumnChart
 End Sub
 
-Sub ColumnChartBlueRamp()
-    BuildColumnChart "BLUERAMP"
-End Sub

@@ -1,7 +1,7 @@
 Attribute VB_Name = "modChartStackedColumn"
 Option Explicit
 
-Private Sub BuildStackedColumnChart(Optional ByVal colorMode As String = "FILL")
+Private Sub BuildStackedColumnChart()
     Dim cht As Chart
 
     ActiveSheet.Shapes.AddChart2(-1, xlColumnStacked).Select
@@ -11,7 +11,7 @@ Private Sub BuildStackedColumnChart(Optional ByVal colorMode As String = "FILL")
     If cht Is Nothing Then Exit Sub
 
     ' Shared formatting pipeline
-    ApplyChartPipeline cht, colorMode
+    ApplyChartPipeline cht, "FILL"
 
     ' Stacked column-specific: no tick marks on category axis
     cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
@@ -26,6 +26,3 @@ Sub StackedColumnChart()
     BuildStackedColumnChart
 End Sub
 
-Sub StackedColumnChartBlueRamp()
-    BuildStackedColumnChart "BLUERAMP"
-End Sub

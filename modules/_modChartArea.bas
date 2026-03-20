@@ -1,7 +1,7 @@
 Attribute VB_Name = "modChartArea"
 Option Explicit
 
-Private Sub BuildAreaChart(Optional ByVal colorMode As String = "FILL")
+Private Sub BuildAreaChart()
     Dim cht As Chart
 
     ActiveSheet.Shapes.AddChart2(-1, xlAreaStacked).Select
@@ -11,7 +11,7 @@ Private Sub BuildAreaChart(Optional ByVal colorMode As String = "FILL")
     If cht Is Nothing Then Exit Sub
 
     ' Shared formatting pipeline
-    ApplyChartPipeline cht, colorMode
+    ApplyChartPipeline cht, "FILL"
 
     ' Area-specific: axis starts on first data point (not between categories)
     cht.Axes(xlCategory).AxisBetweenCategories = False
@@ -25,6 +25,3 @@ Sub AreaChart()
     BuildAreaChart
 End Sub
 
-Sub AreaChartBlueRamp()
-    BuildAreaChart "BLUERAMP"
-End Sub

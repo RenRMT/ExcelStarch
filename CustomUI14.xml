@@ -1,5 +1,4 @@
-<!--RibbonX Visual Designer 1.94 for Microsoft Excel 15.0. XML Code produced on 2017/02/02-->
-<customUI  xmlns="http://schemas.microsoft.com/office/2006/01/customui" >
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
 	<ribbon >
 		<tabs >
 			<tab 
@@ -16,26 +15,12 @@
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Column_onAction"/>
 					<button 
-						id="ColumnwithBlueRamp"
-						image="i_chart_vbar_blue"
-						label="Column with Blue Ramp"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="ColumnwithBlueRamp_onAction"/>
-					<button 
 						id="StackedColumn"
-						image="i_chart_stacked_bar"
+						image="i_chart_stacked_col"
 						label="Stacked Column"
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedColumn_onAction"/>
-					<button 
-						id="StackedColumnwithBlueRamp"
-						image="i_chart_stacked_bar_blue"
-						label="Stacked Column with Blue Ramp"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="StackedColumnwithBlueRamp_onAction"/>
 				</group >
 				<group 
 					id="LineGroup"
@@ -47,13 +32,6 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="LineChart_onAction"/>
-					<button 
-						id="LinewithMarkers"
-						image="i_menu_none"
-						label="Line with Markers"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="LinewithMarkers_onAction"/>
 				</group >
 				<group 
 					id="BarGroup"
@@ -65,13 +43,13 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Bar_onAction"/>
-					<button 
-						id="BarwithBlueRamp"
-						image="i_chart_hbar_blue"
-						label="Bar with Blue Ramp"
+					<button
+						id="Lollipop"
+						image="i_chart_lollipop"
+						label="Lollipop Chart"
 						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="BarwithBlueRamp_onAction"/>
+						supertip="Style a lollipop chart following the COMPANY standards"
+						onAction="Lollipop_onAction"/>
 					<button 
 						id="StackedBar"
 						image="i_chart_stacked_bar"
@@ -79,63 +57,24 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedBar_onAction"/>
-					<button 
-						id="StackedBarwithBlueRamp"
-						image="i_chart_stacked_bar_blue"
-						label="Stacked Bar with Blue Ramp"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="StackedBarwithBlueRamp_onAction"/>
 				</group >
-				<group 
-					id="AreaGroup"
-					label="Area">
-					<button 
-						id="Area"
-						image="i_menu_none"
-						label="Area Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Area_onAction"/>
-					<button 
-						id="AreawithBlueRamp"
-						image="i_menu_none"
-						label="Area with Blue Ramp"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="AreawithBlueRamp_onAction"/>
-				</group >
-				<group 
+				<group
 					id="OtherGraphs"
 					label="Other Graphs">
-					<button 
-						id="Scatter"
-						image="i_menu_none"
-						label="Scatterplot"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Scatter_onAction"/>
-					<button 
+					<button
 						id="Pie"
 						image="i_chart_pie"
 						label="Pie Chart"
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Pie_onAction"/>
-					<button 
-						id="StyleSlopeChart"
-						image="i_menu_none"
-						label="Slope Chart"
+					<button
+						id="Donut"
+						image="i_chart_donut"
+						label="Donut Chart"
 						size="large"
-						supertip="Use this button to create a Slope Chart in COMPANY style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Slope Chart. You can then insert your own data into the worksheet."
-						onAction="StyleSlopeChart_onAction"/>
-					<button 
-						id="StyleDotPlot"
-						image="i_menu_none"
-						label="Dot Plot"
-						size="large"
-						supertip="Use this button to create a Dot Plot in COMPANY style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Dot Plot. You can then insert your own data into the worksheet."
-						onAction="StyleDotPlot_onAction"/>
+						supertip="Style a chart following the COMPANY standards"
+						onAction="Donut_onAction"/>
 				</group >
 				<group
 					id="FillColors"
@@ -204,7 +143,7 @@
 						onAction="Format_onAction" 
 						tag="Fill:white"/>
 				</group >
-			<group
+                <group
 					id="ColorRamps"
 					label="Colour Ramps">
 					<button
@@ -256,23 +195,33 @@
 						supertip="Apply Lavender colour ramp to chart series."
 						onAction="ApplyRamp_onAction"
 						tag="LAVENDER"/>
-					<button
-						id="InvertRamp"
-						image="i_menu_invert"
-						size="normal"
-						supertip="Invert ramp colour order"
-						onAction="InvertRamp_onAction"
 				</group >
-			<group  id="StartwithGray" >
-					<button 
+                <group 
+                    id="FillActions"
+                    label="Fill Actions">
+					<button
+						id="TogglePaletteOrder"
+						image="i_menu_none"
+						size="large"
+						label="Toggle Palette Order"
+						supertip="Switch the series colour order between Contrasting and Complementary."
+						onAction="TogglePaletteOrder_onAction"/>
+					<button
+						id="InvertRampButton"
+						image="i_menu_invert"
+						label="Invert Ramp"
+						size="large"
+						supertip="Reverse the fill colour order across all chart series."
+						onAction="InvertRamp_onAction"/>
+					<button
 						id="StartWithGrayButton"
 						image="i_menu_grey"
 						label="Reset to Grey"
 						size="large"
 						supertip="Reset all chartobjects to grey."
 						onAction="StartWithGrayButton_onAction"/>
-				</group >
-				<group  id="LabelLastPoint" >
+				</group>
+				<group id="Customisation">
 					<button
 						id="LabelLastPointButton"
 						image="i_menu_labels"
@@ -282,45 +231,29 @@
 						onAction="LabelLastPointButton_onAction"/>
 					<button
 						id="ToggleGridlinesButton"
-						imageMso="GridlinesShowHide"
+						image="i_menu_none"
 						label="Toggle Gridlines"
 						size="large"
 						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."
 						onAction="ToggleGridlinesButton_onAction"/>
 					<button
-						id="InvertRampButton"
-						imageMso="SortDescendingExcel"
-						label="Invert Ramp"
-						size="large"
-						supertip="Reverse the fill colour order across all chart series."
-						onAction="InvertRamp_onAction"/>
-					<button
 						id="RemoveLegendResizeButton"
-						imageMso="LegendNone"
+						image="i_menu_none"
 						label="Remove Legend"
 						size="large"
 						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
 						onAction="RemoveLegendResizeButton_onAction"/>
-				</group >
-				<group  id="ChartExportButton" >
-					<button 
+				</group>
+				<group id="ChartExportButton">
+					<button
 						id="ChartExport"
 						image="i_menu_export"
 						label="Chart Export"
 						size="large"
 						supertip="Export chart as PNG, GIF, JPG, BMP, SVG, or PDF. Note that this will *not* warn you to overwrite an existing file."
 						onAction="ChartExport_onAction"/>
-				</group >
-				<group  id="Notes" >
-					<button 
-						id="NotesButton"
-						imageMso="ReviewEditComment"
-						label="Notes"
-						size="large"
-						supertip="Various notes and explanations about this Excel add-in."
-						onAction="NotesButton_onAction"/>
-				</group >
-			</tab >
+				</group>
+			</tab>
 		</tabs >
 	</ribbon >
 </customUI >

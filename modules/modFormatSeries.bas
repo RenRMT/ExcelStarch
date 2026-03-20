@@ -1,7 +1,21 @@
 Attribute VB_Name = "modFormatSeries"
 Option Explicit
 
-' mode: "FILL", "LINE", or "BLUERAMP"
+' Palette order toggle. False = default, True = alternative.
+' Default:     Ocean, Coral,    Sky, Pine, Gold, Rust,  Lavender
+' Alternative: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust
+Private m_useAltOrder As Boolean
+
+Public Sub TogglePaletteOrder()
+    m_useAltOrder = Not m_useAltOrder
+    If m_useAltOrder Then
+        MsgBox "Palette order: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust", vbInformation, "Palette Order"
+    Else
+        MsgBox "Palette order: Ocean, Coral, Sky, Pine, Gold, Rust, Lavender (default)", vbInformation, "Palette Order"
+    End If
+End Sub
+
+' mode: "FILL" or "LINE"
 ' fillTransparency: 0..1 (only used when mode="FILL")
 ' lineWeight: points (only used when mode="LINE")
 Public Function FormatSeriesColors(cht As Chart, _
@@ -18,26 +32,29 @@ Public Function FormatSeriesColors(cht As Chart, _
 
     ' --- Normalize mode
     mode = UCase$(Trim$(mode))
-    If mode <> "FILL" And mode <> "LINE" And mode <> "BLUERAMP" Then
-        MsgBox "Invalid mode. Use ""FILL"", ""LINE"", or ""BLUERAMP"".", vbExclamation, "FormatSeriesColors"
-        Exit Function
-    End If
-
-    ' --- Blue ramp delegates to its own helper
-    If mode = "BLUERAMP" Then
-        ApplyBlueRampColors cht
-        FormatSeriesColors = True
+    If mode <> "FILL" And mode <> "LINE" Then
+        MsgBox "Invalid mode. Use ""FILL"" or ""LINE"".", vbExclamation, "FormatSeriesColors"
         Exit Function
     End If
 
     ' --- Build brand palette
-    palette(1) = colorOcean
-    palette(2) = colorCoral
-    palette(3) = colorSky
-    palette(4) = colorPine
-    palette(5) = colorGold
-    palette(6) = colorRust
-    palette(7) = colorLavender
+    If m_useAltOrder Then
+        palette(1) = colorOcean
+        palette(2) = colorLavender
+        palette(3) = colorSky
+        palette(4) = colorPine
+        palette(5) = colorGold
+        palette(6) = colorCoral
+        palette(7) = colorRust
+    Else
+        palette(1) = colorOcean
+        palette(2) = colorCoral
+        palette(3) = colorSky
+        palette(4) = colorPine
+        palette(5) = colorGold
+        palette(6) = colorRust
+        palette(7) = colorLavender
+    End If
 
     n = cht.SeriesCollection.Count
     If n = 0 Then
@@ -73,44 +90,3 @@ Public Function FormatSeriesColors(cht As Chart, _
 CleanFail:
     MsgError "FormatSeriesColors"
 End Function
-
-
-' Applies the ocean ramp palette with count-dependent color selection (1-6 series).
-' Rather than always using ramp steps 1-N, the selection is spread across the full ramp
-' to maximise contrast for small series counts. For example, with 2 series the darkest
-' (rampOcean5) and lightest (rampOcean2) steps are used rather than adjacent shades.
-Private Sub ApplyBlueRampColors(cht As Chart)
-    Dim n As Long, i As Long
-    Dim ramp(1 To 6) As Long
-
-    n = cht.SeriesCollection.Count
-    If n = 0 Then Exit Sub
-
-    If n > 6 Then
-        MsgTooManySeries cht
-        Exit Sub
-    End If
-
-    Select Case n
-        Case 1
-            ramp(1) = rampOcean5
-        Case 2
-            ramp(1) = rampOcean5: ramp(2) = rampOcean2
-        Case 3
-            ramp(1) = rampOcean7: ramp(2) = rampOcean5: ramp(3) = rampOcean2
-        Case 4
-            ramp(1) = rampOcean7: ramp(2) = rampOcean5: ramp(3) = rampOcean3: ramp(4) = rampOcean1
-        Case 5
-            ramp(1) = colorBlack: ramp(2) = rampOcean7: ramp(3) = rampOcean5: ramp(4) = rampOcean3: ramp(5) = rampOcean1
-        Case 6
-            ramp(1) = rampOcean6: ramp(2) = rampOcean5: ramp(3) = rampOcean4: ramp(4) = rampOcean3: ramp(5) = rampOcean2: ramp(6) = rampOcean1
-    End Select
-
-    For i = 1 To n
-        With cht.SeriesCollection(i).Format.Fill
-            .Visible = msoTrue
-            .Solid
-            .ForeColor.rgb = ramp(i)
-        End With
-    Next i
-End Sub

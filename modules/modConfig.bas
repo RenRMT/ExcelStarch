@@ -106,32 +106,14 @@ Public Const removeLegend_webTop As Long = 65
 Public Const removeLegend_webWidth As Long = 300
 Public Const removeLegend_webLeft As Long = 1
 
-'=== modChartSlope: SlopeChartStyles ===
-Public Const slopePlotWidth_web As Long = 700
-Public Const slopePlotLeft As Long = 40
-Public Const slopePlotTop As Long = 80
-
-'=== modChartDotPlot / modChartSlope: shared label sizes ===
-Public Const dataLabelFontSize_secondary As Double = 11  ' secondary/normal label text
-
 '=== modLabelLastPoint: BuildLabelLastPoint ===
 Public Const labelLastPointPlotWidthInset As Long = 50    ' narrowed for end labels on line charts
 Public Const labelLastPointPlotTop As Long = 80
 Public Const labelLastPointPlotWidthRatio_web As Double = 0.98
 Public Const labelLastPointTitleNudge As Long = -10
 
-'=== modChartDotPlot: BuildDotPlot ===
-Public Const dotPlotLabelFontSize As Double = 8
-Public Const dotPlotMarkerSize As Long = 6
-Public Const dotPlotChartTop As Long = 10
-Public Const dotPlotChartLeft As Long = 350
-
-'=== modChartScatter: BuildScatterChart ===
-Public Const scatterMarkerSize As Long = 7
-
-'=== modExport / modInstructions ===
+'=== modExport ===
 Public Const exportAppName As String = orgName & " Chart Styles"
-Public Const exportAddInVersion As String = "v0.9"
 Public Const exportSection As String = "Chart Export"
 Public Const exportSettingKey As String = "File Filter"
 Public Const exportDefaultExt As String = "png"

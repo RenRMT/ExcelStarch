@@ -19,13 +19,12 @@ Option Explicit
 ' ============================================================
 
 Public Sub InvertColorRamp()
-    If ActiveChart Is Nothing Then
+    Dim cht As Chart
+    Set cht = ResolveActiveChart()
+    If cht Is Nothing Then
         MsgNoActiveChart
         Exit Sub
     End If
-
-    Dim cht As Chart
-    Set cht = ActiveChart
 
     Dim n As Long
     n = cht.SeriesCollection.Count
@@ -51,19 +50,23 @@ Public Sub InvertColorRamp()
 End Sub
 
 Public Sub ApplyColorRamp(ByVal rampName As String)
-    If ActiveChart Is Nothing Then
+    Dim cht As Chart
+    Set cht = ResolveActiveChart()
+    If cht Is Nothing Then
         MsgNoActiveChart
         Exit Sub
     End If
-    BuildColorRamp ActiveChart, UCase$(Trim$(rampName))
+    BuildColorRamp cht, UCase$(Trim$(rampName))
 End Sub
 
 Public Sub ApplyDivergingRamp(ByVal leftRamp As String, ByVal rightRamp As String)
-    If ActiveChart Is Nothing Then
+    Dim cht As Chart
+    Set cht = ResolveActiveChart()
+    If cht Is Nothing Then
         MsgNoActiveChart
         Exit Sub
     End If
-    BuildDivergingRamp ActiveChart, UCase$(Trim$(leftRamp)), UCase$(Trim$(rightRamp))
+    BuildDivergingRamp cht, UCase$(Trim$(leftRamp)), UCase$(Trim$(rightRamp))
 End Sub
 
 
@@ -178,6 +181,17 @@ End Sub
 ' ============================================================
 '   SHARED HELPERS
 ' ============================================================
+
+' Returns ActiveChart if a chart is in edit mode, or the chart from a selected
+' ChartObject (single-click). Handles ribbon buttons deactivating the chart before
+' the onAction callback fires.
+Private Function ResolveActiveChart() As Chart
+    If Not ActiveChart Is Nothing Then
+        Set ResolveActiveChart = ActiveChart
+    ElseIf TypeName(Selection) = "ChartObject" Then
+        Set ResolveActiveChart = Selection.Chart
+    End If
+End Function
 
 ' Fills a 1-to-7 Long array with the ramp constants for rampName.
 ' Returns False and shows an error if the name is unrecognised.

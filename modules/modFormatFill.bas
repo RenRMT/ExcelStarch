@@ -52,14 +52,24 @@ End Sub
 
 '   TARGET DETECTION HELPERS
 Private Function GetFillTarget() As Object
+    ' Resolve a chart even when a ribbon button click deactivated it before
+    ' onAction fired — in that case ActiveChart is Nothing but the ChartObject
+    ' remains selected at the worksheet level.
+    Dim cht As Chart
     If Not ActiveChart Is Nothing Then
+        Set cht = ActiveChart
+    ElseIf TypeName(Selection) = "ChartObject" Then
+        Set cht = Selection.Chart
+    End If
+
+    If Not cht Is Nothing Then
         If Not Selection Is Nothing Then
-            If HasFillFormat(Selection) Then
+            If HasFillFormat(Selection) And TypeName(Selection) <> "ChartObject" Then
                 Set GetFillTarget = Selection
                 Exit Function
             End If
         End If
-        Set GetFillTarget = ActiveChart.ChartArea
+        Set GetFillTarget = cht.ChartArea
         Exit Function
     End If
 
