@@ -1,46 +1,17 @@
 Attribute VB_Name = "modConfig"
 '==== Module: modConfig ====
 '=== Chart size constants ===
-Public Const gdChartWidth_web As Double = 456.48 '6.34" (456.58px) for web
-Public Const gdChartHeight_web As Double = 456.48 '6.34" (456.58px) for web
+Public Const chartWidth As Double = 456.48 '6.34" (456.58px) for web
+Public Const chartHeight As Double = 456.48 '6.34" (456.58px) for web
 
 '=== Font constants ===
-Public Const gsPRIMARY_FONT As String = "Calibri"
-Public Const gsPRIMARY_ITALICS_FONT As String = "Calibri Italic"
+Public Const fontPrimary As String = "Calibri"
+Public Const fontPrimaryItalic As String = "Calibri Italic"
 
-' brand colors
-' Note: colorPrimaryBlue, colorDarkBlue, colorLightGrey are defined for completeness
-' but are not currently referenced in code. Reserved for future ribbon buttons.
-Public Const colorPrimaryBlue As Long = 10963739    'RGB(27, 75, 167)
-Public Const colorDarkBlue As Long = 2888711        'RGB(7, 20, 44)
-Public Const colorBlack As Long = 655874            'RGB(2, 2, 10)
-Public Const colorLightGrey As Long = 16382457      'RGB(249, 249, 249)
 
-' neutral colors
-' Note: colorSteel and colorAsh are defined for completeness but not currently referenced in code.
-Public Const colorSilver As Long = 13421772     'RGB(204, 204, 204)
-Public Const colorSteel As Long = 12303291      'RGB(187, 187, 187)
-Public Const colorAsh As Long = 10263708        'RGB(156, 156, 156)
-Public Const colorWhite As Long = 16777215      'RGB(255, 255, 255)
-
-' data colors
-Public Const colorOcean As Long = 12285696      '?RGB(0, 119, 187)
-Public Const colorCoral As Long = 6719743       'RGB(255, 136, 102)
-Public Const colorSky As Long = 16764023        'RGB(119, 204, 255)
-Public Const colorPine As Long = 8952064        'RGB(0, 153, 136)
-Public Const colorGold As Long = 3399167        'RGB(255, 221, 51)
-Public Const colorRust As Long = 17578          'RGB(170, 68, 0)
-Public Const colorLavender As Long = 15636906   'RGB(170, 153, 238)
-
-Public Const rampOcean1 As Long = 15984847 'RGB(207, 232, 243)
-Public Const rampOcean2 As Long = 15520930 'RGB(162, 212, 236)
-Public Const rampOcean3 As Long = 14860147 'RGB(115, 191, 226)
-Public Const rampOcean4 As Long = 14396230 'RGB(70, 171, 219)
-Public Const rampOcean5 As Long = 13800982 '?RGB(22, 150, 210) in Immediate window
-Public Const rampOcean6 As Long = 10383634 'RGB(18, 113, 158)
-Public Const rampOcean7 As Long = 6966282  'RGB(10, 76, 106)
-
-Public Const giRGBgridlinesweb As Long = 14540253   'RGB(221, 221, 221)
+'== Organisation identity == 
+Public Const orgName As String = "COMPANY"
+Public Const orgSupportContact As String = "COMPANY IT"
 
 'data series constants
 Public Const seriesGapWidth As Double = 33
@@ -159,7 +130,7 @@ Public Const dotPlotChartLeft As Long = 350
 Public Const scatterMarkerSize As Long = 7
 
 '=== modExport / modInstructions ===
-Public Const exportAppName As String = "INSO Chart Styles"
+Public Const exportAppName As String = orgName & " Chart Styles"
 Public Const exportAddInVersion As String = "v0.9"
 Public Const exportSection As String = "Chart Export"
 Public Const exportSettingKey As String = "File Filter"

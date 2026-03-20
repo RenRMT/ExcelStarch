@@ -24,7 +24,7 @@ Private Sub BuildLabelLastPoint()
 
     ' Narrow plot area only on line charts to make room for end labels
     If ActiveChart.ChartType = xlLine Then
-        Selection.Width = gdChartWidth_web - labelLastPointPlotWidthInset
+        Selection.Width = chartWidth - labelLastPointPlotWidthInset
     End If
     Selection.Left = 0
 

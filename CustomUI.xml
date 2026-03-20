@@ -4,7 +4,7 @@
 		<tabs >
 			<tab 
 				id="Tab1"
-				label="INSO Chart Styles">
+				label="COMPANY Chart Styles">
 				<group 
 					id="ColumnGroup"
 					label="Column">
@@ -13,28 +13,28 @@
 						image="i_chart_vbar"
 						label="Column Chart"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="Column_onAction"/>
 					<button 
 						id="ColumnwithBlueRamp"
 						image="i_chart_vbar_blue"
 						label="Column with Blue Ramp"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="ColumnwithBlueRamp_onAction"/>
 					<button 
 						id="StackedColumn"
 						image="i_chart_stacked_bar"
 						label="Stacked Column"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedColumn_onAction"/>
 					<button 
 						id="StackedColumnwithBlueRamp"
 						image="i_chart_stacked_bar_blue"
 						label="Stacked Column with Blue Ramp"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedColumnwithBlueRamp_onAction"/>
 				</group >
 				<group 
@@ -45,14 +45,14 @@
 						image="i_chart_line"
 						label="Line Chart"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="LineChart_onAction"/>
 					<button 
 						id="LinewithMarkers"
-						image="ExcelMenuGraphs_LineChartwithMarkers_png"
+						image="i_menu_none"
 						label="Line with Markers"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="LinewithMarkers_onAction"/>
 				</group >
 				<group 
@@ -63,28 +63,28 @@
 						image="i_chart_hbar"
 						label="Bar Chart"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="Bar_onAction"/>
 					<button 
 						id="BarwithBlueRamp"
 						image="i_chart_hbar_blue"
 						label="Bar with Blue Ramp"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="BarwithBlueRamp_onAction"/>
 					<button 
 						id="StackedBar"
 						image="i_chart_stacked_bar"
 						label="Stacked Bar"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedBar_onAction"/>
 					<button 
 						id="StackedBarwithBlueRamp"
 						image="i_chart_stacked_bar_blue"
 						label="Stacked Bar with Blue Ramp"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedBarwithBlueRamp_onAction"/>
 				</group >
 				<group 
@@ -92,17 +92,17 @@
 					label="Area">
 					<button 
 						id="Area"
-						image="ExcelMenuGraphs_AreaChart_png"
+						image="i_menu_none"
 						label="Area Chart"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="Area_onAction"/>
 					<button 
 						id="AreawithBlueRamp"
-						image="ExcelMenuGraphs_AreaChartBlueRamp_png"
+						image="i_menu_none"
 						label="Area with Blue Ramp"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="AreawithBlueRamp_onAction"/>
 				</group >
 				<group 
@@ -110,34 +110,34 @@
 					label="Other Graphs">
 					<button 
 						id="Scatter"
-						image="ExcelMenuGraphs_Scatterplot_png"
+						image="i_menu_none"
 						label="Scatterplot"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="Scatter_onAction"/>
 					<button 
 						id="Pie"
 						image="i_chart_pie"
 						label="Pie Chart"
 						size="large"
-						supertip="Style a chart following the INSO standards"
+						supertip="Style a chart following the COMPANY standards"
 						onAction="Pie_onAction"/>
 					<button 
 						id="StyleSlopeChart"
-						image="ExcelMenuGraphs_SlopeChart_png"
+						image="i_menu_none"
 						label="Slope Chart"
 						size="large"
-						supertip="Use this button to create a Slope Chart in INSO style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Slope Chart. You can then insert your own data into the worksheet."
+						supertip="Use this button to create a Slope Chart in COMPANY style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Slope Chart. You can then insert your own data into the worksheet."
 						onAction="StyleSlopeChart_onAction"/>
 					<button 
 						id="StyleDotPlot"
-						image="ExcelMenuGraphs_DotPlot_png"
+						image="i_menu_none"
 						label="Dot Plot"
 						size="large"
-						supertip="Use this button to create a Dot Plot in INSO style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Dot Plot. You can then insert your own data into the worksheet."
+						supertip="Use this button to create a Dot Plot in COMPANY style. This option will prompt you for a number of data series you wish to plot and then generate a new worksheet with placeholder data for the Dot Plot. You can then insert your own data into the worksheet."
 						onAction="StyleDotPlot_onAction"/>
 				</group >
-				<group 
+				<group
 					id="FillColors"
 					label="Fill Colors">
 					<button 
@@ -204,74 +204,66 @@
 						onAction="Format_onAction" 
 						tag="Fill:white"/>
 				</group >
-				<group 
-					id="OutlineColors"
-					label="Outline Colors">
-					<button 
-						id="OceanOutline"
-						image="i_outline_ocean"
+			<group
+					id="ColorRamps"
+					label="Colour Ramps">
+					<button
+						id="OceanRamp"
+						image="i_ramp_ocean"
 						size="normal"
-						supertip="Ocean outline color"
-						onAction="Format_onAction" 
-						tag="Outline:ocean"/>
-					<button 
-						id="CoralOutline"
-						image="i_outline_coral"
+						supertip="Apply Ocean colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="OCEAN"/>
+					<button
+						id="CoralRamp"
+						image="i_ramp_coral"
 						size="normal"
-						supertip="Coral outline color"
-						onAction="Format_onAction"
-						tag="Outline:coral"/>
-					<button 
-						id="SkyOutline"
-						image="i_outline_sky"
+						supertip="Apply Coral colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="CORAL"/>
+					<button
+						id="SkyRamp"
+						image="i_ramp_sky"
 						size="normal"
-						supertip="Sky outline color"
-						onAction="Format_onAction" 
-						tag="Outline:sky"/>
-					<button 
-						id="PineOutline"
-						image="i_outline_pine"
+						supertip="Apply Sky colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="SKY"/>
+					<button
+						id="PineRamp"
+						image="i_ramp_pine"
 						size="normal"
-						supertip="Pine outline color"
-						onAction="Format_onAction" 
-						tag="Outline:pine"/>
-					<button 
-						id="GoldOutline"
-						image="i_outline_gold"
+						supertip="Apply Pine colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="PINE"/>
+					<button
+						id="GoldRamp"
+						image="i_ramp_gold"
 						size="normal"
-						supertip="Gold outline color"
-						onAction="Format_onAction" 
-						tag="Outline:gold"/>
-					<button 
-						id="RustOutline"
-						image="i_outline_rust"
+						supertip="Apply Gold colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="GOLD"/>
+					<button
+						id="RustRamp"
+						image="i_ramp_rust"
 						size="normal"
-						supertip="Rust outline color"
-						onAction="Format_onAction" 
-						tag="Outline:rust"/>
-					<button 
-						id="LavenderOutline"
-						image="i_outline_lavender"
+						supertip="Apply Rust colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="RUST"/>
+					<button
+						id="LavenderRamp"
+						image="i_ramp_lavender"
 						size="normal"
-						supertip="Lavender outline color"
-						onAction="Format_onAction" 
-						tag="Outline:lavender"/>
-					<button 
-						id="SilverOutline"
-						image="i_outline_silver"
+						supertip="Apply Lavender colour ramp to chart series."
+						onAction="ApplyRamp_onAction"
+						tag="LAVENDER"/>
+					<button
+						id="InvertRamp"
+						image="i_menu_invert"
 						size="normal"
-						supertip="Silver outline color"
-						onAction="Format_onAction" 
-						tag="Outline:silver"/>
-					<button 
-						id="NoOutline"
-						image="i_menu_none"
-						size="normal"
-						supertip="No outline color"
-						onAction="Format_onAction" 
-						tag="Outline:NONE"/>
+						supertip="Invert ramp colour order"
+						onAction="InvertRamp_onAction"
 				</group >
-				<group  id="StartwithGray" >
+			<group  id="StartwithGray" >
 					<button 
 						id="StartWithGrayButton"
 						image="i_menu_grey"
@@ -281,13 +273,27 @@
 						onAction="StartWithGrayButton_onAction"/>
 				</group >
 				<group  id="LabelLastPoint" >
-					<button 
+					<button
 						id="LabelLastPointButton"
 						image="i_menu_labels"
 						label="Label Last Point"
 						size="large"
 						supertip="Add series names to the last point on the graph."
 						onAction="LabelLastPointButton_onAction"/>
+					<button
+						id="ToggleGridlinesButton"
+						imageMso="GridlinesShowHide"
+						label="Toggle Gridlines"
+						size="large"
+						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."
+						onAction="ToggleGridlinesButton_onAction"/>
+					<button
+						id="InvertRampButton"
+						imageMso="SortDescendingExcel"
+						label="Invert Ramp"
+						size="large"
+						supertip="Reverse the fill colour order across all chart series."
+						onAction="InvertRamp_onAction"/>
 					<button
 						id="RemoveLegendResizeButton"
 						imageMso="LegendNone"

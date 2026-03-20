@@ -4,7 +4,7 @@ Option Explicit
 ' Core: make all series on the chart gray (line + fill).
 ' - If cht is Nothing, falls back to ActiveChart.
 ' - If duplicateChart := True, duplicates the chart first and then grays out the duplicate.
-' - grayColor defaults to colorSilver if omitted.
+' - grayColor defaults to colorSteel if omitted.
 Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
                         Optional ByVal duplicateChart As Boolean = True, _
                         Optional ByVal grayColor As Long = 0)
@@ -25,7 +25,7 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
     End If
 
     ' Default gray color
-    If grayColor = 0 Then grayColor = colorSilver  ' or giRGBgridlinesprint if you prefer
+    If grayColor = 0 Then grayColor = colorSteel
 
     ' Confirm once
     Dim answer As VbMsgBoxResult

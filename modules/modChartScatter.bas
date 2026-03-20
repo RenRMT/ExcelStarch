@@ -71,7 +71,7 @@ Private Sub ScatterplotStyles(cht As Chart)
         .Visible = msoTrue
         .Weight = gridlineWeight
         .DashStyle = msoLineSysDot
-        .ForeColor.rgb = giRGBgridlinesweb
+        .ForeColor.rgb = colorSteel
     End With
 
     ' Format horizontal gridlines
@@ -84,7 +84,7 @@ Private Sub ScatterplotStyles(cht As Chart)
         .Visible = msoTrue
         .Weight = gridlineWeight
         .DashStyle = msoLineSysDot
-        .ForeColor.rgb = giRGBgridlinesweb
+        .ForeColor.rgb = colorSteel
     End With
 End Sub
 

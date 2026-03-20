@@ -188,7 +188,7 @@ Private Sub BuildDotPlot()
 
     End If ' End adding data
 
-    ' --- Apply INSO formatting pipeline ---
+    ' --- Apply COMPANY formatting pipeline ---
     ActiveSheet.ChartObjects(1).Activate
     ActiveChart.Parent.Duplicate.Select
 

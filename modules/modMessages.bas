@@ -18,6 +18,16 @@ Public Sub MsgError(ByVal source As String)
     MsgBox source & ": " & Err.Number & " - " & Err.Description, vbExclamation
 End Sub
 
+' Guard: too many series for a colour ramp (max 7)
+Public Sub MsgRampTooManySeries()
+    MsgBox "Colour ramps support a maximum of 7 data series.", vbExclamation, "Too Many Series"
+End Sub
+
+' Guard: too many series for a diverging colour ramp (max 15: 7 + grey + 7)
+Public Sub MsgDivergingTooManySeries()
+    MsgBox "Diverging colour ramps support a maximum of 15 data series.", vbExclamation, "Too Many Series"
+End Sub
+
 ' Adds a styled error box to the chart when the series count exceeds the supported limit.
 ' Overlays a yellow/red warning directly on the chart area.
 Public Sub MsgTooManySeries(cht As Chart)
@@ -26,9 +36,9 @@ Public Sub MsgTooManySeries(cht As Chart)
     With txtB
         .Name = "ErrorBox"
         With .TextFrame2.TextRange
-            .Text = "You have too many data series for this chart type. Please contact the Communications Department for further guidance."
+            .Text = "You have too many data series for this chart type."
             .Font.Size = errorBoxFontSize
-            .Font.Name = gsPRIMARY_FONT
+            .Font.Name = fontPrimary
             .Font.Fill.ForeColor.rgb = vbRed
             .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
         End With

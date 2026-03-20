@@ -32,39 +32,37 @@ Public Sub StyleDotPlot_onAction(control As IRibbonControl): DotPlot: End Sub
 '=== Chart tools ===
 Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl): RemoveLegendResizeButton: End Sub
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub
+Public Sub ToggleGridlinesButton_onAction(control As IRibbonControl): ToggleGridlines: End Sub
 
-'=== Format (fill / outline) ===
+'=== Colour ramps ===
+Public Sub ApplyRamp_onAction(control As IRibbonControl): ApplyColorRamp control.Tag: End Sub
+Public Sub InvertRamp_onAction(control As IRibbonControl): InvertColorRamp: End Sub
+
+'=== Format (fill) ===
 ' Tag format (set in ribbon XML):
 '   "FILL:ColorName"          — solid fill, no transparency
 '   "FILL:ColorName|0.3"      — fill with 30% transparency
 '   "FILL:NONE"               — remove fill
-'   "OUTLINE:ColorName|2"     — outline with weight 2pt
-'   "OUTLINE:NONE"            — remove outline
 ' Valid color names: OCEAN, CORAL, SKY, PINE, GOLD, RUST, LAVENDER, SILVER, WHITE
 Public Sub Format_onAction(control As IRibbonControl)
     Dim tagValue As String
     tagValue = Trim$(control.Tag)
 
     If InStr(1, tagValue, ":", vbTextCompare) = 0 Then
-        MsgBox "Invalid Tag. Expected 'Fill:Color|t' or 'Outline:Color|w'.", vbExclamation
+        MsgBox "Invalid Tag. Expected 'Fill:Color|t'.", vbExclamation
         Exit Sub
     End If
 
     Dim parts() As String
     parts = Split(tagValue, ":")
 
-    Dim mode As String: mode = UCase$(parts(0))   ' "OUTLINE" or "FILL"
     Dim payload As String: payload = UCase$(parts(1))
 
     '--------------------------------------------
-    '   NO OUTLINE / NO FILL
+    '   NO FILL
     '--------------------------------------------
-    If payload = "NONE" Or payload = "NOFILL" Or payload = "NOOUTLINE" Or payload = "OFF" Then
-        If mode = "OUTLINE" Then
-            RemoveOutline
-        ElseIf mode = "FILL" Then
-            RemoveFill
-        End If
+    If payload = "NONE" Or payload = "NOFILL" Or payload = "OFF" Then
+        RemoveFill
         Exit Sub
     End If
 
@@ -75,10 +73,10 @@ Public Sub Format_onAction(control As IRibbonControl)
     subp = Split(payload, "|")
 
     Dim colorName As String: colorName = subp(0)
-    Dim arg As Double: arg = 0
+    Dim transparency As Double: transparency = 0
 
     If UBound(subp) >= 1 Then
-        If IsNumeric(subp(1)) Then arg = CDbl(subp(1))
+        If IsNumeric(subp(1)) Then transparency = CDbl(subp(1))
     End If
 
     Dim rgb As Long: rgb = ColorFromName(colorName)
@@ -87,17 +85,7 @@ Public Sub Format_onAction(control As IRibbonControl)
         Exit Sub
     End If
 
-    '--------------------------------------------
-    '   EXECUTE
-    '--------------------------------------------
-    If mode = "OUTLINE" Then
-        If arg = 0 Then arg = 2            ' default weight when tag omits |weight
-        ApplyOutline rgb, arg               ' arg = weight
-    ElseIf mode = "FILL" Then
-        ApplyFill rgb, arg                  ' arg = transparency 0-1
-    Else
-        MsgBox "Unknown mode '" & mode & "'", vbExclamation
-    End If
+    ApplyFill rgb, transparency
 End Sub
 
 Private Function ColorFromName(ByVal name As String) As Long

@@ -33,7 +33,7 @@ Function OuterFormat(cht As Chart) As Boolean
     Dim seriescount As Long
 
     'Font
-    cht.ChartArea.Font.name = gsPRIMARY_FONT
+    cht.ChartArea.Font.name = fontPrimary
 
     'Hide Y-axis line
     If cht.HasAxis(xlValue) Then
@@ -51,8 +51,8 @@ Function OuterFormat(cht As Chart) As Boolean
     'Chart size
     If TypeName(cht.Parent) = "ChartObject" Then
         With cht.Parent
-            .Width = gdChartWidth_web
-            .Height = gdChartHeight_web
+            .Width = chartWidth
+            .Height = chartHeight
         End With
     End If
 
@@ -136,7 +136,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     With tr.Font
         .Italic = msoTrue
         .Size = axisFontSize
-        .name = gsPRIMARY_FONT
+        .name = fontPrimary
     End With
 
     With shp.TextFrame2
@@ -254,7 +254,7 @@ Function InsertSource(cht As Chart) As Boolean
         .Text = "Source: Source text goes here." & vbNewLine & _
                 "Notes: Notes text goes here."
         .Font.Size = sourceTextFontSize
-        .Font.name = gsPRIMARY_FONT
+        .Font.name = fontPrimary
         .Font.Bold = msoTrue
     End With
 
@@ -308,7 +308,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Title in 20pt sentence case"
             With .Font
                 .Size = titleFontSize
-                .name = gsPRIMARY_FONT
+                .name = fontPrimary
                 .Bold = msoTrue
             End With
         End With
@@ -329,7 +329,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Subtitle in 16pt sentence case"
             With .Font
                 .Size = subTitleFontSize
-                .name = gsPRIMARY_FONT
+                .name = fontPrimary
                 .Bold = msoFalse
             End With
         End With
@@ -357,7 +357,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Y axis title (unit)"
             With .Font
                 .Size = axisFontSize
-                .name = gsPRIMARY_ITALICS_FONT
+                .name = fontPrimaryItalic
                 .Bold = msoFalse
                 .Italic = msoTrue
             End With
@@ -391,7 +391,7 @@ Function FormatGridlines(cht As Chart) As Boolean
         .Visible = msoTrue
         .weight = gridlineWeight
         .DashStyle = msoLineSolid
-        .ForeColor.rgb = giRGBgridlinesweb
+        .ForeColor.rgb = colorSteel
     End With
 
     FormatGridlines = True

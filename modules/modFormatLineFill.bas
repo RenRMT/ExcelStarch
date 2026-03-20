@@ -2,46 +2,6 @@ Attribute VB_Name = "modFormatLineFill"
 '==== Module: modFormatLineFill ====
 Option Explicit
 
-'   OUTLINE (LINE)
-Public Sub ApplyOutline(ByVal colorRGB As Long, Optional ByVal weightPts As Single = 2!)
-    On Error GoTo CleanFail
-
-    Dim tgt As Object
-    Set tgt = GetLineTarget()
-    If tgt Is Nothing Then
-        MsgSelectTarget
-        Exit Sub
-    End If
-
-    With tgt.Format.Line
-        .Visible = msoTrue
-        .ForeColor.rgb = colorRGB
-        .weight = weightPts
-    End With
-    Exit Sub
-
-CleanFail:
-    MsgError "ApplyOutline"
-End Sub
-
-
-Public Sub RemoveOutline()
-    On Error GoTo CleanFail
-
-    Dim tgt As Object
-    Set tgt = GetLineTarget()
-    If tgt Is Nothing Then
-        MsgSelectTarget
-        Exit Sub
-    End If
-
-    tgt.Format.Line.Visible = msoFalse
-    Exit Sub
-
-CleanFail:
-    MsgError "RemoveOutline"
-End Sub
-
 '   FILL
 Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Single = 0!)
     ' transparency: 0 = opaque, 1 = fully transparent (chart model)
@@ -91,26 +51,6 @@ CleanFail:
 End Sub
 
 '   TARGET DETECTION HELPERS
-Private Function GetLineTarget() As Object
-    If Not ActiveChart Is Nothing Then
-        If Not Selection Is Nothing Then
-            If HasLineFormat(Selection) Then
-                Set GetLineTarget = Selection
-                Exit Function
-            End If
-        End If
-        ' fallback
-        Set GetLineTarget = ActiveChart.ChartArea
-        Exit Function
-    End If
-
-    ' shapes or ranges
-    If Not Selection Is Nothing Then
-        If HasLineFormat(Selection) Then Set GetLineTarget = Selection
-    End If
-End Function
-
-
 Private Function GetFillTarget() As Object
     If Not ActiveChart Is Nothing Then
         If Not Selection Is Nothing Then
@@ -128,13 +68,6 @@ Private Function GetFillTarget() As Object
     End If
 End Function
 
-
-Private Function HasLineFormat(o As Object) As Boolean
-    On Error Resume Next
-    Dim x: Set x = o.Format.Line
-    HasLineFormat = (Err.Number = 0)
-    Err.Clear
-End Function
 
 Private Function HasFillFormat(o As Object) As Boolean
     On Error Resume Next

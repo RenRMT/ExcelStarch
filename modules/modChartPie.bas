@@ -65,11 +65,11 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
 
     ' Set chart dimensions
     With cht.Parent
-        .Width = gdChartWidth_web
-        .Height = gdChartHeight_web
+        .Width = chartWidth
+        .Height = chartHeight
     End With
 
-    cht.ChartArea.Font.Name = gsPRIMARY_FONT
+    cht.ChartArea.Font.Name = fontPrimary
 
     ' Remove built-in title; replace with text boxes
     If cht.HasTitle Then cht.ChartTitle.Delete
@@ -79,7 +79,7 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
         .Name = "TitleBox"
         .Text = "Title in 18pt Title Case"
         .Font.Size = pieTitleFontSize
-        .Font.Name = gsPRIMARY_FONT
+        .Font.Name = fontPrimary
         .Font.Bold = msoFalse
     End With
 
@@ -88,7 +88,7 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
         .Name = "SubTitleBox"
         .Text = "Subtitle in 14pt sentence case"
         .Font.Size = pieSubtitleFontSize
-        .Font.Name = gsPRIMARY_FONT
+        .Font.Name = fontPrimary
         .Font.Bold = msoFalse
     End With
 
@@ -97,7 +97,7 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
         .Name = "YAxisLabelBox"
         .Text = "Y axis title (unit)"
         .Font.Size = axisFontSize
-        .Font.Name = gsPRIMARY_ITALICS_FONT
+        .Font.Name = fontPrimaryItalic
         .Font.Bold = msoFalse
         .Font.Italic = msoTrue
     End With
