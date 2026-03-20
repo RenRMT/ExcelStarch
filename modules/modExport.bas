@@ -7,6 +7,8 @@ Public Sub RunChartExport()
     Exit Sub
 #End If
 
+    On Error GoTo CleanFail
+
     If ActiveChart Is Nothing Then
         MsgNoActiveChart
         Exit Sub
@@ -51,6 +53,8 @@ Public Sub RunChartExport()
 
     sFileName = vChartName
     sFileExt = Mid$(sFileName, InStrRev(sFileName, ".") + 1)
+    ' Normalise JPEG variants so the saved setting is always "jpg"
+    If LCase$(sFileExt) = "jpeg" Or LCase$(sFileExt) = "jpe" Then sFileExt = "jpg"
 
     Dim FileFilter As String, bPDF As Boolean
 
@@ -88,6 +92,10 @@ Public Sub RunChartExport()
     End If
 
     SaveSetting exportAppName, exportSection, exportSettingKey, sFileExt
+    Exit Sub
+
+CleanFail:
+    MsgError "RunChartExport"
 End Sub
 
 Sub ExportChart()

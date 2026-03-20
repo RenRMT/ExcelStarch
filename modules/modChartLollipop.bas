@@ -17,7 +17,6 @@ Private Sub BuildLollipopChart()
     Dim srs As Series
     Dim n As Long, i As Long
     Dim clr As Long
-    Dim palette(1 To 7) As Long
 
     ' Create and pipeline-format a bar chart, then convert to lollipop style
     BarChart
@@ -25,23 +24,14 @@ Private Sub BuildLollipopChart()
     Set cht = ActiveChart
     If cht Is Nothing Then Exit Sub
 
-    ' Brand palette — default order, matching FormatSeriesColors
-    palette(1) = colorOcean
-    palette(2) = colorCoral
-    palette(3) = colorSky
-    palette(4) = colorPine
-    palette(5) = colorGold
-    palette(6) = colorRust
-    palette(7) = colorLavender
-
     n = cht.SeriesCollection.Count
 
-    ' Wider gap gives cleaner spacing between lollipop stems
-    cht.ChartGroups(1).GapWidth = 150
+    cht.ChartGroups(1).GapWidth = lollipopGapWidth
 
     For i = 1 To n
         Set srs = cht.SeriesCollection(i)
-        clr = IIf(i <= 7, palette(i), colorSilver)
+        ' Delegate to modFormatSeries so palette toggle is respected
+        clr = GetPaletteColor(i)
 
         ' Hide the bar — fill and border both invisible
         With srs.Format.Fill
@@ -60,7 +50,7 @@ Private Sub BuildLollipopChart()
         With Selection.Format.Line
             .Visible = msoTrue
             .ForeColor.RGB = clr
-            .Weight = 1.5
+            .Weight = lollipopStickWeight
             .JoinType = msoLineRoundJoin
             .BeginArrowheadStyle = msoArrowheadOval
             .BeginArrowheadLength = msoArrowheadLengthMedium

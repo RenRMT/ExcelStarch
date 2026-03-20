@@ -240,6 +240,8 @@ End Function
 
 
 Function InsertSource(cht As Chart) As Boolean
+    On Error GoTo Fail
+
     Dim sourceB As TextBox
     Dim chHeight As Long
 
@@ -272,6 +274,11 @@ Function InsertSource(cht As Chart) As Boolean
     cht.Shapes.Range(Array("SourceBox")).Select
     Selection.ShapeRange.IncrementLeft -sourceBoxLeftNudge
 
+    InsertSource = True
+    Exit Function
+
+Fail:
+    MsgError "InsertSource"
 End Function
 
 

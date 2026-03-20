@@ -1,6 +1,63 @@
-Attribute VB_Name = "modFormatLineFill"
-'==== Module: modFormatLineFill ====
+Attribute VB_Name = "modFormatFill"
+'==== Module: modFormatFill ====
 Option Explicit
+
+'   TAG DISPATCHER
+' Called from modRibbonHandlers. Parses the ribbon button tag and calls ApplyFill or RemoveFill.
+' Tag format: "FILL:ColorName" | "FILL:ColorName|0.3" | "FILL:NONE"
+Public Sub ApplyFillFromTag(ByVal tagValue As String)
+    tagValue = Trim$(tagValue)
+
+    If InStr(1, tagValue, ":", vbTextCompare) = 0 Then
+        MsgBox "Invalid Tag. Expected 'Fill:Color|t'.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim parts() As String
+    parts = Split(tagValue, ":")
+
+    Dim payload As String: payload = UCase$(parts(1))
+
+    If payload = "NONE" Or payload = "NOFILL" Or payload = "OFF" Then
+        RemoveFill
+        Exit Sub
+    End If
+
+    Dim subp() As String
+    subp = Split(payload, "|")
+
+    Dim colorName As String: colorName = subp(0)
+    Dim transparency As Double: transparency = 0
+
+    If UBound(subp) >= 1 Then
+        If IsNumeric(subp(1)) Then transparency = CDbl(subp(1))
+    End If
+
+    Dim colorRGB As Long: colorRGB = ColorFromName(colorName)
+    If colorRGB = -1 Then
+        MsgBox "Unknown color '" & colorName & "'", vbExclamation
+        Exit Sub
+    End If
+
+    ApplyFill colorRGB, transparency
+End Sub
+
+
+Private Function ColorFromName(ByVal name As String) As Long
+    Select Case UCase$(name)
+        Case "OCEAN":    ColorFromName = colorOcean
+        Case "CORAL":    ColorFromName = colorCoral
+        Case "SKY":      ColorFromName = colorSky
+        Case "PINE":     ColorFromName = colorPine
+        Case "GOLD":     ColorFromName = colorGold
+        Case "RUST":     ColorFromName = colorRust
+        Case "LAVENDER": ColorFromName = colorLavender
+        Case "SILVER":   ColorFromName = colorSilver
+        Case "WHITE":    ColorFromName = colorWhite
+        Case Else:       ColorFromName = -1
+    End Select
+End Function
+
 
 '   FILL
 Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Single = 0!)

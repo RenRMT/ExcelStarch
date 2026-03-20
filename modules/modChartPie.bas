@@ -1,5 +1,30 @@
 Attribute VB_Name = "modChartPie"
+'==== Module: modChartPie ====
+' Pie and donut chart variants.
+'
+' Variants
+' --------
+'   PieChart   — xlPie:      solid filled circle divided into slices
+'   DonutChart — xlDoughnut: same as pie with a hollow centre
+'
+' Differences
+' -----------
+'   Chart type only: xlPie vs xlDoughnut.
+'   All sizing, layout, title boxes, legend handling, slice colouring, and
+'   border removal are identical and share the private helpers below.
+'
+' Both variants use a custom pipeline (no ApplyChartPipeline) because pie/donut
+' charts have no axes or gridlines. Steps applied: InsertLogo, InsertSource,
+' SetRoundChartSizeAndTitle, border removal, slice colouring.
+'
+' Palette: first 5 brand colours (Ocean, Coral, Sky, Pine, Gold).
+' Maximum 5 slices; charts with more will show a warning and receive no colouring.
 Option Explicit
+
+
+' ============================================================
+'   BUILDERS
+' ============================================================
 
 Private Sub BuildPieChart()
     Dim cht As Chart
@@ -11,48 +36,74 @@ Private Sub BuildPieChart()
     Set cht = ActiveChart
     If cht Is Nothing Then Exit Sub
 
-    ' Pie-specific pipeline (no generic ApplyChartPipeline — pie has no axes/gridlines)
     InsertLogo cht
     InsertSource cht
-    SetPieChartSizeandTitle cht
+    SetRoundChartSizeAndTitle cht
 
-    ' Remove chart border
     cht.ChartArea.Border.LineStyle = xlNone
 
-    ' Color pie slices
     pointscount = cht.SeriesCollection(1).Points.Count
+    ApplySliceColors cht, pointscount
+End Sub
 
+
+Private Sub BuildDonutChart()
+    Dim cht As Chart
+    Dim pointscount As Long
+
+    ' xlDoughnut — identical to pie in all respects except the hollow centre.
+    ' Hole size is controlled by Excel's default (75%); no VBA override applied.
+    ActiveSheet.Shapes.AddChart2(-1, xlDoughnut).Select
+    ActiveChart.Parent.Duplicate.Select
+
+    Set cht = ActiveChart
+    If cht Is Nothing Then Exit Sub
+
+    InsertLogo cht
+    InsertSource cht
+    SetRoundChartSizeAndTitle cht
+
+    cht.ChartArea.Border.LineStyle = xlNone
+
+    pointscount = cht.SeriesCollection(1).Points.Count
+    ApplySliceColors cht, pointscount
+End Sub
+
+
+' ============================================================
+'   SHARED PRIVATE HELPERS
+' ============================================================
+
+Private Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
     If pointscount > 5 Then
         MsgTooManySeries cht
-    Else
-        Dim palette(1 To 5) As Long
-        palette(1) = colorOcean
-        palette(2) = colorCoral
-        palette(3) = colorSky
-        palette(4) = colorPine
-        palette(5) = colorGold
-
-        Dim i As Long
-        For i = 1 To pointscount
-            ApplyPieSliceColor cht, i, palette(i)
-        Next i
+        Exit Sub
     End If
-End Sub
 
+    Dim palette(1 To 5) As Long
+    palette(1) = colorOcean
+    palette(2) = colorCoral
+    palette(3) = colorSky
+    palette(4) = colorPine
+    palette(5) = colorGold
 
-Private Sub ApplyPieSliceColor(cht As Chart, ByVal idx As Long, ByVal clr As Long)
-    With cht.SeriesCollection(1).Points(idx).Format
-        With .Fill
-            .Visible = msoTrue
-            .Solid
-            .ForeColor.rgb = clr
+    Dim i As Long
+    For i = 1 To pointscount
+        With cht.SeriesCollection(1).Points(i).Format
+            With .Fill
+                .Visible = msoTrue
+                .Solid
+                .ForeColor.rgb = palette(i)
+            End With
+            .Line.Visible = msoFalse
         End With
-        .Line.Visible = msoFalse
-    End With
+    Next i
 End Sub
 
 
-Private Sub SetPieChartSizeandTitle(cht As Chart)
+Private Sub SetRoundChartSizeAndTitle(cht As Chart)
+    ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
+    ' sizing, centering, and legend placement are identical for both variants.
     Dim titleB1 As TextBox
     Dim titleB2 As TextBox
     Dim titleB3 As TextBox
@@ -63,7 +114,6 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
     Dim pltHeight As Double
     Dim plotSize As Long
 
-    ' Set chart dimensions
     With cht.Parent
         .Width = chartWidth
         .Height = chartHeight
@@ -71,13 +121,12 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
 
     cht.ChartArea.Font.Name = fontPrimary
 
-    ' Remove built-in title; replace with text boxes
     If cht.HasTitle Then cht.ChartTitle.Delete
 
     Set titleB1 = cht.TextBoxes.Add(0, 0, titleBoxWidth, pieTitleBoxHeight)
     With titleB1
         .Name = "TitleBox"
-        .Text = "Title in 18pt Title Case"
+        .Text = "Title in 18pt sentence case"
         .Font.Size = pieTitleFontSize
         .Font.Name = fontPrimary
         .Font.Bold = msoFalse
@@ -102,7 +151,6 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
         .Font.Italic = msoTrue
     End With
 
-    ' Size the pie chart plot area
     plotSize = IIf(cht.HasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
     cht.PlotArea.Select
     Selection.Width = plotSize
@@ -110,7 +158,6 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
     Selection.Left = piePlotAreaLeft_web
     Selection.Top = piePlotAreaTop_web
 
-    ' Center pie chart horizontally
     Set chtObj = cht.Parent
     With chtObj
         chtHeight = .Chart.ChartArea.Height
@@ -121,7 +168,6 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
         .Chart.PlotArea.Left = (chtWidth - pltWidth) / 2
     End With
 
-    ' Position the legend
     If cht.HasLegend Then
         cht.Legend.Position = xlLegendPositionTop
         cht.Legend.Select
@@ -131,6 +177,14 @@ Private Sub SetPieChartSizeandTitle(cht As Chart)
 End Sub
 
 
+' ============================================================
+'   PUBLIC ENTRY POINTS
+' ============================================================
+
 Sub PieChart()
     BuildPieChart
+End Sub
+
+Sub DonutChart()
+    BuildDonutChart
 End Sub

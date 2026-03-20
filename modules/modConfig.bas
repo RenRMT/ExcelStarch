@@ -112,6 +112,10 @@ Public Const labelLastPointPlotTop As Long = 80
 Public Const labelLastPointPlotWidthRatio_web As Double = 0.98
 Public Const labelLastPointTitleNudge As Long = -10
 
+'=== modChartLollipop ===
+Public Const lollipopGapWidth As Long = 150     ' wider gap for cleaner stem spacing
+Public Const lollipopStickWeight As Single = 1.5 ' error bar line weight in points
+
 '=== modExport ===
 Public Const exportAppName As String = orgName & " Chart Styles"
 Public Const exportSection As String = "Chart Export"

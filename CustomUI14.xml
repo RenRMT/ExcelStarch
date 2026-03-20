@@ -221,7 +221,7 @@
 						supertip="Reset all chartobjects to grey."
 						onAction="StartWithGrayButton_onAction"/>
 				</group>
-				<group id="Customisation">
+				<group id="Customisation" label="Customisation">
 					<button
 						id="LabelLastPointButton"
 						image="i_menu_labels"
@@ -244,7 +244,7 @@
 						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
 						onAction="RemoveLegendResizeButton_onAction"/>
 				</group>
-				<group id="ChartExportButton">
+				<group id="ChartExportButton" label="Export">
 					<button
 						id="ChartExport"
 						image="i_menu_export"

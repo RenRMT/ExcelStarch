@@ -12,6 +12,7 @@ Private Sub BuildLineChart()
 
     ' Shared formatting pipeline
     ApplyChartPipeline cht, "LINE"
+    Call RemoveShadow(cht)
 
     ' Line-specific: axis starts on first data point (not between categories)
     cht.Axes(xlCategory).AxisBetweenCategories = False

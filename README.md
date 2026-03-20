@@ -16,7 +16,7 @@ The ribbon provides buttons for the chart types in active use. Clicking a button
 | <img src="icons/i_chart_stacked_col.png" height="28"> | Stacked Column | 100% or absolute stacked vertical bar |
 | <img src="icons/i_chart_hbar.png" height="28"> | Bar Chart | Clustered horizontal bar |
 | <img src="icons/i_chart_stacked_bar.png" height="28"> | Stacked Bar | 100% or absolute stacked horizontal bar |
-| | Lollipop Chart | Horizontal lollipop (bar chart with error-bar sticks and dot markers) |
+| <img src="icons/i_chart_lollipop.png" height="28"> | Lollipop Chart | Horizontal lollipop (bar chart with error-bar sticks and dot markers) |
 | <img src="icons/i_chart_line.png" height="28"> | Line Chart | Standard line chart |
 | <img src="icons/i_chart_pie.png" height="28"> | Pie Chart | Pie chart |
 | <img src="icons/i_chart_donut.png" height="28"> | Donut Chart | Donut chart |
@@ -94,13 +94,10 @@ The <img src="icons/i_menu_export.png" height="20"> *Chart Export* button export
 | `CustomUI14.xml` | Ribbon definition — tab layout, groups, buttons, image references, and `onAction` callback names |
 | `modRibbonHandlers.bas` | Single entry-point layer for all ribbon callbacks. Thin wrappers only — one line per button, calling into the relevant module |
 | `modChartBuilder.bas` | Shared formatting pipeline (`ApplyChartPipeline`) and all individual pipeline steps: `OuterFormat`, `FormatXAxisTitle`, `InsertLogo`, `InsertSource`, `FormatTitle`, `FormatGridlines`, `FormatXAxis` |
-| `modChartColumn.bas` | Column chart creation |
-| `modChartStackedColumn.bas` | Stacked column chart creation |
-| `modChartBar.bas` | Bar chart creation |
-| `modChartStackedBar.bas` | Stacked bar chart creation |
+| `modChartColumn.bas` | Column and stacked column chart creation (`ColumnChart`, `StackedColumnChart`) |
+| `modChartBar.bas` | Bar and stacked bar chart creation (`BarChart`, `StackedBarChart`) |
 | `modChartLine.bas` | Line chart creation |
-| `modChartPie.bas` | Pie chart creation |
-| `modChartDonut.bas` | Donut chart creation |
+| `modChartPie.bas` | Pie and donut chart creation (`PieChart`, `DonutChart`) — shared layout helpers, variants differ only in chart type |
 | `modChartLollipop.bas` | Lollipop chart creation — wraps the bar chart pipeline, then replaces bars with error-bar sticks and oval arrowhead dots |
 | `modFormatSeries.bas` | Brand palette application to chart series (fill and line modes); palette order toggle |
 | `modFormatFill.bas` | Solid fill application and removal for selected shapes |
@@ -108,10 +105,7 @@ The <img src="icons/i_menu_export.png" height="20"> *Chart Export* button export
 | `modConfigColors.bas` | Brand colour and ramp step constants |
 | `modConfig.bas` | Layout, font, sizing, and export constants |
 | `modEmbeddedImages.bas` | Organisation logo encoded as a Base64 string; decoded to a temp file at runtime for insertion into charts. Ribbon button icons are embedded separately into the `.xlam` via the Custom UI Editor |
-| `modLabelLastPoint.bas` | Label-last-point tool |
-| `modGridlines.bas` | Gridline toggle (none → horizontal → vertical → both) |
-| `modRemoveLegendResize.bas` | Remove legend and resize plot area |
-| `modResetColors.bas` | Reset all series fills to grey |
+| `modChartTools.bas` | Post-creation chart utilities: label last point, toggle gridlines, remove legend and resize, reset to grey |
 | `modExport.bas` | Chart export dialog and file-write logic |
 | `modMessages.bas` | Shared error and status message strings |
 

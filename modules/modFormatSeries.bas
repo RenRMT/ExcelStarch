@@ -6,6 +6,22 @@ Option Explicit
 ' Alternative: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust
 Private m_useAltOrder As Boolean
 
+Public Function GetPaletteColor(ByVal i As Long) As Long
+    ' Returns the brand colour for series index i, respecting the current palette order.
+    ' Falls back to colorSilver for i > 7.
+    Dim palette(1 To 7) As Long
+    If m_useAltOrder Then
+        palette(1) = colorOcean:    palette(2) = colorLavender: palette(3) = colorSky
+        palette(4) = colorPine:     palette(5) = colorGold:     palette(6) = colorCoral
+        palette(7) = colorRust
+    Else
+        palette(1) = colorOcean:    palette(2) = colorCoral:    palette(3) = colorSky
+        palette(4) = colorPine:     palette(5) = colorGold:     palette(6) = colorRust
+        palette(7) = colorLavender
+    End If
+    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorSilver)
+End Function
+
 Public Sub TogglePaletteOrder()
     m_useAltOrder = Not m_useAltOrder
     If m_useAltOrder Then

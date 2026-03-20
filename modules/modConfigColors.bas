@@ -16,7 +16,7 @@ Public Const colorAsh As Long = 10263708        'RGB(156, 156, 156)
 Public Const colorWhite As Long = 16777215      'RGB(255, 255, 255)
 
 '=== Data colors ===
-Public Const colorOcean As Long = 12285696      '?RGB(0, 119, 187)
+Public Const colorOcean As Long = 12285696      'RGB(0, 119, 187)
 Public Const colorCoral As Long = 6719743       'RGB(255, 136, 102)
 Public Const colorSky As Long = 16764023        'RGB(119, 204, 255)
 Public Const colorPine As Long = 8952064        'RGB(0, 153, 136)
@@ -30,7 +30,7 @@ Public Const rampOcean1 As Long = 15984847 'RGB(207, 232, 243)
 Public Const rampOcean2 As Long = 15520930 'RGB(162, 212, 236)
 Public Const rampOcean3 As Long = 14860147 'RGB(115, 191, 226)
 Public Const rampOcean4 As Long = 14396230 'RGB(70, 171, 219)
-Public Const rampOcean5 As Long = 13800982 '?RGB(22, 150, 210) in Immediate window
+Public Const rampOcean5 As Long = 13800982 'RGB(22, 150, 210)
 Public Const rampOcean6 As Long = 10383634 'RGB(18, 113, 158)
 Public Const rampOcean7 As Long = 6966282  'RGB(10, 76, 106)
 
