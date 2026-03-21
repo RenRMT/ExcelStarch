@@ -30,10 +30,7 @@ Private Sub BuildPieChart()
     Dim cht As Chart
     Dim pointscount As Long
 
-    ActiveSheet.Shapes.AddChart2(-1, xlPie).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlPie)
     If cht Is Nothing Then Exit Sub
 
     InsertLogo cht
@@ -53,10 +50,7 @@ Private Sub BuildDonutChart()
 
     ' xlDoughnut — identical to pie in all respects except the hollow centre.
     ' Hole size is controlled by Excel's default (75%); no VBA override applied.
-    ActiveSheet.Shapes.AddChart2(-1, xlDoughnut).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlDoughnut)
     If cht Is Nothing Then Exit Sub
 
     InsertLogo cht
@@ -81,11 +75,11 @@ Private Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
     End If
 
     Dim palette(1 To 5) As Long
-    palette(1) = colorOcean
-    palette(2) = colorCoral
-    palette(3) = colorSky
-    palette(4) = colorPine
-    palette(5) = colorGold
+    palette(1) = colorData1
+    palette(2) = colorData2
+    palette(3) = colorData3
+    palette(4) = colorData4
+    palette(5) = colorData5
 
     Dim i As Long
     For i = 1 To pointscount
@@ -122,6 +116,10 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
     cht.ChartArea.Font.Name = fontPrimary
 
     If cht.HasTitle Then cht.ChartTitle.Delete
+
+    SafeDeleteShape cht, "TitleBox"
+    SafeDeleteShape cht, "SubTitleBox"
+    SafeDeleteShape cht, "YAxisLabelBox"
 
     Set titleB1 = cht.TextBoxes.Add(0, 0, titleBoxWidth, pieTitleBoxHeight)
     With titleB1

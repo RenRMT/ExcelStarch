@@ -2,33 +2,29 @@ Attribute VB_Name = "modFormatSeries"
 Option Explicit
 
 ' Palette order toggle. False = default, True = alternative.
-' Default:     Ocean, Coral,    Sky, Pine, Gold, Rust,  Lavender
-' Alternative: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust
+' Default:     colorData1, colorData2, colorData3, colorData4, colorData5, colorData6, colorData7
+' Alternative: colorData1, colorData7, colorData3, colorData4, colorData5, colorData2, colorData6
 Private m_useAltOrder As Boolean
 
 Public Function GetPaletteColor(ByVal i As Long) As Long
     ' Returns the brand colour for series index i, respecting the current palette order.
-    ' Falls back to colorSilver for i > 7.
+    ' Falls back to colorNeutral1 for i > 7.
     Dim palette(1 To 7) As Long
     If m_useAltOrder Then
-        palette(1) = colorOcean:    palette(2) = colorLavender: palette(3) = colorSky
-        palette(4) = colorPine:     palette(5) = colorGold:     palette(6) = colorCoral
-        palette(7) = colorRust
+        palette(1) = colorData1:    palette(2) = colorData7:    palette(3) = colorData3
+        palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData2
+        palette(7) = colorData6
     Else
-        palette(1) = colorOcean:    palette(2) = colorCoral:    palette(3) = colorSky
-        palette(4) = colorPine:     palette(5) = colorGold:     palette(6) = colorRust
-        palette(7) = colorLavender
+        palette(1) = colorData1:    palette(2) = colorData2:    palette(3) = colorData3
+        palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData6
+        palette(7) = colorData7
     End If
-    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorSilver)
+    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorNeutral1)
 End Function
 
 Public Sub TogglePaletteOrder()
     m_useAltOrder = Not m_useAltOrder
-    If m_useAltOrder Then
-        MsgBox "Palette order: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust", vbInformation, "Palette Order"
-    Else
-        MsgBox "Palette order: Ocean, Coral, Sky, Pine, Gold, Rust, Lavender (default)", vbInformation, "Palette Order"
-    End If
+    MsgPaletteOrderToggled m_useAltOrder
 End Sub
 
 ' mode: "FILL" or "LINE"
@@ -41,7 +37,6 @@ Public Function FormatSeriesColors(cht As Chart, _
     On Error GoTo CleanFail
 
     Dim n As Long, i As Long
-    Dim palette(1 To 7) As Long
     Dim clr As Long
 
     If cht Is Nothing Then Exit Function
@@ -49,27 +44,8 @@ Public Function FormatSeriesColors(cht As Chart, _
     ' --- Normalize mode
     mode = UCase$(Trim$(mode))
     If mode <> "FILL" And mode <> "LINE" Then
-        MsgBox "Invalid mode. Use ""FILL"" or ""LINE"".", vbExclamation, "FormatSeriesColors"
+        MsgInvalidColorMode
         Exit Function
-    End If
-
-    ' --- Build brand palette
-    If m_useAltOrder Then
-        palette(1) = colorOcean
-        palette(2) = colorLavender
-        palette(3) = colorSky
-        palette(4) = colorPine
-        palette(5) = colorGold
-        palette(6) = colorCoral
-        palette(7) = colorRust
-    Else
-        palette(1) = colorOcean
-        palette(2) = colorCoral
-        palette(3) = colorSky
-        palette(4) = colorPine
-        palette(5) = colorGold
-        palette(6) = colorRust
-        palette(7) = colorLavender
     End If
 
     n = cht.SeriesCollection.Count
@@ -80,7 +56,7 @@ Public Function FormatSeriesColors(cht As Chart, _
 
     ' --- Apply colors
     For i = 1 To n
-        clr = IIf(i <= 7, palette(i), colorSilver)  ' fallback for 8+
+        clr = GetPaletteColor(i)
 
         With cht.SeriesCollection(i).Format
             If mode = "FILL" Then

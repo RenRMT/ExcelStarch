@@ -205,7 +205,7 @@ Private Sub ApplyAxisGridlines(ax As Axis)
         .Visible = msoTrue
         .weight = gridlineWeight
         .DashStyle = msoLineSolid
-        .ForeColor.rgb = colorSteel
+        .ForeColor.rgb = colorNeutral2
     End With
 End Sub
 
@@ -244,7 +244,7 @@ End Sub
 ' ============================================================
 ' Grays out all series on a chart (line + fill).
 ' StartWithGray is the ribbon entry point: duplicates the source chart, then
-' applies colorSilver. GrayOutChart is parameterised for potential pipeline use.
+' applies colorNeutral1. GrayOutChart is parameterised for potential pipeline use.
 
 Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
                         Optional ByVal duplicateChart As Boolean = True, _
@@ -264,20 +264,15 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
         Set targetChart = cht
     End If
 
-    If grayColor = 0 Then grayColor = colorSteel
+    If grayColor = 0 Then grayColor = colorNeutral2
 
-    Dim answer As VbMsgBoxResult
-    answer = MsgBox(IIf(duplicateChart, _
-                       "This will duplicate your chart and make the duplicate gray.", _
-                       "This will make your current chart gray."), _
-                       vbExclamation + vbOKCancel)
-    If answer <> vbOK Then Exit Sub
+    If MsgGrayOutConfirm(duplicateChart) <> vbOK Then Exit Sub
 
     If duplicateChart Then
         targetChart.Parent.Duplicate.Select
         Set targetChart = ActiveChart
         If targetChart Is Nothing Then
-            MsgBox "Could not resolve duplicated chart.", vbExclamation
+            MsgCouldNotResolveDuplicate
             Exit Sub
         End If
     End If
@@ -304,5 +299,5 @@ CleanFail:
 End Sub
 
 Public Sub StartWithGray()
-    GrayOutChart cht:=Nothing, duplicateChart:=True, grayColor:=colorSilver
+    GrayOutChart cht:=Nothing, duplicateChart:=True, grayColor:=colorNeutral1
 End Sub

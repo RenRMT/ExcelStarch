@@ -83,7 +83,7 @@ Function OuterFormat(cht As Chart) As Boolean
 
             cht.Legend.Position = xlLegendPositionTop
             cht.Legend.Left = legend_leftPad
-            cht.Legend.Font.color = colorBlack
+            cht.Legend.Font.color = colorBrand3
 
             pa.Height = plotAreaHeight
             pa.Top = plotAreaTop_default
@@ -148,7 +148,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     ' Position below plot area, centered.
     ' InsideTop/InsideHeight refer to the inner plot boundary (excluding axis tick labels),
     ' so this places the title just below where the data ends, not below the axis labels.
-    shp.Top = plt.InsideTop + plt.InsideHeight + xAxisTitle_legendGap
+    shp.Top = plt.InsideTop + plt.InsideHeight + xAxisTitle_plotGap
     shp.Left = plt.InsideLeft + (plt.InsideWidth - shp.Width) / 2
 
     ' Legend repositioning
@@ -187,7 +187,7 @@ Public Function InsertLogo(cht As Chart) As Boolean
     tmp = Environ$("TEMP") & "\logo_temp.svg"
 
     If Not Base64ToFile(LogoPNG_Base64, tmp) Then
-        MsgBox "Failed to decode logo image.", vbExclamation
+        MsgLogoDecodeFailed
         Exit Function
     End If
 
@@ -245,6 +245,8 @@ Function InsertSource(cht As Chart) As Boolean
     Dim sourceB As TextBox
     Dim chHeight As Long
 
+    SafeDeleteShape cht, "SourceBox"
+
     'Chart dimensions
     chHeight = cht.Parent.Height
 
@@ -257,17 +259,12 @@ Function InsertSource(cht As Chart) As Boolean
                 "Notes: Notes text goes here."
         .Font.Size = sourceTextFontSize
         .Font.name = fontPrimary
-        .Font.Bold = msoTrue
     End With
 
     'Bottom-align the text
     cht.Shapes.Range(Array("SourceBox")).Select
     With Selection
         .VerticalAlignment = xlBottom
-
-        'Un-bold the colon and body text, leaving "Source" and "Notes" labels bold
-        .ShapeRange(1).TextFrame2.TextRange.Characters(sourceBox_sourceUnboldStart, sourceBox_sourceUnboldLen).Font.Bold = msoFalse
-        .ShapeRange(1).TextFrame2.TextRange.Characters(sourceBox_notesUnboldStart, sourceBox_notesUnboldLen).Font.Bold = msoFalse
     End With
 
     ' padding
@@ -398,7 +395,7 @@ Function FormatGridlines(cht As Chart) As Boolean
         .Visible = msoTrue
         .weight = gridlineWeight
         .DashStyle = msoLineSolid
-        .ForeColor.rgb = colorSteel
+        .ForeColor.rgb = colorNeutral2
     End With
 
     FormatGridlines = True
@@ -410,13 +407,14 @@ End Function
 
 
 Function FormatXAxis(cht As Chart) As Boolean
+    On Error GoTo Fail
 
     'Format size of x-axis & y-axis tick mark labels
     If cht.HasAxis(xlCategory) = True Then
         cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = colorBlack
+        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = colorBrand3
 
         'Change x-axis line color
         ' Note: Excel does not expose Format.Line on an Axis object directly —
@@ -424,7 +422,7 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlCategory).Select
         With Selection.Format.Line
             .Visible = msoTrue
-            .ForeColor.rgb = colorBlack
+            .ForeColor.rgb = colorBrand3
             .ForeColor.TintAndShade = 0
             .ForeColor.Brightness = 0
             .weight = axisLineWeight
@@ -436,10 +434,15 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlValue).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = colorBlack
+        cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = colorBrand3
 
     End If
 
+    FormatXAxis = True
+    Exit Function
+
+Fail:
+    FormatXAxis = False
 End Function
 
 
@@ -471,8 +474,37 @@ Fail:
 End Function
 
 
-Private Sub SafeDeleteShape(cht As Chart, ByVal nm As String)
+Public Sub SafeDeleteShape(cht As Chart, ByVal nm As String)
     On Error Resume Next
     cht.Shapes(nm).Delete
     On Error GoTo 0
 End Sub
+
+
+' Returns a duplicate chart to style. Two entry paths:
+'   1. A chart is already active  → duplicate it; return the copy.
+'   2. A range is selected        → create a new chart of chartType, duplicate it, return the copy.
+' In both paths the original is left untouched. Returns Nothing on any other selection state.
+Public Function GetTargetChart(ByVal chartType As Long) As Chart
+    On Error GoTo Fail
+
+    If Not ActiveChart Is Nothing Then
+        ActiveChart.Parent.Duplicate.Select
+        If Not ActiveChart Is Nothing Then Set GetTargetChart = ActiveChart
+        Exit Function
+    End If
+
+    If TypeName(Selection) <> "Range" Then
+        MsgSelectRangeOrChart
+        Exit Function
+    End If
+
+    ActiveSheet.Shapes.AddChart2(-1, chartType).Select
+    ActiveChart.Parent.Duplicate.Select
+
+    If Not ActiveChart Is Nothing Then Set GetTargetChart = ActiveChart
+    Exit Function
+
+Fail:
+    Set GetTargetChart = Nothing
+End Function

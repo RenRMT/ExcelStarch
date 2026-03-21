@@ -15,7 +15,8 @@ Attribute VB_Name = "modChartBar"
 '                 shadow removal is not needed.
 '
 ' Everything else is identical: full FILL pipeline, no category-axis tick marks,
-' seriesOverlap and seriesGapWidth from modConfig.
+' seriesGapWidth from modConfig.
+' seriesOverlap: clustered uses modConfig value; stacked is always 100 (slices must be flush).
 '
 ' Note: modChartLollipop wraps BarChart() and post-processes the result into a
 ' lollipop style. Changes to BuildBarChart may affect lollipop output.
@@ -25,10 +26,7 @@ Option Explicit
 Private Sub BuildBarChart()
     Dim cht As Chart
 
-    ActiveSheet.Shapes.AddChart2(-1, xlBarClustered).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlBarClustered)
     If cht Is Nothing Then Exit Sub
 
     ApplyChartPipeline cht, "FILL"
@@ -45,10 +43,7 @@ End Sub
 Private Sub BuildStackedBarChart()
     Dim cht As Chart
 
-    ActiveSheet.Shapes.AddChart2(-1, xlBarStacked).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlBarStacked)
     If cht Is Nothing Then Exit Sub
 
     ApplyChartPipeline cht, "FILL"
@@ -57,7 +52,7 @@ Private Sub BuildStackedBarChart()
     cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
     cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
 
-    cht.ChartGroups(1).Overlap = seriesOverlap
+    cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
 End Sub
 

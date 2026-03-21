@@ -4,10 +4,7 @@ Option Explicit
 Private Sub BuildLineChart()
     Dim cht As Chart
 
-    ActiveSheet.Shapes.AddChart2(-1, xlLine).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlLine)
     If cht Is Nothing Then Exit Sub
 
     ' Shared formatting pipeline

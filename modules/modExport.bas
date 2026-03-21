@@ -3,7 +3,7 @@ Option Explicit
 
 Public Sub RunChartExport()
 #If Mac Then
-    MsgBox "Chart export is not supported on Mac.", vbExclamation
+    MsgExportMacUnsupported
     Exit Sub
 #End If
 

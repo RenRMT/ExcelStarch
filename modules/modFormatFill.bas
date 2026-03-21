@@ -9,7 +9,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     tagValue = Trim$(tagValue)
 
     If InStr(1, tagValue, ":", vbTextCompare) = 0 Then
-        MsgBox "Invalid Tag. Expected 'Fill:Color|t'.", vbExclamation
+        MsgInvalidFillTag
         Exit Sub
     End If
 
@@ -35,7 +35,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
 
     Dim colorRGB As Long: colorRGB = ColorFromName(colorName)
     If colorRGB = -1 Then
-        MsgBox "Unknown color '" & colorName & "'", vbExclamation
+        MsgUnknownColor colorName
         Exit Sub
     End If
 
@@ -45,15 +45,15 @@ End Sub
 
 Private Function ColorFromName(ByVal name As String) As Long
     Select Case UCase$(name)
-        Case "OCEAN":    ColorFromName = colorOcean
-        Case "CORAL":    ColorFromName = colorCoral
-        Case "SKY":      ColorFromName = colorSky
-        Case "PINE":     ColorFromName = colorPine
-        Case "GOLD":     ColorFromName = colorGold
-        Case "RUST":     ColorFromName = colorRust
-        Case "LAVENDER": ColorFromName = colorLavender
-        Case "SILVER":   ColorFromName = colorSilver
-        Case "WHITE":    ColorFromName = colorWhite
+        Case "DATA1":    ColorFromName = colorData1
+        Case "DATA2":    ColorFromName = colorData2
+        Case "DATA3":    ColorFromName = colorData3
+        Case "DATA4":    ColorFromName = colorData4
+        Case "DATA5":    ColorFromName = colorData5
+        Case "DATA6":    ColorFromName = colorData6
+        Case "DATA7":    ColorFromName = colorData7
+        Case "NEUTRAL1": ColorFromName = colorNeutral1
+        Case "NEUTRAL4": ColorFromName = colorNeutral4
         Case Else:       ColorFromName = -1
     End Select
 End Function

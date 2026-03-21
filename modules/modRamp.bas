@@ -59,6 +59,16 @@ Public Sub ApplyColorRamp(ByVal rampName As String)
     BuildColorRamp cht, UCase$(Trim$(rampName))
 End Sub
 
+Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
+    Dim parts() As String
+    parts = Split(UCase$(Trim$(tagValue)), "|")
+    If UBound(parts) < 1 Then
+        MsgInvalidDivergingTag
+        Exit Sub
+    End If
+    ApplyDivergingRamp parts(0), parts(1)
+End Sub
+
 Public Sub ApplyDivergingRamp(ByVal leftRamp As String, ByVal rightRamp As String)
     Dim cht As Chart
     Set cht = ResolveActiveChart()
@@ -161,7 +171,7 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = colorLightGrey
+            .ForeColor.rgb = colorBrand4
         End With
         seriesIdx = seriesIdx + 1
     End If
@@ -197,36 +207,36 @@ End Function
 ' Returns False and shows an error if the name is unrecognised.
 Private Function LoadPalette(ByVal rampName As String, palette() As Long) As Boolean
     Select Case rampName
-        Case "OCEAN"
-            palette(1) = rampOcean1: palette(2) = rampOcean2: palette(3) = rampOcean3
-            palette(4) = rampOcean4: palette(5) = rampOcean5: palette(6) = rampOcean6
-            palette(7) = rampOcean7
-        Case "CORAL"
-            palette(1) = rampCoral1: palette(2) = rampCoral2: palette(3) = rampCoral3
-            palette(4) = rampCoral4: palette(5) = rampCoral5: palette(6) = rampCoral6
-            palette(7) = rampCoral7
-        Case "SKY"
-            palette(1) = rampSky1: palette(2) = rampSky2: palette(3) = rampSky3
-            palette(4) = rampSky4: palette(5) = rampSky5: palette(6) = rampSky6
-            palette(7) = rampSky7
-        Case "PINE"
-            palette(1) = rampPine1: palette(2) = rampPine2: palette(3) = rampPine3
-            palette(4) = rampPine4: palette(5) = rampPine5: palette(6) = rampPine6
-            palette(7) = rampPine7
-        Case "GOLD"
-            palette(1) = rampGold1: palette(2) = rampGold2: palette(3) = rampGold3
-            palette(4) = rampGold4: palette(5) = rampGold5: palette(6) = rampGold6
-            palette(7) = rampGold7
-        Case "RUST"
-            palette(1) = rampRust1: palette(2) = rampRust2: palette(3) = rampRust3
-            palette(4) = rampRust4: palette(5) = rampRust5: palette(6) = rampRust6
-            palette(7) = rampRust7
-        Case "LAVENDER"
-            palette(1) = rampLavender1: palette(2) = rampLavender2: palette(3) = rampLavender3
-            palette(4) = rampLavender4: palette(5) = rampLavender5: palette(6) = rampLavender6
-            palette(7) = rampLavender7
+        Case "A"
+            palette(1) = rampA1: palette(2) = rampA2: palette(3) = rampA3
+            palette(4) = rampA4: palette(5) = rampA5: palette(6) = rampA6
+            palette(7) = rampA7
+        Case "B"
+            palette(1) = rampB1: palette(2) = rampB2: palette(3) = rampB3
+            palette(4) = rampB4: palette(5) = rampB5: palette(6) = rampB6
+            palette(7) = rampB7
+        Case "C"
+            palette(1) = rampC1: palette(2) = rampC2: palette(3) = rampC3
+            palette(4) = rampC4: palette(5) = rampC5: palette(6) = rampC6
+            palette(7) = rampC7
+        Case "D"
+            palette(1) = rampD1: palette(2) = rampD2: palette(3) = rampD3
+            palette(4) = rampD4: palette(5) = rampD5: palette(6) = rampD6
+            palette(7) = rampD7
+        Case "E"
+            palette(1) = rampE1: palette(2) = rampE2: palette(3) = rampE3
+            palette(4) = rampE4: palette(5) = rampE5: palette(6) = rampE6
+            palette(7) = rampE7
+        Case "F"
+            palette(1) = rampF1: palette(2) = rampF2: palette(3) = rampF3
+            palette(4) = rampF4: palette(5) = rampF5: palette(6) = rampF6
+            palette(7) = rampF7
+        Case "G"
+            palette(1) = rampG1: palette(2) = rampG2: palette(3) = rampG3
+            palette(4) = rampG4: palette(5) = rampG5: palette(6) = rampG6
+            palette(7) = rampG7
         Case Else
-            MsgBox "Unknown ramp '" & rampName & "'.", vbExclamation, "Apply Colour Ramp"
+            MsgUnknownRamp rampName
             LoadPalette = False
             Exit Function
     End Select

@@ -3,7 +3,7 @@ Attribute VB_Name = "modChartLollipop"
 ' Builds a lollipop chart by wrapping the bar chart pipeline and converting each
 ' series to a stick-and-dot via horizontal error bars.
 '
-' Technique (Schwabish / PolicyViz):
+' Technique: horizontal error bars styled as stems with an oval arrowhead ("candy") at the data-value end.
 '   1. Build a standard horizontal bar chart (full pipeline via BarChart)
 '   2. For each series, add a horizontal error bar: Minus direction, No Cap, 100%
 '      This extends a line from the data value back to zero.

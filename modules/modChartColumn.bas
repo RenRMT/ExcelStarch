@@ -15,17 +15,15 @@ Attribute VB_Name = "modChartColumn"
 '                 shadow removal is not needed.
 '
 ' Everything else is identical: full FILL pipeline, no category-axis tick marks,
-' seriesOverlap and seriesGapWidth from modConfig.
+' seriesGapWidth from modConfig.
+' seriesOverlap: clustered uses modConfig value; stacked is always 100 (slices must be flush).
 Option Explicit
 
 
 Private Sub BuildColumnChart()
     Dim cht As Chart
 
-    ActiveSheet.Shapes.AddChart2(-1, xlColumnClustered).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlColumnClustered)
     If cht Is Nothing Then Exit Sub
 
     ApplyChartPipeline cht, "FILL"
@@ -42,10 +40,7 @@ End Sub
 Private Sub BuildStackedColumnChart()
     Dim cht As Chart
 
-    ActiveSheet.Shapes.AddChart2(-1, xlColumnStacked).Select
-    ActiveChart.Parent.Duplicate.Select
-
-    Set cht = ActiveChart
+    Set cht = GetTargetChart(xlColumnStacked)
     If cht Is Nothing Then Exit Sub
 
     ApplyChartPipeline cht, "FILL"
@@ -54,7 +49,7 @@ Private Sub BuildStackedColumnChart()
     cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
     cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
 
-    cht.ChartGroups(1).Overlap = seriesOverlap
+    cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
 End Sub
 
