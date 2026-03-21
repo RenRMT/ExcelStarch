@@ -218,7 +218,130 @@ Rebuild the `.xlam`, apply any chart, and inspect the bottom-right corner. If th
 
 ---
 
-## Checklist for a complete white-label deployment
+## 8 — Full constant reference
+
+All values are in Excel points unless noted. These are the defaults at 600 × 600 pt canvas; scale proportionally when changing canvas size (see section 3).
+
+### Fonts
+
+| Constant | Description | Default |
+|---|---|---|
+| `fontPrimary` | All chart text | `"Calibri"` |
+| `fontPrimaryItalic` | Y-axis label, x-axis title | `"Calibri Italic"` |
+| `titleFontSize` | Chart title | `24` pt |
+| `subTitleFontSize` | Subtitle | `20` pt |
+| `axisFontSize` | Axis tick labels, legend | `16` pt |
+
+### Series (bar and column)
+
+| Constant | Description | Default |
+|---|---|---|
+| `seriesGapWidth` | Gap between bar/column groups | `33`% |
+| `seriesOverlap` | Overlap between bars within a group | `0`% |
+
+### Plot area
+
+| Constant | Description | Default |
+|---|---|---|
+| `plotAreaHeight` | Plot area height | `408` pt |
+| `plotAreaWidth` | Plot area width | `973` pt |
+| `plotAreaTop_default` | Top — single-series or multi-series with legend | `158` pt |
+| `plotAreaTop_noLegend` | Top — multi-series, no legend | `116` pt |
+| `plotAreaLeft` | Left offset | `3` pt |
+| `plotArea_noLegendSingleHeight` | Height — single series, no legend | `421` pt |
+| `plotArea_noLegendSingleTop` | Top — single series, no legend | `105` pt |
+| `plotArea_noLegendMultiHeight` | Height — multi-series, no legend | `460` pt |
+| `plotArea_noLegendMultiTop` | Top — multi-series, no legend | `79` pt |
+
+### Legend and x-axis title
+
+| Constant | Description | Default |
+|---|---|---|
+| `xAxisTitle_plotGap` | Gap between plot area base and x-axis title | `20` pt |
+| `legend_top` | Legend top offset | `92` pt |
+| `legend_leftPad` | Legend left offset | `7` pt |
+
+### Title boxes
+
+| Constant | Description | Default |
+|---|---|---|
+| `titleBoxWidth` | Title and subtitle text box width | `394` pt |
+| `titleBoxHeight` | Title text box height | `39` pt |
+| `titleBoxNudge` | Top/left alignment nudge | `5` pt |
+| `subtitleBoxTop` | Subtitle text box top offset | `53` pt |
+| `subtitleBoxHeight` | Subtitle text box height | `33` pt |
+| `yAxisLabel_legendTop` | Y-axis label top — legend present | `126` pt |
+| `yAxisLabel_singleTop` | Y-axis label top — single series, no legend | `85` pt |
+| `yAxisLabel_multiTop` | Y-axis label top — multi-series, no legend | `68` pt |
+| `yAxisLabel_legendHeight` | Y-axis label height — legend present | `26` pt |
+| `yAxisLabel_noLegendHeight` | Y-axis label height — no legend | `24` pt |
+
+### Source / notes box
+
+| Constant | Description | Default |
+|---|---|---|
+| `sourceBoxWidth` | Source/notes text box width | `230` pt |
+| `sourceBoxHeight` | Source/notes text box height | `46` pt |
+| `sourceTextFontSize` | Source/notes font size | `11` pt |
+| `sourceBoxLeftNudge` | Left offset nudge | `5` pt |
+
+### Logo
+
+| Constant | Description | Default |
+|---|---|---|
+| `logoHeightScale` | Logo height as fraction of chart height | `0.1` (10%) |
+| `logoAspectRatio` | Logo width = height × this value | `1.8` |
+| `logoMarginRight` | Right margin | `10` pt |
+| `logoMarginBottom` | Bottom margin | `8` pt |
+
+### Gridlines and axes
+
+| Constant | Description | Default |
+|---|---|---|
+| `gridlineWeight` | Major gridline stroke weight | `1` pt |
+| `axisLineWeight` | X-axis line stroke weight | `1` pt |
+
+### Pie and donut
+
+| Constant | Description | Default |
+|---|---|---|
+| `piePlotAreaSize_legend` | Plot area size (square) — legend present | `421` pt |
+| `piePlotAreaSize_noLegend` | Plot area size (square) — no legend | `447` pt |
+| `piePlotAreaLeft_web` | Plot area left offset | `131` pt |
+| `piePlotAreaTop_web` | Plot area initial top offset | `53` pt |
+| `piePlotTopRatio_web` | Vertical centering ratio | `0.75` |
+| `pieLegendTop_web` | Legend top offset | `79` pt |
+
+### Lollipop
+
+| Constant | Description | Default |
+|---|---|---|
+| `lollipopGapWidth` | Bar group gap width | `150`% |
+| `lollipopStickWeight` | Error bar (stick) line weight | `1.5` pt |
+
+### Chart tools
+
+| Constant | Description | Default |
+|---|---|---|
+| `removeLegend_webHeight` | Chart height after Remove Legend | `224` pt |
+| `removeLegend_webTop` | Plot area top after Remove Legend | `85` pt |
+| `removeLegend_webWidth` | Plot area width after Remove Legend | `394` pt |
+| `removeLegend_webLeft` | Plot area left after Remove Legend | `1` pt |
+| `labelLastPointPlotWidthInset` | Plot area width reduction for end labels | `66` pt |
+| `labelLastPointPlotTop` | Plot area top after Label Last Point | `105` pt |
+| `labelLastPointPlotWidthRatio_web` | Plot area width ratio | `0.98` |
+| `labelLastPointTitleNudge` | Title box nudge | `−13` pt |
+
+### Export
+
+| Constant | Description | Default |
+|---|---|---|
+| `exportDefaultExt` | Default file extension | `"png"` |
+| `exportDefaultName` | Default file name | `"MyChart"` |
+
+---
+
+## 9 — Checklist for a complete white-label deployment
 
 | Item | Location | Status |
 |---|---|---|

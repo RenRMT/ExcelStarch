@@ -56,6 +56,27 @@ chart_macro/
 
 The `.xlam` should appear in `.gitignore`. Collaborators build their own local binary from the source.
 
+### Module roles
+
+| Module | Role |
+|---|---|
+| `modRibbonHandlers.bas` | All ribbon `onAction` callbacks — thin wrappers, one line per button |
+| `modChartBuilder.bas` | Shared formatting pipeline (`ApplyChartPipeline`) and all pipeline steps |
+| `modChartColumn.bas` | Column and stacked column chart creation |
+| `modChartBar.bas` | Bar and stacked bar chart creation |
+| `modChartLine.bas` | Line chart creation |
+| `modChartPie.bas` | Pie and donut chart creation |
+| `modChartLollipop.bas` | Lollipop chart — wraps bar pipeline, replaces bars with error-bar sticks and dot markers |
+| `modFormatSeries.bas` | Palette application to chart series; palette order toggle |
+| `modFormatFill.bas` | Solid fill application and removal for shapes and chart elements |
+| `modRamp.bas` | Single-hue sequential ramps, diverging ramps, ramp inversion |
+| `modConfigColors.bas` | Colour and ramp step constants |
+| `modConfig.bas` | Layout, font, sizing, and export constants |
+| `modEmbeddedImages.bas` | Organisation logo as an embedded Base64 string |
+| `modChartTools.bas` | Post-creation utilities: label last point, toggle gridlines, remove legend, reset to grey |
+| `modExport.bas` | Chart export dialog and file-write logic |
+| `modMessages.bas` | Shared error and status message strings |
+
 ---
 
 ## The edit → import → test → export loop

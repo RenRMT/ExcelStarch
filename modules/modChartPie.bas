@@ -15,7 +15,7 @@ Attribute VB_Name = "modChartPie"
 '
 ' Both variants use a custom pipeline (no ApplyChartPipeline) because pie/donut
 ' charts have no axes or gridlines. Steps applied: InsertLogo, InsertSource,
-' SetRoundChartSizeAndTitle, border removal, slice colouring.
+' SetRoundChartSizeAndTitle (which calls FormatTitle), slice colouring.
 '
 ' Palette: first 5 brand colours (Ocean, Coral, Sky, Pine, Gold).
 ' Maximum 5 slices; charts with more will show a warning and receive no colouring.
@@ -37,8 +37,6 @@ Private Sub BuildPieChart()
     InsertSource cht
     SetRoundChartSizeAndTitle cht
 
-    cht.ChartArea.Border.LineStyle = xlNone
-
     pointscount = cht.SeriesCollection(1).Points.Count
     ApplySliceColors cht, pointscount
 End Sub
@@ -56,8 +54,6 @@ Private Sub BuildDonutChart()
     InsertLogo cht
     InsertSource cht
     SetRoundChartSizeAndTitle cht
-
-    cht.ChartArea.Border.LineStyle = xlNone
 
     pointscount = cht.SeriesCollection(1).Points.Count
     ApplySliceColors cht, pointscount
@@ -98,9 +94,6 @@ End Sub
 Private Sub SetRoundChartSizeAndTitle(cht As Chart)
     ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
     ' sizing, centering, and legend placement are identical for both variants.
-    Dim titleB1 As TextBox
-    Dim titleB2 As TextBox
-    Dim titleB3 As TextBox
     Dim chtObj As ChartObject
     Dim chtHeight As Double
     Dim chtWidth As Double
@@ -114,40 +107,9 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
     End With
 
     cht.ChartArea.Font.Name = fontPrimary
+    cht.ChartArea.Border.LineStyle = xlNone
 
-    If cht.HasTitle Then cht.ChartTitle.Delete
-
-    SafeDeleteShape cht, "TitleBox"
-    SafeDeleteShape cht, "SubTitleBox"
-    SafeDeleteShape cht, "YAxisLabelBox"
-
-    Set titleB1 = cht.TextBoxes.Add(0, 0, titleBoxWidth, pieTitleBoxHeight)
-    With titleB1
-        .Name = "TitleBox"
-        .Text = "Title in 18pt sentence case"
-        .Font.Size = pieTitleFontSize
-        .Font.Name = fontPrimary
-        .Font.Bold = msoFalse
-    End With
-
-    Set titleB2 = cht.TextBoxes.Add(0, pieSubtitleBoxTop, titleBoxWidth, pieSubtitleBoxHeight)
-    With titleB2
-        .Name = "SubTitleBox"
-        .Text = "Subtitle in 14pt sentence case"
-        .Font.Size = pieSubtitleFontSize
-        .Font.Name = fontPrimary
-        .Font.Bold = msoFalse
-    End With
-
-    Set titleB3 = cht.TextBoxes.Add(0, pieYAxisLabelBoxTop, titleBoxWidth, yAxisLabel_noLegendHeight)
-    With titleB3
-        .Name = "YAxisLabelBox"
-        .Text = "Y axis title (unit)"
-        .Font.Size = axisFontSize
-        .Font.Name = fontPrimaryItalic
-        .Font.Bold = msoFalse
-        .Font.Italic = msoTrue
-    End With
+    FormatTitle cht
 
     plotSize = IIf(cht.HasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
     cht.PlotArea.Select

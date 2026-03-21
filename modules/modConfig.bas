@@ -73,13 +73,7 @@ Public Const gridlineWeight As Double = 1
 '=== modChartBuilder: FormatXAxis ===
 Public Const axisLineWeight As Double = 1
 
-'=== modChartPie: SetPieChartSizeandTitle ===
-Public Const pieTitleFontSize As Double = 18
-Public Const pieTitleBoxHeight As Long = 33         ' pie title box height (smaller than standard)
-Public Const pieSubtitleFontSize As Double = 14
-Public Const pieSubtitleBoxTop As Long = 33
-Public Const pieSubtitleBoxHeight As Long = 26
-Public Const pieYAxisLabelBoxTop As Long = 59
+'=== modChartPie ===
 Public Const piePlotAreaSize_legend As Long = 421   ' width and height (square) when legend present
 Public Const piePlotAreaSize_noLegend As Long = 447 ' width and height (square) without legend
 Public Const piePlotAreaLeft_web As Long = 131
