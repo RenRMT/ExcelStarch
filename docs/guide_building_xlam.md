@@ -33,28 +33,7 @@ The **Office Custom UI Editor** is a standalone Windows application by Microsoft
 2. In the Project Explorer (Ctrl+R to show it), you should see `VBAProject (chart_styles.xlsm)`.
 3. Right-click the project name → **Import File...**
 4. Navigate to the `modules/` folder of this repository.
-5. Import the modules in this order. Order matters because later modules call functions defined in earlier ones:
-
-   ```
-   modConfigColors.bas
-   modConfig.bas
-   modMessages.bas
-   modEmbeddedImages.bas
-   modChartBuilder.bas
-   modFormatSeries.bas
-   modFormatFill.bas
-   modRamp.bas
-   modChartBar.bas
-   modChartColumn.bas
-   modChartLine.bas
-   modChartPie.bas
-   modChartLollipop.bas
-   modChartTools.bas
-   modExport.bas
-   modRibbonHandlers.bas
-   ```
-
-   Import each file via File → Import File (or right-click → Import File in the Project Explorer).
+5. Import the modules via File → Import File (or right-click → Import File in the Project Explorer).
 
 6. After importing, verify the Project Explorer shows all 16 modules under **Modules**.
 
@@ -140,6 +119,5 @@ For the ribbon XML, repeat step 5 of the original build if `CustomUI14.xml` chan
 |---|---|---|
 | Ribbon tab missing | CustomUI XML not embedded | Re-embed with Custom UI Editor |
 | Compile error on `IRibbonControl` | Missing reference | Tools → References → tick Office library |
-| "Subscript out of range" at runtime | Module loaded in wrong order | Remove all, re-import in order |
 | Logo not appearing | Base64 string corrupted | Re-import `modEmbeddedImages.bas` |
 | Icons not showing on ribbon buttons | Image files not imported | Re-add images via Custom UI Editor |
