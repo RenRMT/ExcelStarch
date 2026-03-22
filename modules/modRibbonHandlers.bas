@@ -21,6 +21,8 @@ Public Sub Donut_onAction(control As IRibbonControl): DonutChart: End Sub
 Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl): RemoveLegendResizeButton: End Sub
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub
 Public Sub ToggleGridlinesButton_onAction(control As IRibbonControl): ToggleGridlines: End Sub
+Public Sub ToggleAxesButton_onAction(control As IRibbonControl): ToggleAxes: End Sub
+Public Sub ApplyChartStyleButton_onAction(control As IRibbonControl): ApplyChartStyle: End Sub
 
 '=== Colour ramps ===
 Public Sub ApplyRamp_onAction(control As IRibbonControl): ApplyColorRamp control.Tag: End Sub

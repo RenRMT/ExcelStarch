@@ -211,6 +211,72 @@ End Sub
 
 
 ' ============================================================
+'   TOGGLE AXES
+' ============================================================
+' Cycles axis visibility through four states in sequence:
+'   None → Y axis only → X axis only → Both → None
+' Operates in-place on the active chart (no duplication).
+
+Public Sub ToggleAxes()
+    If ActiveChart Is Nothing Then
+        MsgNoActiveChart
+        Exit Sub
+    End If
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    Dim hasY As Boolean     ' value axis (Y)
+    Dim hasX As Boolean     ' category axis (X)
+
+    hasY = cht.HasAxis(xlValue)
+    hasX = cht.HasAxis(xlCategory)
+
+    Dim nextY As Boolean
+    Dim nextX As Boolean
+
+    If Not hasY And Not hasX Then
+        nextY = True:  nextX = False        ' None → Y only
+    ElseIf hasY And Not hasX Then
+        nextY = False: nextX = True         ' Y only → X only
+    ElseIf Not hasY And hasX Then
+        nextY = True:  nextX = True         ' X only → Both
+    Else
+        nextY = False: nextX = False        ' Both → None
+    End If
+
+    cht.HasAxis(xlValue, xlPrimary) = nextY
+    cht.HasAxis(xlCategory, xlPrimary) = nextX
+
+    If nextY Then ApplyValueAxisStyle cht
+    If nextX Then ApplyCategoryAxisStyle cht
+End Sub
+
+Private Sub ApplyValueAxisStyle(cht As Chart)
+    If Not cht.HasAxis(xlValue) Then Exit Sub
+    With cht.Axes(xlValue)
+        .Format.Line.Visible = msoFalse
+        .TickLabels.Font.Size = axisFontSize
+        .TickLabels.Font.Color = colorBrand3
+    End With
+End Sub
+
+Private Sub ApplyCategoryAxisStyle(cht As Chart)
+    If Not cht.HasAxis(xlCategory) Then Exit Sub
+    cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
+    cht.Axes(xlCategory, xlPrimary).TickLabels.Font.Color = colorBrand3
+    cht.Axes(xlCategory).Select
+    With Selection.Format.Line
+        .Visible = msoTrue
+        .ForeColor.RGB = colorBrand3
+        .ForeColor.TintAndShade = 0
+        .ForeColor.Brightness = 0
+        .Weight = axisLineWeight
+    End With
+End Sub
+
+
+' ============================================================
 '   REMOVE LEGEND AND RESIZE
 ' ============================================================
 ' Deletes the chart legend and resizes the plot area to standard web dimensions.
@@ -237,6 +303,45 @@ End Sub
 Sub RemoveLegendResizeButton()
     BuildRemoveLegendResize
 End Sub
+
+
+' ============================================================
+'   APPLY CHART STYLE (generic)
+' ============================================================
+' Applies brand formatting to the active chart regardless of type.
+' Operates in-place — no duplication. Steps that require axes are
+' skipped when the chart type does not have them (e.g. pie/donut).
+
+Public Sub ApplyChartStyle()
+    If ActiveChart Is Nothing Then
+        MsgNoActiveChart
+        Exit Sub
+    End If
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    OuterFormat cht
+    FormatXAxisTitle cht
+    InsertLogo cht
+    InsertSource cht
+    FormatTitle cht
+    If cht.HasAxis(xlValue) Then FormatGridlines cht
+    FormatXAxis cht
+    FormatSeriesColors cht, GetStyleColorMode(cht.ChartType)
+End Sub
+
+Private Function GetStyleColorMode(ByVal ct As Long) As String
+    Select Case ct
+        Case xlLine, xlLineMarkers, xlLineStacked, xlLineMarkersStacked, _
+             xlLineStacked100, xlLineMarkersStacked100, _
+             xlXYScatter, xlXYScatterLines, xlXYScatterLinesNoMarkers, _
+             xlXYScatterSmooth, xlXYScatterSmoothNoMarkers
+            GetStyleColorMode = "LINE"
+        Case Else
+            GetStyleColorMode = "FILL"
+    End Select
+End Function
 
 
 ' ============================================================
