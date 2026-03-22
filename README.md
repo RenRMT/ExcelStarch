@@ -19,7 +19,7 @@ See [docs/guide_users.md](docs/guide_users.md) for full button reference and usa
 
 ## Installation
 
-The repository stores source as `.bas` modules and `CustomUI14.xml`. The `.xlam` binary is not tracked — each developer builds their own. See [docs/guide_building_xlam.md](docs/guide_building_xlam.md) for the full build procedure and [docs/guide_workflow.md](docs/guide_workflow.md) for the ongoing edit → import → test → export loop.
+The repository stores source as `.bas` modules and `CustomUI14.xml`. The `.xlam` binary is not tracked. See [docs/guide_building_xlam.md](docs/guide_building_xlam.md) for the full build procedure.
 
 ## Customisation
 
