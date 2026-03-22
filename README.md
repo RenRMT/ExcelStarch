@@ -23,11 +23,4 @@ The repository stores source as `.bas` modules and `CustomUI14.xml`. The `.xlam`
 
 ## Customisation
 
-All brand-specific settings are isolated in `modConfig.bas` (identity, fonts, canvas size, layout), `modConfigColors.bas` (colours and ramp steps), and `modEmbeddedImages.bas` (logo). The ribbon tab label is hardcoded in `CustomUI14.xml` — find-and-replace `COMPANY` to update it. See [docs/guide_branding.md](docs/guide_branding.md) for the step-by-step procedure, full constant reference, and deployment checklist.
-
-## Limitations
-
-- **7-series cap on colour ramps.** Single-hue ramps support a maximum of 7 series; diverging ramps up to 15 (7 + grey centre + 7). Charts exceeding the limit show a warning and receive no ramp.
-- **No overwrite warning on export.** Chart Export silently overwrites an existing file at the chosen path.
-- **Windows only.** `GetSetting`/`SaveSetting` (Windows registry) and several chart formatting APIs are unavailable on Mac Excel.
-- **7-colour palette limit.** An 8th or higher series is formatted in Silver rather than a data colour.
+All brand-specific settings are isolated in `modConfig.bas` and `modConfigColors.bas` with an optional embedded logo om `modEmbeddedImages.bas`. The ribbon tab label is hardcoded in `CustomUI14.xml` — find-and-replace `COMPANY` to update it. See [docs/guide_branding.md](docs/guide_branding.md) for the step-by-step procedure and full constant reference.
