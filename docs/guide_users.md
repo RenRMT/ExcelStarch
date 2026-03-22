@@ -78,7 +78,7 @@ The *Fill Colors* group applies a solid colour fill to the selected chart elemen
 
 A colour ramp applies a single-hue sequential palette to all series of the active chart, ranging from light to dark. Select or activate a chart, then click a ramp button.
 
-Steps are assigned in spread order (5, 1, 3, 6, 2, 4, 7) so that charts with fewer series still achieve maximum contrast.
+Steps are assigned in spread order (5, 2, 3, 6, 1, 4, 7) so that charts with fewer series still achieve maximum contrast.
 
 | | Ramp | | Ramp |
 |---|---|---|---|

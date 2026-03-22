@@ -2,13 +2,13 @@ Attribute VB_Name = "modRamp"
 '==== Module: modRamp ====
 ' Applies colour ramps to the data series of the active chart.
 '
-' ApplyColorRamp      — single-hue ramp, steps assigned in spread order 5,1,3,6,2,4,7.
+' ApplyColorRamp      — single-hue ramp, steps assigned in spread order 5,2,3,6,1,4,7.
 ' InvertColorRamp     — reverses the current fill colour assignment across all series.
 ' ApplyDivergingRamp  — two-hue diverging ramp: dark→light on the left, light→dark on
 '                       the right, with an optional grey centre for odd series counts.
 '
 ' Step selection for both single and diverging ramps follows the same priority sequence
-' [5,1,3,6,2,4,7]. For diverging ramps the selected steps are then sorted numerically
+' [5,2,3,6,1,4,7]. For diverging ramps the selected steps are then sorted numerically
 ' (1 = lightest, 7 = darkest) before being assigned as a gradient.
 '
 ' Maximum series: 7 (single), 15 (diverging: 7 + grey + 7).
@@ -97,10 +97,10 @@ Private Sub BuildColorRamp(cht As Chart, ByVal rampName As String)
     Dim palette(1 To 7) As Long
     If Not LoadPalette(rampName, palette) Then Exit Sub
 
-    ' Assign ramp steps in spread order: 5, 1, 3, 6, 2, 4, 7
+    ' Assign ramp steps in spread order: 5, 2, 3, 6, 1, 4, 7
     Dim order(1 To 7) As Integer
-    order(1) = 5: order(2) = 1: order(3) = 3: order(4) = 6
-    order(5) = 2: order(6) = 4: order(7) = 7
+    order(1) = 5: order(2) = 2: order(3) = 3: order(4) = 6
+    order(5) = 1: order(6) = 4: order(7) = 7
 
     Dim i As Long
     For i = 1 To n
@@ -134,8 +134,8 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
 
     ' Pick first sideCount steps from priority order, then sort ascending (1=lightest)
     Dim priority(1 To 7) As Integer
-    priority(1) = 5: priority(2) = 1: priority(3) = 3: priority(4) = 6
-    priority(5) = 2: priority(6) = 4: priority(7) = 7
+    priority(1) = 5: priority(2) = 2: priority(3) = 3: priority(4) = 6
+    priority(5) = 1: priority(6) = 4: priority(7) = 7
 
     Dim steps() As Integer
     ReDim steps(1 To sideCount)
