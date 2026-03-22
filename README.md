@@ -1,6 +1,6 @@
-# Chart Styles Excel Add-in
+# ExcelStarch to fix your Excel charts
 
-A custom Excel add-in that applies organisational chart style standards from a dedicated ribbon tab. Select a data range, click a chart type, and the add-in creates a fully formatted chart.
+Charts made in Excel could look great if the default settings weren't so bad. This configurable Excel add-in applies organisational chart style standards from a dedicated ribbon tab. Select a data range, click a chart type, and the add-in creates a fully formatted chart.
 
 This add-in was inspired by the [Urban Institute Data Visualisation Style Guide Excel Add-in](https://medium.com/urban-institute/introducing-the-urban-institute-data-visualization-style-guides-open-source-excel-add-in-14dfdfa50ebb), created by Jonathan Schwabish.
 
