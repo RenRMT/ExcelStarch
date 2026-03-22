@@ -14,7 +14,7 @@ This single string appears in:
 - The ribbon tab label in `CustomUI14.xml` (currently hardcoded as `"COMPANY Chart Styles"` — update that separately, see section 5)
 - The Windows registry key used to persist the last-used export format: `"COMPANY Chart Styles"` → `"Chart Export"`
 
-Change `"COMPANY"` to the client's short name (no spaces recommended — it becomes a registry key segment).
+Change `"COMPANY"` to the client's short name. Better not to use spaces because it becomes a registry key.
 
 ---
 
@@ -25,9 +25,7 @@ Public Const fontPrimary As String = "Calibri"
 Public Const fontPrimaryItalic As String = "Calibri Italic"
 ```
 
-Replace with the brand's chart font. `fontPrimary` is applied to all chart text. `fontPrimaryItalic` is used for the Y-axis label and the X-axis title placeholder.
-
-> The font must be installed on every machine that uses the add-in. If the font is missing, Excel silently substitutes a fallback. If the brand font has no separate italic face, set both constants to the same font name.
+Replace with the brand's chart font. `fontPrimary` is applied to all chart text. `fontPrimaryItalic` is used for the Y-axis label and the X-axis title placeholder. If the provided font is missing, Excel silently substitutes a fallback.
 
 ---
 
@@ -38,14 +36,7 @@ Public Const chartWidth As Double  = 600   ' points — 8.33" at 72dpi
 Public Const chartHeight As Double = 600   ' points — 8.33" at 72dpi
 ```
 
-1 point = 1/72 inch. Common target sizes:
-
-| Use case | Width × Height (pt) |
-|---|---|
-| Web/screen, square | 600 × 600 |
-| Web/screen, 4:3 | 640 × 480 |
-| Web/screen, 16:9 | 640 × 360 |
-| Print, half-page | 432 × 288 |
+1 point = 1/72 inch.
 
 When you change canvas size, the plot area constants will also need proportional adjustment (see section 4).
 
@@ -139,17 +130,17 @@ Paste that number as the constant value and add the human-readable RGB as a comm
 Public Const colorPrimary As Long = 12285696  'RGB(0, 119, 187)
 ```
 
-> The comment is documentation only — it does not affect the value. Keep it accurate.
+> The comment is documentation only and does not affect the value.
 
 ### Colour ramps
 
-Each of the seven hues has a 7-step sequential ramp (`ramp<Hue>1` through `ramp<Hue>7`, where 1 = lightest and 7 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales — the names must remain the same because `LoadPalette` in `modRamp.bas` references them.
+Each of the seven hues has a 7-step sequential ramp (`rampX1` through `rampX7`, where 1 = lightest and 7 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales. The names of the constants mustnott be changed as they are referenced directly in other modules.
 
 ---
 
 ## 7 — Logo: `modEmbeddedImages.bas`
 
-The logo is embedded as a Base64-encoded string directly in the VBA module. This avoids any file-path dependency — the add-in is self-contained.
+The logo is embedded as a Base64-encoded string directly in the VBA module to avoid dependencies on external files.
 
 ### Step 1 — Prepare the image
 
@@ -338,21 +329,3 @@ All values are in Excel points unless noted. These are the defaults at 600 × 60
 |---|---|---|
 | `exportDefaultExt` | Default file extension | `"png"` |
 | `exportDefaultName` | Default file name | `"MyChart"` |
-
----
-
-## 9 — Checklist for a complete white-label deployment
-
-| Item | Location | Status |
-|---|---|---|
-| `orgName` | `modConfig.bas:14` | |
-| Font name(s) | `modConfig.bas:9–10` | |
-| Canvas size | `modConfig.bas:5–6` | |
-| Layout constants (if canvas resized) | `modConfig.bas:31–117` | |
-| Ribbon tab label and supertips | `CustomUI14.xml` | |
-| Categorical colours (7) | `modConfigColors.bas:20–26` | |
-| Sequential ramp colours (49) | `modConfigColors.bas:29–90` | |
-| Logo Base64 | `modEmbeddedImages.bas` | |
-| Logo aspect ratio | `modConfig.bas:48` | |
-| Logo scale and margins | `modConfig.bas:47–50` | |
-| Colour names (if renaming hues) | `modRamp.bas`, `modFormatFill.bas`, `CustomUI14.xml` | |
