@@ -492,8 +492,8 @@ Public Sub ToggleDataLabels()
             On Error GoTo 0
             Select Case pos
                 Case xlLabelPositionOutsideEnd:  currentState = "OUTSIDE"
-                Case xlLabelPositionInsideCenter: currentState = "INSIDE"
-                Case Else:                        currentState = "OTHER"
+                Case xlLabelPositionCenter:      currentState = "INSIDE"
+                Case Else:                       currentState = "OTHER"
             End Select
         End If
     End If
@@ -539,7 +539,7 @@ Public Sub ToggleDataLabels()
             Case "INSIDE"
                 srs.ApplyDataLabels
                 With srs.DataLabels
-                    .Position = xlLabelPositionInsideCenter
+                    .Position = xlLabelPositionCenter
                     .Font.Color = GetLabelContrastColor(srs)
                     .Font.Size = axisFontSize
                     .Font.Name = fontPrimary
