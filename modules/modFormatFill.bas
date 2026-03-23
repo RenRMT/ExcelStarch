@@ -67,8 +67,42 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
+
     If tgt Is Nothing Then
-        MsgSelectTarget
+        ' No specific element selected — apply to all series in the active chart.
+        Dim cht As Chart
+        If Not ActiveChart Is Nothing Then
+            Set cht = ActiveChart
+        ElseIf TypeName(Selection) = "ChartObject" Then
+            Set cht = Selection.Chart
+        End If
+
+        If cht Is Nothing Then
+            MsgSelectTarget
+            Exit Sub
+        End If
+
+        If transparency < 0 Then transparency = 0
+        If transparency > 1 Then transparency = 1
+
+        Dim i As Long
+        For i = 1 To cht.SeriesCollection.Count
+            Dim srs As Series
+            Set srs = cht.SeriesCollection(i)
+            If IsLineTarget(srs) Then
+                With srs.Format.Line
+                    .Visible = msoTrue
+                    .ForeColor.rgb = colorRGB
+                End With
+            Else
+                With srs.Format.Fill
+                    .Visible = msoTrue
+                    .Solid
+                    .ForeColor.rgb = colorRGB
+                    .transparency = transparency
+                End With
+            End If
+        Next i
         Exit Sub
     End If
 
@@ -103,8 +137,31 @@ Public Sub RemoveFill()
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
+
     If tgt Is Nothing Then
-        MsgSelectTarget
+        ' No specific element selected — remove fill from all series in the active chart.
+        Dim cht As Chart
+        If Not ActiveChart Is Nothing Then
+            Set cht = ActiveChart
+        ElseIf TypeName(Selection) = "ChartObject" Then
+            Set cht = Selection.Chart
+        End If
+
+        If cht Is Nothing Then
+            MsgSelectTarget
+            Exit Sub
+        End If
+
+        Dim i As Long
+        For i = 1 To cht.SeriesCollection.Count
+            Dim srs As Series
+            Set srs = cht.SeriesCollection(i)
+            If IsLineTarget(srs) Then
+                srs.Format.Line.Visible = msoFalse
+            Else
+                srs.Format.Fill.Visible = msoFalse
+            End If
+        Next i
         Exit Sub
     End If
 
@@ -164,7 +221,8 @@ Private Function GetFillTarget() As Object
                 Exit Function
             End If
         End If
-        Set GetFillTarget = cht.ChartArea
+        ' No specific element selected inside the chart — return Nothing so the caller
+        ' applies the fill to all series instead of the chart background.
         Exit Function
     End If
 
