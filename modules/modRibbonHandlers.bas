@@ -22,6 +22,7 @@ Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl): RemoveL
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub
 Public Sub ToggleGridlinesButton_onAction(control As IRibbonControl): ToggleGridlines: End Sub
 Public Sub ToggleAxesButton_onAction(control As IRibbonControl): ToggleAxes: End Sub
+Public Sub ToggleDataLabelsButton_onAction(control As IRibbonControl): ToggleDataLabels: End Sub
 Public Sub ApplyChartStyleButton_onAction(control As IRibbonControl): ApplyChartStyle: End Sub
 
 '=== Colour ramps ===

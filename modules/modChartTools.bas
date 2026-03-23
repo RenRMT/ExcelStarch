@@ -449,3 +449,131 @@ End Sub
 Public Sub StartWithGray()
     GrayOutChart cht:=Nothing, duplicateChart:=True, grayColor:=colorNeutral1
 End Sub
+
+
+' ============================================================
+'   TOGGLE DATA LABELS
+' ============================================================
+' Cycles data labels through three states: None → Outside End → Inside Centre → None.
+' Operates in-place on the active chart.
+' Scope: if a specific series is selected, only that series is affected;
+'        otherwise all series in the chart are affected.
+
+Public Sub ToggleDataLabels()
+    If ActiveChart Is Nothing Then
+        MsgNoActiveChart
+        Exit Sub
+    End If
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    ' Resolve target: single selected series, or Nothing for all series.
+    Dim targetSrs As Series
+    On Error Resume Next
+    Set targetSrs = Selection
+    On Error GoTo 0
+
+    ' Detect current state from the first (or only) target series.
+    Dim firstSrs As Series
+    If Not targetSrs Is Nothing Then
+        Set firstSrs = targetSrs
+    ElseIf cht.SeriesCollection.Count > 0 Then
+        Set firstSrs = cht.SeriesCollection(1)
+    End If
+
+    Dim currentState As String
+    currentState = "NONE"
+    If Not firstSrs Is Nothing Then
+        If firstSrs.HasDataLabels Then
+            On Error Resume Next
+            Dim pos As Long
+            pos = firstSrs.DataLabels.Position
+            On Error GoTo 0
+            Select Case pos
+                Case xlLabelPositionOutsideEnd:  currentState = "OUTSIDE"
+                Case xlLabelPositionInsideCenter: currentState = "INSIDE"
+                Case Else:                        currentState = "OTHER"
+            End Select
+        End If
+    End If
+
+    ' Advance to next state.
+    Dim nextState As String
+    Select Case currentState
+        Case "NONE":    nextState = "OUTSIDE"
+        Case "OUTSIDE": nextState = "INSIDE"
+        Case Else:      nextState = "NONE"
+    End Select
+
+    ' Apply to target series or all series.
+    Dim i As Long
+    Dim n As Long
+    If Not targetSrs Is Nothing Then
+        n = 1
+    Else
+        n = cht.SeriesCollection.Count
+    End If
+
+    For i = 1 To n
+        Dim srs As Series
+        If Not targetSrs Is Nothing Then
+            Set srs = targetSrs
+        Else
+            Set srs = cht.SeriesCollection(i)
+        End If
+
+        Select Case nextState
+            Case "NONE"
+                srs.HasDataLabels = False
+
+            Case "OUTSIDE"
+                srs.ApplyDataLabels
+                With srs.DataLabels
+                    .Position = xlLabelPositionOutsideEnd
+                    .Font.Color = colorBrand3
+                    .Font.Size = axisFontSize
+                    .Font.Name = fontPrimary
+                End With
+
+            Case "INSIDE"
+                srs.ApplyDataLabels
+                With srs.DataLabels
+                    .Position = xlLabelPositionInsideCenter
+                    .Font.Color = GetLabelContrastColor(srs)
+                    .Font.Size = axisFontSize
+                    .Font.Name = fontPrimary
+                End With
+        End Select
+    Next i
+End Sub
+
+' Returns a label color (colorBrand3 dark or colorBrand4 light) chosen for best
+' contrast against the series fill color. Falls back to colorBrand4 on any error.
+Private Function GetLabelContrastColor(srs As Series) As Long
+    On Error GoTo UseFallback
+
+    Dim fillRGB As Long
+    fillRGB = srs.Format.Fill.ForeColor.RGB
+
+    ' Excel stores RGB as R + G*256 + B*65536
+    Dim r As Long, g As Long, b As Long
+    r = fillRGB And &HFF
+    g = (fillRGB \ 256) And &HFF
+    b = (fillRGB \ 65536) And &HFF
+
+    ' Perceived luminance (ITU-R BT.601)
+    Dim lum As Double
+    lum = 0.299 * r + 0.587 * g + 0.114 * b
+
+    ' Dark fill → use light label (colorBrand4); light fill → use dark label (colorBrand3)
+    If lum < 128 Then
+        GetLabelContrastColor = colorBrand4
+    Else
+        GetLabelContrastColor = colorBrand3
+    End If
+    Exit Function
+
+UseFallback:
+    GetLabelContrastColor = colorBrand4
+End Function

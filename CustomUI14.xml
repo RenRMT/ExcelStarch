@@ -297,6 +297,13 @@
 						supertip="Add series names to the last point on the graph."
 						onAction="LabelLastPointButton_onAction"/>
 					<button
+						id="ToggleDataLabelsButton"
+						image="i_menu_labels"
+						label="Toggle Data Labels"
+						size="large"
+						supertip="Cycle data labels: none → outside end → inside centre. Applies to selected series or all series."
+						onAction="ToggleDataLabelsButton_onAction"/>
+					<button
 						id="ToggleGridlinesButton"
 						image="i_menu_gridlines"
 						label="Toggle Gridlines"
