@@ -166,8 +166,9 @@ Public Sub ToggleGridlines()
     Dim hasH As Boolean     ' horizontal gridlines (value / Y axis)
     Dim hasV As Boolean     ' vertical gridlines   (category / X axis)
 
-    If cht.HasAxis(xlValue) Then hasH = cht.Axes(xlValue).HasMajorGridlines
-    If cht.HasAxis(xlCategory) Then hasV = cht.Axes(xlCategory).HasMajorGridlines
+    ' Read gridline state via helpers that work even when the axis has been removed.
+    hasH = GetGridlineState(cht, xlValue)
+    hasV = GetGridlineState(cht, xlCategory)
 
     Dim nextH As Boolean
     Dim nextV As Boolean
@@ -182,20 +183,62 @@ Public Sub ToggleGridlines()
         nextH = False: nextV = False        ' Both → None
     End If
 
-    If cht.HasAxis(xlValue) Then
-        If nextH Then
-            ApplyAxisGridlines cht.Axes(xlValue)
-        Else
-            cht.Axes(xlValue).HasMajorGridlines = False
-        End If
+    ' Apply gridlines only to currently visible axes; remove from any axis (even hidden ones).
+    If nextH And cht.HasAxis(xlValue) Then
+        ApplyAxisGridlines cht.Axes(xlValue)
+    End If
+    If Not nextH Then ClearGridlinesSafe cht, xlValue
+
+    If nextV And cht.HasAxis(xlCategory) Then
+        ApplyAxisGridlines cht.Axes(xlCategory)
+    End If
+    If Not nextV Then ClearGridlinesSafe cht, xlCategory
+End Sub
+
+' Returns True if the axis has major gridlines, temporarily re-enabling the axis
+' if it has been removed so the property can be read reliably.
+Private Function GetGridlineState(cht As Chart, ByVal axisType As Long) As Boolean
+    Dim wasVisible As Boolean
+    wasVisible = cht.HasAxis(axisType, xlPrimary)
+
+    If Not wasVisible Then
+        On Error Resume Next
+        cht.HasAxis(axisType, xlPrimary) = True
+        If Err.Number <> 0 Then Err.Clear: Exit Function   ' axis not available
+        On Error GoTo 0
     End If
 
-    If cht.HasAxis(xlCategory) Then
-        If nextV Then
-            ApplyAxisGridlines cht.Axes(xlCategory)
-        Else
-            cht.Axes(xlCategory).HasMajorGridlines = False
-        End If
+    On Error Resume Next
+    If cht.HasAxis(axisType) Then GetGridlineState = cht.Axes(axisType).HasMajorGridlines
+    On Error GoTo 0
+
+    If Not wasVisible Then
+        On Error Resume Next
+        cht.HasAxis(axisType, xlPrimary) = False
+        On Error GoTo 0
+    End If
+End Function
+
+' Removes major gridlines from the axis, temporarily re-enabling it if it has been removed.
+Private Sub ClearGridlinesSafe(cht As Chart, ByVal axisType As Long)
+    Dim wasVisible As Boolean
+    wasVisible = cht.HasAxis(axisType, xlPrimary)
+
+    If Not wasVisible Then
+        On Error Resume Next
+        cht.HasAxis(axisType, xlPrimary) = True
+        If Err.Number <> 0 Then Err.Clear: Exit Sub        ' axis not available
+        On Error GoTo 0
+    End If
+
+    On Error Resume Next
+    If cht.HasAxis(axisType) Then cht.Axes(axisType).HasMajorGridlines = False
+    On Error GoTo 0
+
+    If Not wasVisible Then
+        On Error Resume Next
+        cht.HasAxis(axisType, xlPrimary) = False
+        On Error GoTo 0
     End If
 End Sub
 
