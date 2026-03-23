@@ -1,21 +1,21 @@
 Attribute VB_Name = "modChartPie"
 '==== Module: modChartPie ====
-' Pie and donut chart variants.
+' Pie, donut, and treemap chart variants.
 '
 ' Variants
 ' --------
-'   PieChart   — xlPie:      solid filled circle divided into slices
-'   DonutChart — xlDoughnut: same as pie with a hollow centre
+'   PieChart     — xlPie:               solid filled circle divided into slices
+'   DonutChart   — xlDoughnut:          same as pie with a hollow centre
+'   TreemapChart — xlRectangularTreemap: hierarchical rectangular tiles (Excel 2016+)
 '
 ' Differences
 ' -----------
-'   Chart type only: xlPie vs xlDoughnut.
-'   All sizing, layout, title boxes, legend handling, slice colouring, and
-'   border removal are identical and share the private helpers below.
+'   Pie/Donut: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand palette.
+'   Treemap:   custom pipeline; no axes or gridlines; tile colours managed by Excel.
 '
-' Both variants use a custom pipeline (no ApplyChartPipeline) because pie/donut
-' charts have no axes or gridlines. Steps applied: InsertLogo, InsertSource,
-' SetRoundChartSizeAndTitle (which calls FormatTitle), slice colouring.
+' Both pie/donut use a custom pipeline (no ApplyChartPipeline) because pie/donut
+' charts have no axes or gridlines. Steps applied: InsertSource,
+' SetRoundChartSizeAndTitle (which calls FormatTitle), InsertLogo, slice colouring.
 '
 ' Palette: first 5 brand colours (Ocean, Coral, Sky, Pine, Gold).
 ' Maximum 5 slices; charts with more will show a warning and receive no colouring.
@@ -137,6 +137,30 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
 End Sub
 
 
+Private Sub BuildTreemapChart()
+    Dim cht As Chart
+
+    ' xlRectangularTreemap requires Excel 2016+
+    Set cht = GetTargetChart(xlRectangularTreemap)
+    If cht Is Nothing Then Exit Sub
+
+    ' Custom pipeline — treemaps have no axes or gridlines
+    With cht.Parent
+        .Width = chartWidth
+        .Height = chartHeight
+    End With
+    cht.ChartArea.Font.Name = fontPrimary
+    cht.ChartArea.Border.LineStyle = xlNone
+
+    ' Tile labels make a legend redundant
+    If cht.HasLegend Then cht.Legend.Delete
+
+    InsertSource cht
+    FormatTitle cht
+    InsertLogo cht  ' must follow size-setting so logo is sized against 600x600
+End Sub
+
+
 ' ============================================================
 '   PUBLIC ENTRY POINTS
 ' ============================================================
@@ -147,4 +171,8 @@ End Sub
 
 Sub DonutChart()
     BuildDonutChart
+End Sub
+
+Sub TreemapChart()
+    BuildTreemapChart
 End Sub
