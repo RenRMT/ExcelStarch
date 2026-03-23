@@ -19,6 +19,11 @@ Private Sub BuildLineChart()
     cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
     cht.Axes(xlValue).MajorTickMark = xlTickMarkOutside
     cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
+
+    ' Re-hide axis lines: setting AxisBetweenCategories and tick marks can re-show them.
+    cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    cht.Axes(xlCategory).Select
+    Selection.Format.Line.Visible = msoFalse
 End Sub
 
 Sub LineChart()

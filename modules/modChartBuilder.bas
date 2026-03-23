@@ -40,6 +40,12 @@ Function OuterFormat(cht As Chart) As Boolean
         cht.Axes(xlValue).Format.Line.Visible = msoFalse
     End If
 
+    'Hide X-axis line (requires Select — Excel doesn't expose Format.Line on Axis directly)
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).Select
+        Selection.Format.Line.Visible = msoFalse
+    End If
+
     'Remove axis titles
     If cht.HasAxis(xlValue) Then
         If cht.Axes(xlValue).HasTitle Then cht.Axes(xlValue).AxisTitle.Delete
