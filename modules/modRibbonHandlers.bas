@@ -16,7 +16,7 @@ Public Sub StackedColumn_onAction(control As IRibbonControl): StackedColumnChart
 Public Sub LineChart_onAction(control As IRibbonControl): LineChart: End Sub
 Public Sub Pie_onAction(control As IRibbonControl): PieChart: End Sub
 Public Sub Donut_onAction(control As IRibbonControl): DonutChart: End Sub
-
+Public Sub Area_onAction(control AS IRibbonControl): AreaChart End Sub
 '=== Chart tools ===
 Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl): RemoveLegendResizeButton: End Sub
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub

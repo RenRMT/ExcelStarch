@@ -75,6 +75,13 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Donut_onAction"/>
+					<button
+						id="Area"
+						image="i_menu_none"
+						label="Stacked Area Chart"
+						size="large"
+						supertip="Style a chart following the COMPANY standards"
+						onAction="Area_onAction"/>
 				</group >
 				<group
 					id="FillColors"

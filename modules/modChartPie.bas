@@ -6,7 +6,7 @@ Attribute VB_Name = "modChartPie"
 ' --------
 '   PieChart     — xlPie:               solid filled circle divided into slices
 '   DonutChart   — xlDoughnut:          same as pie with a hollow centre
-'   TreemapChart — xlRectangularTreemap: hierarchical rectangular tiles (Excel 2016+)
+'   TreemapChart — xlTreemap: hierarchical rectangular tiles
 '
 ' Differences
 ' -----------
@@ -140,8 +140,8 @@ End Sub
 Private Sub BuildTreemapChart()
     Dim cht As Chart
 
-    ' xlRectangularTreemap requires Excel 2016+
-    Set cht = GetTargetChart(xlRectangularTreemap)
+    ' xlTreemap requires Excel 2016+
+    Set cht = GetTargetChart(xlTreemap)
     If cht Is Nothing Then Exit Sub
 
     ' Custom pipeline — treemaps have no axes or gridlines
