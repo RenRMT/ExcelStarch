@@ -83,7 +83,7 @@ Function OuterFormat(cht As Chart) As Boolean
 
             cht.Legend.Position = xlLegendPositionTop
             cht.Legend.Left = legend_leftPad
-            cht.Legend.Font.color = colorBrand3
+            cht.Legend.Font.color = legendFontColor
 
             pa.Height = plotAreaHeight
             pa.Top = plotAreaTop_default
@@ -136,6 +136,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     With tr.Font
         .Italic = msoTrue
         .Size = axisFontSize
+        .Fill.ForeColor.RGB = axisFontColor
         .name = fontPrimary
     End With
 
@@ -155,6 +156,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     If cht.hasLegend Then
         With cht.Legend
             .Font.Size = axisFontSize
+
             .Top = legend_top
             .Left = legend_leftPad
         End With
@@ -313,6 +315,7 @@ Function FormatTitle(cht As Chart) As Boolean
             With .Font
                 .Size = titleFontSize
                 .name = fontPrimary
+                .Fill.ForeColor.RGB = colorBrand1
                 .Bold = msoTrue
             End With
         End With
@@ -333,6 +336,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = "Subtitle in 16pt sentence case"
             With .Font
                 .Size = subTitleFontSize
+                .Fill.ForeColor.RGB = colorBrand2
                 .name = fontPrimary
                 .Bold = msoFalse
             End With
@@ -414,15 +418,14 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = colorBrand3
+        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = legendFontColor
 
         'Change x-axis line color
         ' Note: Excel does not expose Format.Line on an Axis object directly —
         ' the property is only accessible via Selection after .Select
         cht.Axes(xlCategory).Select
         With Selection.Format.Line
-            .Visible = msoTrue
-            .ForeColor.rgb = colorBrand3
+            .Visible = msoFalse
             .ForeColor.TintAndShade = 0
             .ForeColor.Brightness = 0
             .weight = axisLineWeight

@@ -21,6 +21,10 @@ Public Const seriesOverlap As Double = 0
 Public Const titleFontSize As Double = 24
 Public Const subTitleFontSize As Double = 20
 Public Const axisFontSize As Double = 16
+Public Const titleFontColor As Long = colorBrand1
+Public Const subTitleFontColor As Long = colorBrand2
+Public Const axisFontColor As Long = colorBrand3
+Public Const legendFontColor As Long = colorBrand3
 
 '=== modChartBuilder: OuterFormat ===
 ' Layout constants use Excel points as the unit (1pt = 1/72"). Origin is the top-left
