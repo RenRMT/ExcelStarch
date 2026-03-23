@@ -33,9 +33,9 @@ Private Sub BuildPieChart()
     Set cht = GetTargetChart(xlPie)
     If cht Is Nothing Then Exit Sub
 
-    InsertLogo cht
     InsertSource cht
     SetRoundChartSizeAndTitle cht
+    InsertLogo cht      ' must follow SetRoundChartSizeAndTitle so chart is 600×600 when logo is sized
 
     pointscount = cht.SeriesCollection(1).Points.Count
     ApplySliceColors cht, pointscount
@@ -51,9 +51,9 @@ Private Sub BuildDonutChart()
     Set cht = GetTargetChart(xlDoughnut)
     If cht Is Nothing Then Exit Sub
 
-    InsertLogo cht
     InsertSource cht
     SetRoundChartSizeAndTitle cht
+    InsertLogo cht      ' must follow SetRoundChartSizeAndTitle so chart is 600×600 when logo is sized
 
     pointscount = cht.SeriesCollection(1).Points.Count
     ApplySliceColors cht, pointscount
