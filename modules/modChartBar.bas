@@ -4,20 +4,19 @@ Attribute VB_Name = "modChartBar"
 '
 ' Variants
 ' --------
-'   BarChart        — xlBarClustered:  discrete side-by-side bars per category
-'   StackedBarChart — xlBarStacked:    series stacked into a single bar per category
-'   StackedBar100Chart — xlBarStacked100: series stacked to 100% per category
+'   BarChart        — xlBarClustered: discrete side-by-side bars per category
+'   StackedBarChart — xlBarStacked:   series stacked into a single bar per category
 '
 ' Differences
 ' -----------
-'   Chart type:   xlBarClustered vs xlBarStacked vs xlBarStacked100
+'   Chart type:   xlBarClustered vs xlBarStacked
 '   RemoveShadow: called for clustered only. Clustered bars can accumulate per-series
 '                 shadows from Excel defaults; stacked bars share a single bar body so
 '                 shadow removal is not needed.
 '
 ' Everything else is identical: full FILL pipeline, no category-axis tick marks,
 ' seriesGapWidth from modConfig.
-' seriesOverlap: clustered uses modConfig value; stacked variants are always 100 (slices must be flush).
+' seriesOverlap: clustered uses modConfig value; stacked is always 100 (slices must be flush).
 '
 ' Note: modChartLollipop wraps BarChart() and post-processes the result into a
 ' lollipop style. Changes to BuildBarChart may affect lollipop output.
@@ -58,31 +57,10 @@ Private Sub BuildStackedBarChart()
 End Sub
 
 
-Private Sub BuildHundredPctStackedBarChart()
-    Dim cht As Chart
-
-    Set cht = GetTargetChart(xlBarStacked100)
-    If cht Is Nothing Then Exit Sub
-
-    ApplyChartPipeline cht, "FILL"
-    Call RemoveShadow(cht)
-
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
-
-    cht.ChartGroups(1).Overlap = 100
-    cht.ChartGroups(1).GapWidth = seriesGapWidth
-End Sub
-
-
 Sub BarChart()
     BuildBarChart
 End Sub
 
 Sub StackedBarChart()
     BuildStackedBarChart
-End Sub
-
-Sub StackedBar100Chart()
-    BuildHundredPctStackedBarChart
 End Sub
