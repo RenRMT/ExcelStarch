@@ -304,7 +304,7 @@
 						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."
 						onAction="ToggleGridlinesButton_onAction"/>
 					<button
-						id="ToggleGridlinesButton"
+						id="ToggleAxisButton"
 						image="i_menu_axislines"
 						label="Toggle Axis Lines"
 						size="large"
