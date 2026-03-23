@@ -33,7 +33,10 @@ Public Const legendFontColor As Long = colorBrand3
 ' plotAreaTop will shift the x-axis title, and may require adjusting legend_top and the
 ' yAxisLabel_* constants to keep elements visually balanced. gdChartWidth/Height_web
 ' define the overall canvas; plot area dimensions must fit within those bounds.
-Public Const plotAreaHeight As Long = 408
+'
+' Logo bottom boundary: logoTop = chartHeight - (chartHeight * logoHeightScale) - logoMarginBottom
+'   = 600 - 60 - 8 = 532 pt. All plot area bottoms (Top + Height) must stay below this.
+Public Const plotAreaHeight As Long = 370           ' 158 + 370 = 528 < 532 (logo top)
 Public Const plotAreaWidth As Long = 973
 Public Const plotAreaTop_default As Long = 158      ' single-series, or multi-series with legend
 Public Const plotAreaTop_noLegend As Long = 116     ' multi-series, no legend
@@ -43,9 +46,9 @@ Public Const plotAreaLeft As Long = 3
 Public Const xAxisTitle_plotGap As Long = 20        ' gap between plot area base and x-axis title
 Public Const legend_top As Long = 92
 Public Const legend_leftPad As Long = 7
-Public Const plotArea_noLegendSingleHeight As Long = 421
+Public Const plotArea_noLegendSingleHeight As Long = 421  ' 105 + 421 = 526 < 532 (logo top)
 Public Const plotArea_noLegendSingleTop As Long = 105
-Public Const plotArea_noLegendMultiHeight As Long = 460
+Public Const plotArea_noLegendMultiHeight As Long = 450   ' 79 + 450 = 529 < 532 (logo top)
 Public Const plotArea_noLegendMultiTop As Long = 79
 
 '=== modChartBuilder: InsertLogo ===
