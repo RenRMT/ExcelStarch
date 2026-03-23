@@ -103,10 +103,12 @@ Public Const errorBoxHeight As Long = 53
 Public Const errorBoxFontSize As Double = 10
 
 '=== modRemoveLegendResize ===
-Public Const removeLegend_webHeight As Long = 224
-Public Const removeLegend_webTop As Long = 85
-Public Const removeLegend_webWidth As Long = 394
-Public Const removeLegend_webLeft As Long = 1
+' Aligned with noLegend-multi dimensions so the plot area matches what the pipeline
+' would produce for a multi-series chart created without a legend.
+Public Const removeLegend_webHeight As Long = 450   ' = plotArea_noLegendMultiHeight
+Public Const removeLegend_webTop As Long = 79       ' = plotArea_noLegendMultiTop
+Public Const removeLegend_webWidth As Long = 973    ' = plotAreaWidth
+Public Const removeLegend_webLeft As Long = 3       ' = plotAreaLeft
 
 '=== modLabelLastPoint: BuildLabelLastPoint ===
 Public Const labelLastPointPlotWidthInset As Long = 66    ' narrowed for end labels on line charts
