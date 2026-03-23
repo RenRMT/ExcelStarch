@@ -322,7 +322,7 @@ Function FormatTitle(cht As Chart) As Boolean
             With .Font
                 .Size = generalFontSize
                 .name = fontPrimary
-                .Fill.ForeColor.RGB = colorBrand3
+                .Fill.ForeColor.RGB = generalFontColor
                 .Bold = msoFalse
             End With
         End With
@@ -342,7 +342,7 @@ Function FormatTitle(cht As Chart) As Boolean
             With .Font
                 .Size = titleFontSize
                 .name = fontPrimary
-                .Fill.ForeColor.RGB = colorBrand1
+                .Fill.ForeColor.RGB = titleFontColor
                 .Bold = msoTrue
             End With
         End With
@@ -363,7 +363,7 @@ Function FormatTitle(cht As Chart) As Boolean
             .Text = subtitleDefaultText
             With .Font
                 .Size = subTitleFontSize
-                .Fill.ForeColor.RGB = colorBrand2
+                .Fill.ForeColor.RGB = subTitleFontColor
                 .name = fontPrimary
                 .Bold = msoFalse
             End With
@@ -464,7 +464,7 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlValue).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = colorBrand3
+        cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = axisFontColor
 
     End If
 

@@ -9,12 +9,6 @@ Public Const colorBrand2 As Long = 4738357     'Dark Green  #354D48   RGB(53, 77
 Public Const colorBrand3 As Long = 655874      'Black        RGB(2, 2, 10)
 Public Const colorBrand4 As Long = 16382457    'Light Grey    RGB(249, 249, 249)
 
-' Alternative brand colors, kept for easy switching
-'Public Const colorBrand1 As Long = 10963739    'Primary Blue  RGB(27, 75, 167)
-'Public Const colorBrand2 As Long = 2888711     'Dark Blue     RGB(7, 20, 44)
-'Public Const colorBrand3 As Long = 655874      'Black        RGB(2, 2, 10)
-'Public Const colorBrand4 As Long = 16382457    'Light Grey    RGB(249, 249, 249)
-
 '=== Neutral colors ===
 ' Note: colorNeutral2 and colorNeutral3 are defined for completeness but not currently referenced in code.
 Public Const colorNeutral1 As Long = 13421772  'Silver  RGB(204, 204, 204)

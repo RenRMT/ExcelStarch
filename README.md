@@ -1,4 +1,4 @@
-# ExcelStarch to fix your Excel charts
+# ExcelStarch for crisp Excel charts
 
 Ever encountered a chart or graph in the wild that just looked...Excelly? Charts made in Excel don't *have* to look bad, the default settings are just not very good. This configurable Excel add-in applies better default settings or specific organisational chart style standards from a dedicated ribbon tab. Select a data range, click a chart type, and the add-in creates a fully formatted chart.
 
