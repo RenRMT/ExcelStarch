@@ -131,7 +131,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     shp.name = "XAxisBox"
 
     Set tr = shp.TextFrame2.TextRange
-    tr.Text = "X axis title (unit)"
+    tr.Text = xAxisDefaultText
 
     With tr.Font
         .Italic = msoTrue
@@ -257,8 +257,7 @@ Function InsertSource(cht As Chart) As Boolean
 
     With sourceB
         .name = "SourceBox"
-        .Text = "Source: Source text goes here." & vbNewLine & _
-                "Notes: Notes text goes here."
+        .Text = sourceDefaultText & vbNewLine & notesDefaultText
         .Font.Size = sourceTextFontSize
         .Font.name = fontPrimary
     End With
@@ -311,7 +310,7 @@ Function FormatTitle(cht As Chart) As Boolean
     With titleB1
         .name = "TitleBox"
         With .TextFrame2.TextRange
-            .Text = "Title in 20pt sentence case"
+            .Text = titleDefaultText
             With .Font
                 .Size = titleFontSize
                 .name = fontPrimary
@@ -333,7 +332,7 @@ Function FormatTitle(cht As Chart) As Boolean
     With titleB2
         .name = "SubTitleBox"
         With .TextFrame2.TextRange
-            .Text = "Subtitle in 16pt sentence case"
+            .Text = subtitleDefaultText
             With .Font
                 .Size = subTitleFontSize
                 .Fill.ForeColor.RGB = colorBrand2
@@ -362,7 +361,7 @@ Function FormatTitle(cht As Chart) As Boolean
     With titleB3
         .name = "YAxisLabelBox"
         With .TextFrame2.TextRange
-            .Text = "Y axis title (unit)"
+            .Text = yAxisDefaultText
             With .Font
                 .Size = axisFontSize
                 .name = fontPrimaryItalic

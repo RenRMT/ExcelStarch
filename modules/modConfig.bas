@@ -20,6 +20,7 @@ Public Const seriesOverlap As Double = 0
 'chart area constants
 Public Const titleFontSize As Double = 24
 Public Const subTitleFontSize As Double = 20
+Public Const generalFontSize As Double = 16
 Public Const axisFontSize As Double = 16
 Public Const titleFontColor As Long = colorBrand1
 Public Const subTitleFontColor As Long = colorBrand2
@@ -64,6 +65,14 @@ Public Const titleBoxWidth As Long = 394
 Public Const titleBoxHeight As Long = 39
 Public Const subtitleBoxTop As Long = 53
 Public Const subtitleBoxHeight As Long = 33
+
+'=== Placeholder texts (modChartBuilder: FormatTitle, FormatXAxisTitle, InsertSource) ===
+Public Const titleDefaultText    As String = "Title in 20pt sentence case"
+Public Const subtitleDefaultText As String = "Subtitle in 16pt sentence case"
+Public Const yAxisDefaultText    As String = "Y axis title (unit)"
+Public Const xAxisDefaultText    As String = "X axis title (unit)"
+Public Const sourceDefaultText   As String = "Source: Source text goes here."
+Public Const notesDefaultText    As String = "Notes: Notes text goes here."
 Public Const titleBoxNudge As Long = 5              ' pixel nudge applied to top/left for alignment
 Public Const yAxisLabel_legendTop As Long = 126
 Public Const yAxisLabel_singleTop As Long = 85
