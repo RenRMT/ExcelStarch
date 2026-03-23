@@ -14,24 +14,38 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Column_onAction"/>
-					<button 
+					<button
 						id="StackedColumn"
 						image="i_chart_stacked_vbar"
 						label="Stacked Column"
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedColumn_onAction"/>
+					<button
+						id="StackedColumn100"
+						image="i_menu_none"
+						label="100% Stacked Column"
+						size="large"
+						supertip="Style a 100% stacked column chart following the COMPANY standards."
+						onAction="StackedColumn100_onAction"/>
 				</group >
-				<group 
+				<group
 					id="LineGroup"
 					label="Line">
-					<button 
+					<button
 						id="LineChart"
 						image="i_chart_line"
 						label="Line Chart"
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="LineChart_onAction"/>
+					<button
+						id="LineMarkers"
+						image="i_menu_none"
+						label="Line + Markers"
+						size="large"
+						supertip="Style a line chart with markers following the COMPANY standards."
+						onAction="LineMarkers_onAction"/>
 				</group >
 				<group 
 					id="BarGroup"
@@ -50,13 +64,20 @@
 						size="large"
 						supertip="Style a lollipop chart following the COMPANY standards"
 						onAction="Lollipop_onAction"/>
-					<button 
+					<button
 						id="StackedBar"
 						image="i_chart_stacked_hbar"
 						label="Stacked Bar"
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="StackedBar_onAction"/>
+					<button
+						id="StackedBar100"
+						image="i_menu_none"
+						label="100% Stacked Bar"
+						size="large"
+						supertip="Style a 100% stacked bar chart following the COMPANY standards."
+						onAction="StackedBar100_onAction"/>
 				</group >
 				<group
 					id="OtherGraphs"
@@ -75,6 +96,41 @@
 						size="large"
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Donut_onAction"/>
+					<button
+						id="Treemap"
+						image="i_menu_none"
+						label="Treemap"
+						size="large"
+						supertip="Style a treemap chart following the COMPANY standards. Requires Excel 2016+."
+						onAction="Treemap_onAction"/>
+					<button
+						id="AreaChartButton"
+						image="i_menu_none"
+						label="Area Chart"
+						size="large"
+						supertip="Style an area chart following the COMPANY standards."
+						onAction="AreaChart_onAction"/>
+					<button
+						id="Area100Button"
+						image="i_menu_none"
+						label="100% Stacked Area"
+						size="large"
+						supertip="Style a 100% stacked area chart following the COMPANY standards."
+						onAction="Area100_onAction"/>
+					<button
+						id="ScatterChartButton"
+						image="i_menu_none"
+						label="Scatter Plot"
+						size="large"
+						supertip="Style a scatter plot following the COMPANY standards."
+						onAction="ScatterChart_onAction"/>
+					<button
+						id="BubbleChartButton"
+						image="i_menu_none"
+						label="Bubble Chart"
+						size="large"
+						supertip="Style a bubble chart following the COMPANY standards."
+						onAction="BubbleChart_onAction"/>
 				</group >
 				<group
 					id="FillColors"

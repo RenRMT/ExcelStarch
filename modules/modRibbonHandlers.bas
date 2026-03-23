@@ -8,14 +8,22 @@ Option Explicit
 '=== Chart creation ===
 Public Sub Bar_onAction(control As IRibbonControl): BarChart: End Sub
 Public Sub StackedBar_onAction(control As IRibbonControl): StackedBarChart: End Sub
+Public Sub StackedBar100_onAction(control As IRibbonControl): StackedBar100Chart: End Sub
 Public Sub Lollipop_onAction(control As IRibbonControl): LollipopChart: End Sub
 
 Public Sub Column_onAction(control As IRibbonControl): ColumnChart: End Sub
 Public Sub StackedColumn_onAction(control As IRibbonControl): StackedColumnChart: End Sub
+Public Sub StackedColumn100_onAction(control As IRibbonControl): StackedColumn100Chart: End Sub
 
 Public Sub LineChart_onAction(control As IRibbonControl): LineChart: End Sub
+Public Sub LineMarkers_onAction(control As IRibbonControl): LineMarkersChart: End Sub
 Public Sub Pie_onAction(control As IRibbonControl): PieChart: End Sub
 Public Sub Donut_onAction(control As IRibbonControl): DonutChart: End Sub
+Public Sub Treemap_onAction(control As IRibbonControl): TreemapChart: End Sub
+Public Sub AreaChart_onAction(control As IRibbonControl): AreaChart: End Sub
+Public Sub Area100_onAction(control As IRibbonControl): Area100Chart: End Sub
+Public Sub ScatterChart_onAction(control As IRibbonControl): ScatterChart: End Sub
+Public Sub BubbleChart_onAction(control As IRibbonControl): BubbleChart: End Sub
 
 '=== Chart tools ===
 Public Sub RemoveLegendResizeButton_onAction(control As IRibbonControl): RemoveLegendResizeButton: End Sub
