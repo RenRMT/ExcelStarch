@@ -26,6 +26,7 @@ Public Const titleFontColor As Long = colorBrand1
 Public Const subTitleFontColor As Long = colorBrand2
 Public Const axisFontColor As Long = colorBrand3
 Public Const legendFontColor As Long = colorBrand3
+Public Const generalFontColor As Long = colorBrand3
 
 '=== modChartBuilder: OuterFormat ===
 ' Layout constants use Excel points as the unit (1pt = 1/72"). Origin is the top-left
@@ -53,7 +54,7 @@ Public Const plotArea_noLegendMultiTop As Long = 79
 
 '=== modChartBuilder: InsertLogo ===
 Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of chart height
-Public Const logoAspectRatio As Double = 1.8        ' logo width = aspectRatio x height
+Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
 Public Const logoMarginRight As Single = 10
 Public Const logoMarginBottom As Single = 8
 
