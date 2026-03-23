@@ -42,7 +42,7 @@ Private Sub BuildLollipopChart()
         End With
 
         ' Add horizontal error bar extending from the value back to zero (the stick)
-        srs.ErrorBar Direction:=xlX, Include:=xlMinusValues, Type:=xlPercentage, Amount:=100
+        srs.ErrorBar Direction:=xlX, Include:=xlMinusValues, Type:=xlErrorBarTypePercent, Amount:=100
         srs.ErrorBars.EndStyle = xlNoCap
 
         ' Format stick: brand colour, round join, oval arrowhead at the value end (the candy)
@@ -51,7 +51,7 @@ Private Sub BuildLollipopChart()
             .Visible = msoTrue
             .ForeColor.RGB = clr
             .Weight = lollipopStickWeight
-            .JoinType = msoLineRoundJoin
+            .JoinType = msoLineJoinRound
             .BeginArrowheadStyle = msoArrowheadOval
             .BeginArrowheadLength = msoArrowheadLengthMedium
             .BeginArrowheadWidth = msoArrowheadWidthMedium
