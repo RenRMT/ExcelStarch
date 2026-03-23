@@ -38,6 +38,9 @@
 #*.[pP][pP][sS]
 #*.[pP][pP][sS][mM]
 
-#Claude files containing company-specific info
+# Claude files containing company-specific info
 .claude/
 CLAUDE.md
+
+# source files for icons
+src/
