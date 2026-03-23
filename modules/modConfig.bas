@@ -65,9 +65,11 @@ Public Const sourceBoxLeftNudge As Long = 5
 
 '=== modChartBuilder: FormatTitle ===
 Public Const titleBoxWidth As Long = 394
-Public Const titleBoxHeight As Long = 39
-Public Const subtitleBoxTop As Long = 53
-Public Const subtitleBoxHeight As Long = 33
+Public Const titleBoxHeight As Long = 32    ' reduced from 39 to make room for FigureBox
+Public Const subtitleBoxTop As Long = 54   ' = figureBoxHeight(22) + titleBoxHeight(32)
+Public Const subtitleBoxHeight As Long = 24 ' reduced from 33 to make room for FigureBox
+Public Const figureBoxHeight As Long = 22
+Public Const figureBoxDefaultText As String = "Figure XX (optional)"
 
 '=== Placeholder texts (modChartBuilder: FormatTitle, FormatXAxisTitle, InsertSource) ===
 Public Const titleDefaultText    As String = "Title in 20pt sentence case"

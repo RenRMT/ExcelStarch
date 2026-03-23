@@ -289,6 +289,7 @@ End Function
 Function FormatTitle(cht As Chart) As Boolean
     On Error GoTo Fail
 
+    Dim figureB As Shape
     Dim titleB1 As Shape, titleB2 As Shape, titleB3 As Shape
     Dim plt As PlotArea
     Dim seriescount As Long
@@ -296,6 +297,7 @@ Function FormatTitle(cht As Chart) As Boolean
     Dim hasLegend As Boolean
 
     ' Delete existing title-related boxes safely
+    SafeDeleteShape cht, "FigureBox"
     SafeDeleteShape cht, "TitleBox"
     SafeDeleteShape cht, "SubTitleBox"
     SafeDeleteShape cht, "YAxisLabelBox"
@@ -308,10 +310,30 @@ Function FormatTitle(cht As Chart) As Boolean
     hasLegend = cht.hasLegend
     Set plt = cht.PlotArea
 
-    ' Title
+    ' Figure number box (above title)
+    Set figureB = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=0, Width:=titleBoxWidth, Height:=figureBoxHeight)
+
+    With figureB
+        .name = "FigureBox"
+        With .TextFrame2.TextRange
+            .Text = figureBoxDefaultText
+            With .Font
+                .Size = generalFontSize
+                .name = fontPrimary
+                .Fill.ForeColor.RGB = colorBrand3
+                .Bold = msoFalse
+            End With
+        End With
+        .Top = .Top - titleBoxNudge
+        .Left = .Left - titleBoxNudge
+    End With
+
+    ' Title (positioned below FigureBox)
     Set titleB1 = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=0, Width:=titleBoxWidth, Height:=titleBoxHeight)
+                    Left:=0, Top:=figureBoxHeight, Width:=titleBoxWidth, Height:=titleBoxHeight)
 
     With titleB1
         .name = "TitleBox"
