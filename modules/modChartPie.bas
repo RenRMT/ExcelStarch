@@ -1,21 +1,22 @@
 Attribute VB_Name = "modChartPie"
 '==== Module: modChartPie ====
-' Pie, donut, and treemap chart variants.
+' Pie and treemap chart variants.
 '
 ' Variants
 ' --------
-'   PieChart     — xlPie:               solid filled circle divided into slices
-'   DonutChart   — xlDoughnut:          same as pie with a hollow centre
+'   PieChart     — xlPie:     solid filled circle divided into slices
 '   TreemapChart — xlTreemap: hierarchical rectangular tiles
 '
 ' Differences
 ' -----------
-'   Pie/Donut: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand palette.
-'   Treemap:   custom pipeline; no axes or gridlines; tile colours managed by Excel.
+'   Pie: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand palette.
+'   Treemap: custom pipeline; no axes or gridlines; tile colours managed by Excel.
 '
-' Both pie/donut use a custom pipeline (no ApplyChartPipeline) because pie/donut
-' charts have no axes or gridlines. Steps applied: InsertSource,
-' SetRoundChartSizeAndTitle (which calls FormatTitle), InsertLogo, slice colouring.
+' Pie uses a custom pipeline (no ApplyChartPipeline) because pie charts have no axes
+' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
+' FormatTitle), InsertLogo, slice colouring.
+'
+' To toggle between pie and donut, use ToggleChartVariant (modChartTools).
 '
 ' Palette: first 5 brand colours (Ocean, Coral, Sky, Pine, Gold).
 ' Maximum 5 slices; charts with more will show a warning and receive no colouring.
@@ -31,24 +32,6 @@ Private Sub BuildPieChart()
     Dim pointscount As Long
 
     Set cht = GetTargetChart(xlPie)
-    If cht Is Nothing Then Exit Sub
-
-    InsertSource cht
-    SetRoundChartSizeAndTitle cht
-    InsertLogo cht      ' must follow SetRoundChartSizeAndTitle so chart is 600×600 when logo is sized
-
-    pointscount = cht.SeriesCollection(1).Points.Count
-    ApplySliceColors cht, pointscount
-End Sub
-
-
-Private Sub BuildDonutChart()
-    Dim cht As Chart
-    Dim pointscount As Long
-
-    ' xlDoughnut — identical to pie in all respects except the hollow centre.
-    ' Hole size is controlled by Excel's default (75%); no VBA override applied.
-    Set cht = GetTargetChart(xlDoughnut)
     If cht Is Nothing Then Exit Sub
 
     InsertSource cht
@@ -167,10 +150,6 @@ End Sub
 
 Sub PieChart()
     BuildPieChart
-End Sub
-
-Sub DonutChart()
-    BuildDonutChart
 End Sub
 
 Sub TreemapChart()

@@ -69,13 +69,6 @@
 						supertip="Style a chart following the COMPANY standards"
 						onAction="Pie_onAction"/>
 					<button
-						id="Donut"
-						image="i_chart_donut"
-						label="Donut Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Donut_onAction"/>
-					<button
 						id="Area"
 						image="i_menu_none"
 						label="Stacked Area Chart"
@@ -331,6 +324,13 @@
 						size="large"
 						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
 						onAction="RemoveLegendResizeButton_onAction"/>
+					<button
+						id="ToggleChartVariantButton"
+						image="i_menu_none"
+						label="Toggle Variant"
+						size="large"
+						supertip="Toggle between chart type variants: stacked ↔ 100% stacked, pie ↔ donut, line ↔ line with markers."
+						onAction="ToggleChartVariantButton_onAction"/>
 				</group>
 				<group id="ChartExportButton" label="Export">
 					<button
