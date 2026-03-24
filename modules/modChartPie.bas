@@ -18,8 +18,8 @@ Attribute VB_Name = "modChartPie"
 '
 ' To toggle between pie and donut, use ToggleChartVariant (modChartTools).
 '
-' Palette: first 5 brand colours (Ocean, Coral, Sky, Pine, Gold).
-' Maximum 5 slices; charts with more will show a warning and receive no colouring.
+' Palette: 7 data colours (Ocean, Coral, Sky, Pine, Gold, Rust, Lavender).
+' Slices beyond 7 use colorNeutral2 (Steel).
 Option Explicit
 
 
@@ -28,6 +28,8 @@ Option Explicit
 ' ============================================================
 
 Private Sub BuildPieChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
     Dim pointscount As Long
 
@@ -40,6 +42,10 @@ Private Sub BuildPieChart()
 
     pointscount = cht.SeriesCollection(1).Points.Count
     ApplySliceColors cht, pointscount
+
+    Exit Sub
+CleanFail:
+    MsgError "BuildPieChart"
 End Sub
 
 
@@ -48,33 +54,39 @@ End Sub
 ' ============================================================
 
 Private Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
-    If pointscount > 5 Then
-        MsgTooManySeries cht
-        Exit Sub
-    End If
-
-    Dim palette(1 To 5) As Long
-    palette(1) = colorData1
-    palette(2) = colorData2
-    palette(3) = colorData3
-    palette(4) = colorData4
-    palette(5) = colorData5
+    On Error GoTo CleanFail
 
     Dim i As Long
+    Dim sliceColor As Long
+
     For i = 1 To pointscount
+        ' GetPaletteColor returns the brand palette color for i <= 7.
+        ' For slices beyond 7, use colorNeutral2 (Steel) instead of the default colorNeutral1.
+        If i <= 7 Then
+            sliceColor = GetPaletteColor(i)
+        Else
+            sliceColor = colorNeutral2
+        End If
+
         With cht.SeriesCollection(1).Points(i).Format
             With .Fill
                 .Visible = msoTrue
                 .Solid
-                .ForeColor.RGB = palette(i)
+                .ForeColor.RGB = sliceColor
             End With
             .Line.Visible = msoFalse
         End With
     Next i
+
+    Exit Sub
+CleanFail:
+    MsgError "ApplySliceColors"
 End Sub
 
 
 Private Sub SetRoundChartSizeAndTitle(cht As Chart)
+    On Error GoTo CleanFail
+
     ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
     ' sizing, centering, and legend placement are identical for both variants.
     Dim chtObj As ChartObject
@@ -117,10 +129,16 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
         Selection.Top = pieLegendTop
         Selection.Font.Size = axisFontSize
     End If
+
+    Exit Sub
+CleanFail:
+    MsgError "SetRoundChartSizeAndTitle"
 End Sub
 
 
 Private Sub BuildTreemapChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     ' xlTreemap requires Excel 2016+
@@ -141,6 +159,10 @@ Private Sub BuildTreemapChart()
     InsertSource cht
     FormatTitle cht
     InsertLogo cht  ' must follow size-setting so logo is sized against 600x600
+
+    Exit Sub
+CleanFail:
+    MsgError "BuildTreemapChart"
 End Sub
 
 

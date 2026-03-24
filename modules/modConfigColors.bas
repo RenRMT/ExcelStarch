@@ -10,7 +10,7 @@ Public Const colorBrand3 As Long = 655874      'Black        RGB(2, 2, 10)
 Public Const colorBrand4 As Long = 16382457    'Light Grey    RGB(249, 249, 249)
 
 '=== Neutral colors ===
-' Note: colorNeutral2 and colorNeutral3 are defined for completeness but not currently referenced in code.
+' Note: colorNeutral3 is defined for completeness but not currently referenced in code.
 Public Const colorNeutral1 As Long = 13421772  'Silver  RGB(204, 204, 204)
 Public Const colorNeutral2 As Long = 12303291  'Steel   RGB(187, 187, 187)
 Public Const colorNeutral3 As Long = 10263708  'Ash     RGB(156, 156, 156)

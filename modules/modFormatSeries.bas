@@ -8,7 +8,7 @@ Private m_useAltOrder As Boolean
 
 Public Function GetPaletteColor(ByVal i As Long) As Long
     ' Returns the brand colour for series index i, respecting the current palette order.
-    ' Falls back to colorNeutral1 for i > 7.
+    ' Falls back to colorNeutral2 for i > 7.
     Dim palette(1 To 7) As Long
     If m_useAltOrder Then
         palette(1) = colorData1:    palette(2) = colorData7:    palette(3) = colorData3
@@ -19,7 +19,7 @@ Public Function GetPaletteColor(ByVal i As Long) As Long
         palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData6
         palette(7) = colorData7
     End If
-    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorNeutral1)
+    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorNeutral2)
 End Function
 
 Public Sub TogglePaletteOrder()
