@@ -2,6 +2,8 @@ Attribute VB_Name = "modChartLine"
 Option Explicit
 
 Private Sub BuildLineChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlLine)
@@ -12,18 +14,23 @@ Private Sub BuildLineChart()
     Call RemoveShadow(cht)
 
     ' Line-specific: axis starts on first data point (not between categories)
-    cht.Axes(xlCategory).AxisBetweenCategories = False
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).AxisBetweenCategories = False
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkOutside
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+        ' Re-hide axis line: AxisBetweenCategories assignment can re-show it
+        cht.Axes(xlCategory).Select
+        Selection.Format.Line.Visible = msoFalse
+    End If
 
-    ' Line-specific: tick marks outside on both axes
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkOutside
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
-    cht.Axes(xlValue).MajorTickMark = xlTickMarkOutside
-    cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
-
-    ' Re-hide axis lines: setting AxisBetweenCategories and tick marks can re-show them.
-    cht.Axes(xlValue).Format.Line.Visible = msoFalse
-    cht.Axes(xlCategory).Select
-    Selection.Format.Line.Visible = msoFalse
+    If cht.HasAxis(xlValue) Then
+        cht.Axes(xlValue).MajorTickMark = xlTickMarkOutside
+        cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
+        cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    End If
+    Exit Sub
+CleanFail:
+    MsgError "BuildLineChart"
 End Sub
 
 Sub LineChart()

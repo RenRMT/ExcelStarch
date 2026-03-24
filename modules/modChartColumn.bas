@@ -21,6 +21,8 @@ Option Explicit
 
 
 Private Sub BuildColumnChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlColumnClustered)
@@ -29,15 +31,22 @@ Private Sub BuildColumnChart()
     ApplyChartPipeline cht, "FILL"
     Call RemoveShadow(cht)
 
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
 
     cht.ChartGroups(1).Overlap = seriesOverlap
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+    Exit Sub
+CleanFail:
+    MsgError "BuildColumnChart"
 End Sub
 
 
 Private Sub BuildStackedColumnChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlColumnStacked)
@@ -46,11 +55,16 @@ Private Sub BuildStackedColumnChart()
     ApplyChartPipeline cht, "FILL"
     Call RemoveShadow(cht)
 
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
 
     cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+    Exit Sub
+CleanFail:
+    MsgError "BuildStackedColumnChart"
 End Sub
 
 

@@ -24,6 +24,8 @@ Option Explicit
 
 
 Private Sub BuildBarChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBarClustered)
@@ -32,15 +34,22 @@ Private Sub BuildBarChart()
     ApplyChartPipeline cht, "FILL"
     Call RemoveShadow(cht)
 
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
 
     cht.ChartGroups(1).Overlap = seriesOverlap
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+    Exit Sub
+CleanFail:
+    MsgError "BuildBarChart"
 End Sub
 
 
 Private Sub BuildStackedBarChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBarStacked)
@@ -49,11 +58,16 @@ Private Sub BuildStackedBarChart()
     ApplyChartPipeline cht, "FILL"
     Call RemoveShadow(cht)
 
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
 
     cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+    Exit Sub
+CleanFail:
+    MsgError "BuildStackedBarChart"
 End Sub
 
 

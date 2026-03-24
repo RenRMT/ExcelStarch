@@ -24,6 +24,7 @@ Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String)
     Call FormatGridlines(cht)
     Call FormatXAxis(cht)
     Call FormatSeriesColors(cht, UCase$(colorMode))
+    Call ApplyDefaultFormatting(cht)
 End Sub
 
 
@@ -73,7 +74,7 @@ Function OuterFormat(cht As Chart) As Boolean
     Dim pa As PlotArea
     Set pa = cht.PlotArea
 
-    If seriescount = 1 Then
+    If seriescount = 1 Or Not defaultLegend Then
 
         'Remove legend
         If cht.hasLegend Then cht.Legend.Delete
@@ -167,15 +168,10 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
             .Left = legendLeftPad
         End With
     Else
-        ' Adjust plot area when no legend
+        ' No legend — use no-legend plot area dimensions
         With plt
-            If seriescount = 1 Then
-                .Height = PlotAreaHeight_noLegend
-                .Top = PlotAreaTop_noLegend
-            Else
-                .Height = PlotAreaHeight_noLegend
-                .Top = PlotAreaTop_noLegend
-            End If
+            .Height = PlotAreaHeight_noLegend
+            .Top = PlotAreaTop_noLegend
         End With
     End If
 
@@ -268,15 +264,11 @@ Function InsertSource(cht As Chart) As Boolean
         .Font.name = fontPrimary
     End With
 
-    'Bottom-align the text
-    cht.Shapes.Range(Array("SourceBox")).Select
-    With Selection
+    'Bottom-align the text and apply padding directly via the shape object
+    With cht.Shapes("SourceBox")
         .VerticalAlignment = xlBottom
+        .IncrementLeft -sourceBoxLeftNudge
     End With
-
-    ' padding
-    cht.Shapes.Range(Array("SourceBox")).Select
-    Selection.ShapeRange.IncrementLeft -sourceBoxLeftNudge
 
     InsertSource = True
     Exit Function
@@ -387,7 +379,7 @@ Function FormatTitle(cht As Chart) As Boolean
     Set titleB3 = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
                     Left:=0, Top:=yAxisTop, Width:=titleBoxWidth, _
-                    Height:=IIf(hasLegend, yAxisLabelHeight, yAxisLabelHeight))
+                    Height:=yAxisLabelHeight)
 
     With titleB3
         .name = "YAxisLabelBox"
@@ -414,6 +406,11 @@ End Function
 
 Function FormatGridlines(cht As Chart) As Boolean
     On Error GoTo Fail
+
+    If Not cht.HasAxis(xlValue) Then
+        FormatGridlines = True
+        Exit Function
+    End If
 
     Dim ax As Axis
     Set ax = cht.Axes(xlValue)
@@ -513,16 +510,45 @@ Public Sub SafeDeleteShape(cht As Chart, ByVal nm As String)
 End Sub
 
 
-' Returns a duplicate chart to style. Two entry paths:
-'   1. A chart is already active  → duplicate it; return the copy.
-'   2. A range is selected        → create a new chart of chartType, duplicate it, return the copy.
-' In both paths the original is left untouched. Returns Nothing on any other selection state.
+' Applies defaults from modConfig after the full pipeline completes.
+' Undoes gridlines added by FormatGridlines and removes axes per defaultAxisDisplay.
+' Called as the final step of ApplyChartPipeline so earlier steps can still access axes.
+Private Sub ApplyDefaultFormatting(cht As Chart)
+    On Error GoTo CleanFail
+
+    ' --- Gridlines: remove value-axis gridlines unless Y or Both are requested
+    If defaultGridlines = axisNone Or defaultGridlines = axisX Then
+        If cht.HasAxis(xlValue) Then
+            If cht.Axes(xlValue).HasMajorGridlines Then
+                cht.Axes(xlValue).MajorGridlines.Delete
+            End If
+        End If
+    End If
+
+    ' --- Axis display: show/hide each axis per default constant
+    Dim showX As Boolean, showY As Boolean
+    showX = (defaultAxisDisplay = axisX Or defaultAxisDisplay = axisBoth)
+    showY = (defaultAxisDisplay = axisY Or defaultAxisDisplay = axisBoth)
+
+    cht.HasAxis(xlValue) = showY
+    cht.HasAxis(xlCategory) = showX
+
+    Exit Sub
+CleanFail:
+    MsgError "ApplyDefaultFormatting"
+End Sub
+
+
+' Returns the chart to style, modifying it in-place. Two entry paths:
+'   1. A chart is already active  → retype it to chartType; return it.
+'   2. A range is selected        → create a new chart of chartType; return it.
+' Returns Nothing on any other selection state.
 Public Function GetTargetChart(ByVal chartType As Long) As Chart
     On Error GoTo Fail
 
     If Not ActiveChart Is Nothing Then
-        ActiveChart.Parent.Duplicate.Select
-        If Not ActiveChart Is Nothing Then Set GetTargetChart = ActiveChart
+        ActiveChart.ChartType = chartType
+        Set GetTargetChart = ActiveChart
         Exit Function
     End If
 
@@ -532,8 +558,6 @@ Public Function GetTargetChart(ByVal chartType As Long) As Chart
     End If
 
     ActiveSheet.Shapes.AddChart2(-1, chartType).Select
-    ActiveChart.Parent.Duplicate.Select
-
     If Not ActiveChart Is Nothing Then Set GetTargetChart = ActiveChart
     Exit Function
 

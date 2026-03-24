@@ -14,6 +14,8 @@ Option Explicit
 
 
 Private Sub BuildStackedAreaChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlAreaStacked)
@@ -22,17 +24,23 @@ Private Sub BuildStackedAreaChart()
     ApplyChartPipeline cht, "FILL"
 
     ' Area-specific: axis starts on first data point so areas fill to chart edges
-    cht.Axes(xlCategory).AxisBetweenCategories = False
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).AxisBetweenCategories = False
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+        ' Re-hide axis line: AxisBetweenCategories assignment can re-show it
+        cht.Axes(xlCategory).Select
+        Selection.Format.Line.Visible = msoFalse
+    End If
 
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
-    cht.Axes(xlValue).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
-
-    ' Re-hide axis lines: AxisBetweenCategories assignment can re-show them
-    cht.Axes(xlValue).Format.Line.Visible = msoFalse
-    cht.Axes(xlCategory).Select
-    Selection.Format.Line.Visible = msoFalse
+    If cht.HasAxis(xlValue) Then
+        cht.Axes(xlValue).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
+        cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    End If
+    Exit Sub
+CleanFail:
+    MsgError "BuildStackedAreaChart"
 End Sub
 
 Sub AreaChart()
