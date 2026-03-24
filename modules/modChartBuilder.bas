@@ -320,7 +320,7 @@ Function FormatTitle(cht As Chart) As Boolean
         With .TextFrame2.TextRange
             .Text = figureBoxDefaultText
             With .Font
-                .Size = generalFontSize
+                .Size = figureFontSize
                 .name = fontPrimary
                 .Fill.ForeColor.RGB = figureFontColor
                 .Bold = msoFalse
@@ -337,7 +337,9 @@ Function FormatTitle(cht As Chart) As Boolean
 
     With titleB1
         .name = "TitleBox"
-        With .TextFrame2.TextRange
+        With .TextFrame2
+        .VerticalAnchor = msoAnchorMiddle
+        With .TextRange
             .Text = titleDefaultText
             With .Font
                 .Size = titleFontSize
@@ -345,6 +347,7 @@ Function FormatTitle(cht As Chart) As Boolean
                 .Fill.ForeColor.RGB = titleFontColor
                 .Bold = msoTrue
             End With
+        End With
         End With
 
         ' nudge
@@ -378,13 +381,13 @@ Function FormatTitle(cht As Chart) As Boolean
     If hasLegend Then
         yAxisTop = yAxisLabelTop
     Else
-        yAxisTop = IIf(seriescount = 1, yAxisLabelTop, yAxisLabelTop)
+        yAxisTop = yAxisLabelTop_noLegend
     End If
 
     Set titleB3 = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
                     Left:=0, Top:=yAxisTop, Width:=titleBoxWidth, _
-                    Height:=IIf(hasLegend, yAXisLabelHeight, yAXisLabelHeight))
+                    Height:=IIf(hasLegend, yAxisLabelHeight, yAxisLabelHeight))
 
     With titleB3
         .name = "YAxisLabelBox"

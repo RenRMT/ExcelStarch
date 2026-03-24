@@ -91,20 +91,3 @@ Public Sub MsgPaletteOrderToggled(ByVal altOrder As Boolean)
     End If
 End Sub
 
-' Adds a styled error box to the chart when the series count exceeds the supported limit.
-' Overlays a yellow/red warning directly on the chart area.
-Public Sub MsgTooManySeries(cht As Chart)
-    Dim txtB As Shape
-    Set txtB = cht.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, errorBoxWidth, errorBoxHeight)
-    With txtB
-        .name = "ErrorBox"
-        With .TextFrame2.TextRange
-            .Text = "You have too many data series for this chart type."
-            .Font.Size = errorBoxFontSize
-            .Font.name = fontPrimary
-            .Font.Fill.ForeColor.RGB = vbRed
-            .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
-        End With
-        .Fill.ForeColor.RGB = vbYellow
-    End With
-End Sub

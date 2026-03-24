@@ -45,6 +45,7 @@ agents/
 contexts/
 commands/
 rules/ 
+PLAN.md
 
 # source files for icons
 src/

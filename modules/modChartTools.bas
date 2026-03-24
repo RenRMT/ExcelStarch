@@ -254,7 +254,7 @@ End Sub
 
 
 ' ============================================================
-'   TOGGLE AXES
+'   TOGGLE AxES
 ' ============================================================
 ' Cycles axis visibility through four states in sequence:
 '   None → Y axis only → X axis only → Both → None
