@@ -41,6 +41,10 @@
 # Claude files containing company-specific info
 .claude/
 CLAUDE.md
+agents/
+contexts/
+commands/
+rules/ 
 
 # source files for icons
 src/
