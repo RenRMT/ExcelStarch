@@ -97,17 +97,34 @@ Private Sub BuildColorRamp(cht As Chart, ByVal rampName As String)
     Dim palette(1 To 7) As Long
     If Not LoadPalette(rampName, palette) Then Exit Sub
 
-    ' Assign ramp steps in spread order: 5, 2, 3, 6, 1, 4, 7
-    Dim order(1 To 7) As Integer
-    order(1) = 5: order(2) = 2: order(3) = 3: order(4) = 6
-    order(5) = 1: order(6) = 4: order(7) = 7
+    ' Select first n steps from priority order, sort ascending, assign descending
+    ' (dark → light), matching the left side of a diverging ramp.
+    Dim priority(1 To 7) As Integer
+    priority(1) = 5: priority(2) = 2: priority(3) = 3: priority(4) = 6
+    priority(5) = 1: priority(6) = 4: priority(7) = 7
 
-    Dim i As Long
+    Dim steps() As Integer
+    ReDim steps(1 To n)
+    Dim i As Integer, j As Integer, tmp As Integer
+    For i = 1 To n
+        steps(i) = priority(i)
+    Next i
+
+    ' Bubble sort ascending (1=lightest → 7=darkest)
+    For i = 1 To n - 1
+        For j = 1 To n - i
+            If steps(j) > steps(j + 1) Then
+                tmp = steps(j): steps(j) = steps(j + 1): steps(j + 1) = tmp
+            End If
+        Next j
+    Next i
+
+    ' Assign descending so series 1 = darkest, series N = lightest
     For i = 1 To n
         With cht.SeriesCollection(i).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.RGB = palette(order(i))
+            .ForeColor.RGB = palette(steps(n + 1 - i))
         End With
     Next i
 End Sub
