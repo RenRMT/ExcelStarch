@@ -160,6 +160,25 @@ Public Const logoMarginBottomProp As Double = 0.01 'chartHeight * 0.01
 
 
 ' +---------------------------------------------------------+
+' |  DEFAULT CHART FORMATTING                               |
+' |  Controls pipeline defaults for new charts.             |
+' |  Axis constants: 0=none, 1=X only, 2=Y only, 3=both    |
+' +---------------------------------------------------------+
+'=== Axis selection values (used by defaultGridlines, defaultAxisDisplay, etc.) ===
+Public Const axisNone As Long = 0
+Public Const axisX As Long = 1
+Public Const axisY As Long = 2
+Public Const axisBoth As Long = 3
+
+'=== Default formatting for new/reformatted charts ===
+Public Const defaultGridlines As Long = axisNone        ' gridline visibility
+Public Const defaultAxisDisplay As Long = axisNone      ' axis visibility (HasAxis)
+Public Const defaultAxisLines As Long = axisNone        ' axis line visibility
+Public Const defaultAxisLabels As Long = axisNone       ' tick label visibility
+Public Const defaultLegend As Boolean = False           ' False = no legend
+
+
+' +---------------------------------------------------------+
 ' |  DERIVED CONSTANTS                                      |
 ' |  Computed from Section 1. Do not edit directly.         |
 ' +---------------------------------------------------------+
