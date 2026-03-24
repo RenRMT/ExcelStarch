@@ -125,6 +125,8 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
 
     If cht.hasLegend Then
         cht.Legend.Position = xlLegendPositionTop
+        cht.Legend.Left = legendLeftPad
+        cht.Legend.Font.Color = legendFontColor
         cht.Legend.Select
         Selection.Top = pieLegendTop
         Selection.Font.Size = axisFontSize

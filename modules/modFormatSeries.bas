@@ -19,7 +19,11 @@ Public Function GetPaletteColor(ByVal i As Long) As Long
         palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData6
         palette(7) = colorData7
     End If
-    GetPaletteColor = IIf(i >= 1 And i <= 7, palette(i), colorNeutral2)
+    If i >= 1 And i <= 7 Then
+        GetPaletteColor = palette(i)
+    Else
+        GetPaletteColor = colorNeutral2
+    End If
 End Function
 
 Public Sub TogglePaletteOrder()

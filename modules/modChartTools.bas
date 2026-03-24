@@ -486,15 +486,20 @@ Public Sub ToggleDataLabels()
     currentState = "NONE"
     If Not firstSrs Is Nothing Then
         If firstSrs.HasDataLabels Then
-            On Error Resume Next
             Dim pos As Long
+            On Error Resume Next
             pos = firstSrs.DataLabels.Position
+            If Err.Number <> 0 Then
+                currentState = "OTHER"   ' can't read position — treat as non-standard
+            Else
+                On Error GoTo 0
+                Select Case pos
+                    Case xlLabelPositionOutsideEnd:  currentState = "OUTSIDE"
+                    Case xlLabelPositionCenter:      currentState = "INSIDE"
+                    Case Else:                       currentState = "OTHER"
+                End Select
+            End If
             On Error GoTo 0
-            Select Case pos
-                Case xlLabelPositionOutsideEnd:  currentState = "OUTSIDE"
-                Case xlLabelPositionCenter:      currentState = "INSIDE"
-                Case Else:                       currentState = "OTHER"
-            End Select
         End If
     End If
 
@@ -528,25 +533,44 @@ Public Sub ToggleDataLabels()
                 srs.HasDataLabels = False
 
             Case "OUTSIDE"
-                srs.ApplyDataLabels
-                With srs.DataLabels
-                    .Position = xlLabelPositionOutsideEnd
-                    .Font.Color = colorBrand3
-                    .Font.Size = axisFontSize
-                    .Font.name = fontPrimary
-                End With
+                ' Try preferred position; fall back to center if unsupported.
+                If Not TrySetLabelPosition(srs, xlLabelPositionOutsideEnd) Then
+                    TrySetLabelPosition srs, xlLabelPositionCenter
+                End If
+                If srs.HasDataLabels Then
+                    With srs.DataLabels
+                        .Font.Color = colorBrand3
+                        .Font.Size = axisFontSize
+                        .Font.name = fontPrimary
+                    End With
+                End If
 
             Case "INSIDE"
-                srs.ApplyDataLabels
-                With srs.DataLabels
-                    .Position = xlLabelPositionCenter
-                    .Font.Color = GetLabelContrastColor(srs)
-                    .Font.Size = axisFontSize
-                    .Font.name = fontPrimary
-                End With
+                ' Try preferred position; fall back to outside end if unsupported.
+                If Not TrySetLabelPosition(srs, xlLabelPositionCenter) Then
+                    TrySetLabelPosition srs, xlLabelPositionOutsideEnd
+                End If
+                If srs.HasDataLabels Then
+                    With srs.DataLabels
+                        .Font.Color = GetLabelContrastColor(srs)
+                        .Font.Size = axisFontSize
+                        .Font.name = fontPrimary
+                    End With
+                End If
         End Select
     Next i
 End Sub
+
+' Attempts to apply data labels to a series with the given position.
+' Returns True on success, False if the chart type does not support the position.
+Private Function TrySetLabelPosition(srs As Series, ByVal pos As Long) As Boolean
+    On Error GoTo Fail
+    srs.ApplyDataLabels
+    srs.DataLabels.Position = pos
+    TrySetLabelPosition = True
+    Exit Function
+Fail:
+End Function
 
 ' ============================================================
 '   TOGGLE CHART VARIANT
