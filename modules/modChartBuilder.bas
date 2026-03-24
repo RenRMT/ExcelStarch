@@ -40,7 +40,7 @@ Function OuterFormat(cht As Chart) As Boolean
         cht.Axes(xlValue).Format.Line.Visible = msoFalse
     End If
 
-    'Hide X-axis line (requires Select — Excel doesn't expose Format.Line on Axis directly)
+    'Hide X-axis line (requires Select.  Excel doesn't expose Format.Line on Axis directly)
     If cht.HasAxis(xlCategory) Then
         cht.Axes(xlCategory).Select
         Selection.Format.Line.Visible = msoFalse
@@ -78,8 +78,8 @@ Function OuterFormat(cht As Chart) As Boolean
         'Remove legend
         If cht.hasLegend Then cht.Legend.Delete
 
-        pa.Height = plotAreaHeight
-        pa.Top = plotAreaTop_default
+        pa.Height = PlotAreaHeight_noLegend
+        pa.Top = PlotAreaTop_noLegend
         pa.Width = plotAreaWidth
         pa.Left = plotAreaLeft
 
@@ -88,18 +88,18 @@ Function OuterFormat(cht As Chart) As Boolean
         If cht.hasLegend Then
 
             cht.Legend.Position = xlLegendPositionTop
-            cht.Legend.Left = legend_leftPad
-            cht.Legend.Font.color = legendFontColor
+            cht.Legend.Left = legendLeftPad
+            cht.Legend.Font.Color = legendFontColor
 
-            pa.Height = plotAreaHeight
-            pa.Top = plotAreaTop_default
+            pa.Height = PlotAreaHeight
+            pa.Top = PlotAreaTop
             pa.Width = plotAreaWidth
             pa.Left = plotAreaLeft
 
         Else
 
-            pa.Height = plotAreaHeight
-            pa.Top = plotAreaTop_noLegend
+            pa.Height = PlotAreaHeight_noLegend
+            pa.Top = PlotAreaTop_noLegend
             pa.Width = plotAreaWidth
             pa.Left = plotAreaLeft
 
@@ -163,18 +163,18 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
         With cht.Legend
             .Font.Size = axisFontSize
 
-            .Top = legend_top
-            .Left = legend_leftPad
+            .Top = legendTop
+            .Left = legendLeftPad
         End With
     Else
         ' Adjust plot area when no legend
         With plt
             If seriescount = 1 Then
-                .Height = plotArea_noLegendSingleHeight
-                .Top = plotArea_noLegendSingleTop
+                .Height = PlotAreaHeight_noLegend
+                .Top = PlotAreaTop_noLegend
             Else
-                .Height = plotArea_noLegendMultiHeight
-                .Top = plotArea_noLegendMultiTop
+                .Height = PlotAreaHeight_noLegend
+                .Top = PlotAreaTop_noLegend
             End If
         End With
     End If
@@ -313,7 +313,7 @@ Function FormatTitle(cht As Chart) As Boolean
     ' Figure number box (above title)
     Set figureB = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=0, Width:=titleBoxWidth, Height:=figureBoxHeight)
+                    Left:=0, Top:=figureBoxTop, Width:=titleBoxWidth, Height:=figureBoxHeight)
 
     With figureB
         .name = "FigureBox"
@@ -322,7 +322,7 @@ Function FormatTitle(cht As Chart) As Boolean
             With .Font
                 .Size = generalFontSize
                 .name = fontPrimary
-                .Fill.ForeColor.RGB = generalFontColor
+                .Fill.ForeColor.RGB = figureFontColor
                 .Bold = msoFalse
             End With
         End With
@@ -333,7 +333,7 @@ Function FormatTitle(cht As Chart) As Boolean
     ' Title (positioned below FigureBox)
     Set titleB1 = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=figureBoxHeight, Width:=titleBoxWidth, Height:=titleBoxHeight)
+                    Left:=0, Top:=titleBoxTop, Width:=titleBoxWidth, Height:=titleBoxHeight)
 
     With titleB1
         .name = "TitleBox"
@@ -376,15 +376,15 @@ Function FormatTitle(cht As Chart) As Boolean
 
     ' Y-axis Label
     If hasLegend Then
-        yAxisTop = yAxisLabel_legendTop
+        yAxisTop = yAxisLabelTop
     Else
-        yAxisTop = IIf(seriescount = 1, yAxisLabel_singleTop, yAxisLabel_multiTop)
+        yAxisTop = IIf(seriescount = 1, yAxisLabelTop, yAxisLabelTop)
     End If
 
     Set titleB3 = cht.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
                     Left:=0, Top:=yAxisTop, Width:=titleBoxWidth, _
-                    Height:=IIf(hasLegend, yAxisLabel_legendHeight, yAxisLabel_noLegendHeight))
+                    Height:=IIf(hasLegend, yAXisLabelHeight, yAXisLabelHeight))
 
     With titleB3
         .name = "YAxisLabelBox"
@@ -398,7 +398,6 @@ Function FormatTitle(cht As Chart) As Boolean
             End With
         End With
 
-        ' Left nudge only (matching original logic)
         .Left = .Left - titleBoxNudge
     End With
 
@@ -424,9 +423,9 @@ Function FormatGridlines(cht As Chart) As Boolean
     ' Apply major gridline formatting
     With ax.MajorGridlines.Format.Line
         .Visible = msoTrue
-        .weight = gridlineWeight
+        .Weight = gridlineWeight
         .DashStyle = msoLineSolid
-        .ForeColor.rgb = colorNeutral2
+        .ForeColor.RGB = colorNeutral2
     End With
 
     FormatGridlines = True
@@ -445,7 +444,7 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.color = legendFontColor
+        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.Color = legendFontColor
 
         'Change x-axis line color
         ' Note: Excel does not expose Format.Line on an Axis object directly —
@@ -455,7 +454,7 @@ Function FormatXAxis(cht As Chart) As Boolean
             .Visible = msoFalse
             .ForeColor.TintAndShade = 0
             .ForeColor.Brightness = 0
-            .weight = axisLineWeight
+            .Weight = axisLineWeight
         End With
 
     End If
@@ -464,7 +463,7 @@ Function FormatXAxis(cht As Chart) As Boolean
         cht.Axes(xlValue).TickLabels.Font.Size = axisFontSize
 
         'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlValue, xlPrimary).TickLabels.Font.color = axisFontColor
+        cht.Axes(xlValue, xlPrimary).TickLabels.Font.Color = axisFontColor
 
     End If
 

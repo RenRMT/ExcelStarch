@@ -50,7 +50,7 @@ Private Sub BuildLabelLastPoint()
     ActiveChart.PlotArea.Select
 
     ' Narrow plot area only on line charts to make room for end labels
-    If ActiveChart.ChartType = xlLine Then
+    If ActiveChart.chartType = xlLine Then
         Selection.Width = chartWidth - labelLastPointPlotWidthInset
     End If
     Selection.Left = 0
@@ -58,9 +58,9 @@ Private Sub BuildLabelLastPoint()
     Set cht = ActiveChart
 
     ' Nudge Y-axis label box upward when legend is present
-    If cht.HasLegend Then
+    If cht.hasLegend Then
         For Each shp In cht.Shapes
-            If shp.Name = "YAxisLabelBox" Then
+            If shp.name = "YAxisLabelBox" Then
                 cht.Shapes.Range(Array("YAxisLabelBox")).Select
                 Selection.ShapeRange.IncrementTop labelLastPointTitleNudge
             End If
@@ -72,11 +72,11 @@ Private Sub BuildLabelLastPoint()
     plHeight = cht.PlotArea.Height
     plWidth = cht.PlotArea.Width
     Selection.Top = labelLastPointPlotTop
-    Selection.Width = plWidth * labelLastPointPlotWidthRatio_web
+    Selection.Width = plWidth * labelLastPointPlotWidthRatio
     Selection.Height = plHeight
 
     ' Remove legend (labels replace it)
-    If cht.HasLegend Then
+    If cht.hasLegend Then
         cht.Legend.Delete
     End If
 
@@ -111,19 +111,19 @@ Private Sub BuildLabelLastPoint()
                         Set lbl = srs.Points(ipts).DataLabel
                         lbl.Font.Bold = msoTrue
 
-                        Select Case srs.ChartType
+                        Select Case srs.chartType
                             Case xlLine, xlLineStacked, xlLineStacked100, xlLineMarkers, xlLineMarkersStacked, xlLineMarkersStacked100
                                 lbl.Position = xlLabelPositionRight
-                                iColor = .Format.Line.ForeColor.rgb
+                                iColor = .Format.Line.ForeColor.RGB
                             Case xlXYScatter, xlXYScatterLines, xlXYScatterLinesNoMarkers, xlXYScatterSmooth, xlXYScatterSmoothNoMarkers
                                 lbl.Position = xlLabelPositionRight
                                 iColor = .MarkerBackgroundColor
                             Case xlColumnClustered, xlBarClustered
                                 lbl.Position = xlLabelPositionOutsideEnd
-                                iColor = .Format.Fill.ForeColor.rgb
+                                iColor = .Format.Fill.ForeColor.RGB
                             Case xlColumnStacked, xlColumnStacked100, xlBarStacked, xlBarStacked100, xlArea, xlAreaStacked, xlAreaStacked100
                                 lbl.Position = xlLabelPositionCenter
-                                iColor = .Format.Fill.ForeColor.rgb
+                                iColor = .Format.Fill.ForeColor.RGB
                         End Select
 
                         lbl.Font.Color = iColor
@@ -246,9 +246,9 @@ Private Sub ApplyAxisGridlines(ax As Axis)
     If Not ax.HasMajorGridlines Then ax.HasMajorGridlines = True
     With ax.MajorGridlines.Format.Line
         .Visible = msoTrue
-        .weight = gridlineWeight
+        .Weight = gridlineWeight
         .DashStyle = msoLineSolid
-        .ForeColor.rgb = colorNeutral2
+        .ForeColor.RGB = colorNeutral2
     End With
 End Sub
 
@@ -334,13 +334,13 @@ Private Sub BuildRemoveLegendResize()
 End Sub
 
 Private Sub RemoveLegendAndResize(cht As Chart)
-    If cht.HasLegend Then cht.Legend.Delete
+    If cht.hasLegend Then cht.Legend.Delete
 
     cht.PlotArea.Select
-    Selection.Height = removeLegend_webHeight
-    Selection.Top = removeLegend_webTop
-    Selection.Width = removeLegend_webWidth
-    Selection.Left = removeLegend_webLeft
+    Selection.Height = removelegendHeight
+    Selection.Top = removelegendTop
+    Selection.Width = removeLegend_Width
+    Selection.Left = removeLegend_Left
 End Sub
 
 Sub RemoveLegendResizeButton()
@@ -371,7 +371,7 @@ Public Sub ApplyChartStyle()
     FormatTitle cht
     If cht.HasAxis(xlValue) Then FormatGridlines cht
     FormatXAxis cht
-    FormatSeriesColors cht, GetStyleColorMode(cht.ChartType)
+    FormatSeriesColors cht, GetStyleColorMode(cht.chartType)
 End Sub
 
 Private Function GetStyleColorMode(ByVal ct As Long) As String
@@ -430,11 +430,11 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
         With targetChart.SeriesCollection(i).Format
             With .Line
                 .Visible = msoTrue
-                .ForeColor.rgb = grayColor
+                .ForeColor.RGB = grayColor
             End With
             With .Fill
                 .Visible = msoTrue
-                .ForeColor.rgb = grayColor
+                .ForeColor.RGB = grayColor
                 .Solid
             End With
         End With
@@ -533,7 +533,7 @@ Public Sub ToggleDataLabels()
                     .Position = xlLabelPositionOutsideEnd
                     .Font.Color = colorBrand3
                     .Font.Size = axisFontSize
-                    .Font.Name = fontPrimary
+                    .Font.name = fontPrimary
                 End With
 
             Case "INSIDE"
@@ -542,7 +542,7 @@ Public Sub ToggleDataLabels()
                     .Position = xlLabelPositionCenter
                     .Font.Color = GetLabelContrastColor(srs)
                     .Font.Size = axisFontSize
-                    .Font.Name = fontPrimary
+                    .Font.name = fontPrimary
                 End With
         End Select
     Next i
@@ -566,11 +566,11 @@ Public Sub ToggleChartVariant()
     End If
 
     Dim altType As Long
-    altType = GetAlternativeChartType(ActiveChart.ChartType)
+    altType = GetAlternativeChartType(ActiveChart.chartType)
 
     If altType = -1 Then Exit Sub   ' unsupported type — do nothing
 
-    ActiveChart.ChartType = altType
+    ActiveChart.chartType = altType
 End Sub
 
 Private Function GetAlternativeChartType(ByVal ct As Long) As Long

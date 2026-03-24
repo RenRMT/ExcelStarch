@@ -36,5 +36,5 @@ Private Sub BuildStackedAreaChart()
 End Sub
 
 Sub AreaChart()
-    BuildAreaChart
+    BuildStackedAreaChart
 End Sub

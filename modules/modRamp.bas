@@ -36,7 +36,7 @@ Public Sub InvertColorRamp()
 
     Dim i As Long
     For i = 1 To n
-        colors(i) = cht.SeriesCollection(i).Format.Fill.ForeColor.rgb
+        colors(i) = cht.SeriesCollection(i).Format.Fill.ForeColor.RGB
     Next i
 
     ' Re-apply in reverse order
@@ -44,7 +44,7 @@ Public Sub InvertColorRamp()
         With cht.SeriesCollection(i).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = colors(n - i + 1)
+            .ForeColor.RGB = colors(n - i + 1)
         End With
     Next i
 End Sub
@@ -107,7 +107,7 @@ Private Sub BuildColorRamp(cht As Chart, ByVal rampName As String)
         With cht.SeriesCollection(i).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = palette(order(i))
+            .ForeColor.RGB = palette(order(i))
         End With
     Next i
 End Sub
@@ -161,7 +161,7 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = leftPalette(steps(i))
+            .ForeColor.RGB = leftPalette(steps(i))
         End With
         seriesIdx = seriesIdx + 1
     Next i
@@ -171,7 +171,7 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = colorBrand4
+            .ForeColor.RGB = colorBrand4
         End With
         seriesIdx = seriesIdx + 1
     End If
@@ -181,7 +181,7 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = rightPalette(steps(i))
+            .ForeColor.RGB = rightPalette(steps(i))
         End With
         seriesIdx = seriesIdx + 1
     Next i

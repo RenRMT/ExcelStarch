@@ -63,14 +63,14 @@ Public Function FormatSeriesColors(cht As Chart, _
                 With .Fill
                     .Visible = msoTrue
                     .Solid
-                    .ForeColor.rgb = clr
+                    .ForeColor.RGB = clr
                     .transparency = IIf(fillTransparency < 0, 0, IIf(fillTransparency > 1, 1, fillTransparency))
                 End With
             Else ' LINE
                 With .Line
                     .Visible = msoTrue
-                    .ForeColor.rgb = clr
-                    .weight = lineWeight
+                    .ForeColor.RGB = clr
+                    .Weight = lineWeight
                 End With
             End If
         End With

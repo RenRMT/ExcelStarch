@@ -51,7 +51,7 @@ Private Sub BuildLollipopChart()
             .Visible = msoTrue
             .ForeColor.RGB = clr
             .Weight = lollipopStickWeight
-            .JoinType = msoLineJoinRound
+            '.JoinType = msoLineJoinRound
             .BeginArrowheadStyle = msoArrowheadOval
             .BeginArrowheadLength = msoArrowheadLengthMedium
             .BeginArrowheadWidth = msoArrowheadWidthMedium

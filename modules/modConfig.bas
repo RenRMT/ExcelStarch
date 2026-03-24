@@ -1,131 +1,173 @@
 Attribute VB_Name = "modConfig"
 Option Explicit
 '==== Module: modConfig ====
-'=== Chart size constants ===
-Public Const chartWidth As Double = 600         ' 8.33" canvas width
-Public Const chartHeight As Double = 600        ' 8.33" canvas height
+'
+' +---------------------------------------------------------+
+' |  SECTION 1 USER SETTINGS                                |
+' |  Edit these constants to customise the chart style.     |
+' +---------------------------------------------------------+
 
-'=== Font constants ===
+'=== Identity ===
+Public Const orgName As String = "COMPANY"
+
+'=== Canvas ===
+Public Const chartWidth As Double = 600         ' 20cm canvas width
+Public Const chartHeight As Double = 600        ' 20cm canvas height
+
+'=== Fonts ===
 Public Const fontPrimary As String = "Calibri"
 Public Const fontPrimaryItalic As String = "Calibri Italic"
 
+' Font sizes
+Public Const titleFontSize As Double = 28
+Public Const subTitleFontSize As Double = 22
+Public Const generalFontSize As Double = 18
+Public Const axisFontSize As Double = 18
+Public Const sourceTextFontSize As Double = 14
 
-'== Organisation identity ==
-Public Const orgName As String = "COMPANY"
-
-'data series constants
-Public Const seriesGapWidth As Double = 33
-Public Const seriesOverlap As Double = 0
-
-'chart area constants
-Public Const titleFontSize As Double = 24
-Public Const subTitleFontSize As Double = 20
-Public Const generalFontSize As Double = 16
-Public Const axisFontSize As Double = 16
+'Font colors
 Public Const titleFontColor As Long = colorBrand1
 Public Const subTitleFontColor As Long = colorBrand2
 Public Const axisFontColor As Long = colorBrand3
 Public Const legendFontColor As Long = colorBrand3
 Public Const generalFontColor As Long = colorBrand3
+Public Const sourceFontColor As Long = colorBrand3
+Public Const figureFontColor As Long = colorBrand3
 
-'=== modChartBuilder: OuterFormat ===
-' Layout constants use Excel points as the unit (1pt = 1/72"). Origin is the top-left
-' corner of the chart area. All values are interdependent: changing plotAreaHeight or
-' plotAreaTop will shift the x-axis title, and may require adjusting legend_top and the
-' yAxisLabel_* constants to keep elements visually balanced. gdChartWidth/Height_web
-' define the overall canvas; plot area dimensions must fit within those bounds.
-'
-' Logo bottom boundary: logoTop = chartHeight - (chartHeight * logoHeightScale) - logoMarginBottom
-'   = 600 - 60 - 8 = 532 pt. All plot area bottoms (Top + Height) must stay below this.
-Public Const plotAreaHeight As Long = 370           ' 158 + 370 = 528 < 532 (logo top)
-Public Const plotAreaWidth As Long = 973
-Public Const plotAreaTop_default As Long = 158      ' single-series, or multi-series with legend
-Public Const plotAreaTop_noLegend As Long = 116     ' multi-series, no legend
-Public Const plotAreaLeft As Long = 3
+'=== Data series ===
+Public Const seriesGapWidth As Double = 33
+Public Const seriesOverlap As Double = -5
+Public Const lollipopGapWidth As Double = 150     ' wider gap for cleaner stem spacing
+Public Const lollipopStickWeight As Single = 2 ' error bar line weight in points
 
-'=== modChartBuilder: FormatXAxisTitle ===
-Public Const xAxisTitle_plotGap As Long = 20        ' gap between plot area base and x-axis title
-Public Const legend_top As Long = 92
-Public Const legend_leftPad As Long = 7
-Public Const plotArea_noLegendSingleHeight As Long = 421  ' 105 + 421 = 526 < 532 (logo top)
-Public Const plotArea_noLegendSingleTop As Long = 105
-Public Const plotArea_noLegendMultiHeight As Long = 450   ' 79 + 450 = 529 < 532 (logo top)
-Public Const plotArea_noLegendMultiTop As Long = 79
+'=== Layout — label last point ===
+Public Const labelLastPointPlotWidthInset As Long = 66    ' narrowed for end labels on line charts
+Public Const labelLastPointPlotTop As Long = 105
+Public Const labelLastPointPlotWidthRatio As Double = 0.98
+Public Const labelLastPointTitleNudge As Long = -13
 
-'=== modChartBuilder: InsertLogo ===
-Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of chart height
-Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
-Public Const logoMarginRight As Single = 10
-Public Const logoMarginBottom As Single = 8
-
-'=== modChartBuilder: InsertSource ===
-Public Const sourceBoxWidth As Long = 230
-Public Const sourceBoxHeight As Long = 46
-Public Const sourceTextFontSize As Double = 11
-Public Const sourceBoxLeftNudge As Long = 5
-
-'=== modChartBuilder: FormatTitle ===
-Public Const titleBoxWidth As Long = 394
-Public Const titleBoxHeight As Long = 32    ' reduced from 39 to make room for FigureBox
-Public Const subtitleBoxTop As Long = 54   ' = figureBoxHeight(22) + titleBoxHeight(32)
-Public Const subtitleBoxHeight As Long = 24 ' reduced from 33 to make room for FigureBox
-Public Const figureBoxHeight As Long = 22
-Public Const figureBoxDefaultText As String = "Figure XX (optional)"
-
-'=== Placeholder texts (modChartBuilder: FormatTitle, FormatXAxisTitle, InsertSource) ===
-Public Const titleDefaultText    As String = "Title in 20pt sentence case"
-Public Const subtitleDefaultText As String = "Subtitle in 16pt sentence case"
-Public Const yAxisDefaultText    As String = "Y axis title (unit)"
-Public Const xAxisDefaultText    As String = "X axis title (unit)"
-Public Const sourceDefaultText   As String = "Source: Source text goes here."
-Public Const notesDefaultText    As String = "Notes: Notes text goes here."
-Public Const titleBoxNudge As Long = 5              ' pixel nudge applied to top/left for alignment
-Public Const yAxisLabel_legendTop As Long = 126
-Public Const yAxisLabel_singleTop As Long = 85
-Public Const yAxisLabel_multiTop As Long = 68
-Public Const yAxisLabel_legendHeight As Long = 26
-Public Const yAxisLabel_noLegendHeight As Long = 24
-
-'=== modChartBuilder: FormatGridlines ===
-Public Const gridlineWeight As Double = 1
-
-'=== modChartBuilder: FormatXAxis ===
-Public Const axisLineWeight As Double = 1
-
-'=== modChartPie ===
+'=== Layout — pie ===
 Public Const piePlotAreaSize_legend As Long = 421   ' width and height (square) when legend present
 Public Const piePlotAreaSize_noLegend As Long = 447 ' width and height (square) without legend
-Public Const piePlotAreaLeft_web As Long = 131
-Public Const piePlotAreaTop_web As Long = 53
-Public Const piePlotTopRatio_web As Double = 0.75   ' vertical centering ratio
-Public Const pieLegendTop_web As Long = 79
+Public Const piePlotAreaLeft As Long = 131
+Public Const piePlotAreaTop As Long = 53
+Public Const piePlotTopRatio As Double = 0.75   ' vertical centering ratio
+Public Const pieLegendTop As Long = 79
 
-'=== error textbox (modChartPie, modChartScatter, modFormatSeries) ===
+'=== Layout — error textbox ===
 Public Const errorBoxWidth As Long = 657
 Public Const errorBoxHeight As Long = 53
 Public Const errorBoxFontSize As Double = 10
 
-'=== modRemoveLegendResize ===
-' Aligned with noLegend-multi dimensions so the plot area matches what the pipeline
-' would produce for a multi-series chart created without a legend.
-Public Const removeLegend_webHeight As Long = 450   ' = plotArea_noLegendMultiHeight
-Public Const removeLegend_webTop As Long = 79       ' = plotArea_noLegendMultiTop
-Public Const removeLegend_webWidth As Long = 973    ' = plotAreaWidth
-Public Const removeLegend_webLeft As Long = 3       ' = plotAreaLeft
 
-'=== modLabelLastPoint: BuildLabelLastPoint ===
-Public Const labelLastPointPlotWidthInset As Long = 66    ' narrowed for end labels on line charts
-Public Const labelLastPointPlotTop As Long = 105
-Public Const labelLastPointPlotWidthRatio_web As Double = 0.98
-Public Const labelLastPointTitleNudge As Long = -13
+'=== Weights ===
+Public Const gridlineWeight As Double = 1
+Public Const axisLineWeight As Double = 1
 
-'=== modChartLollipop ===
-Public Const lollipopGapWidth As Long = 150     ' wider gap for cleaner stem spacing
-Public Const lollipopStickWeight As Single = 1.5 ' error bar line weight in points
+'=== Default placeholder texts ===
+Public Const figureBoxDefaultText As String = "Figure XX (optional)"
+Public Const titleDefaultText    As String = "Title in 28pt sentence case"
+Public Const subtitleDefaultText As String = "Subtitle in 22pt sentence case"
+Public Const yAxisDefaultText    As String = "Y axis title (unit)"
+Public Const xAxisDefaultText    As String = "X axis title (unit)"
+Public Const sourceDefaultText   As String = "Source: Source text goes here."
+Public Const notesDefaultText    As String = "Notes: Notes text goes here."
 
-'=== modExport ===
-Public Const exportAppName As String = orgName & " Chart Styles"
+'=== Export ===
 Public Const exportSection As String = "Chart Export"
 Public Const exportSettingKey As String = "File Filter"
 Public Const exportDefaultExt As String = "png"
 Public Const exportDefaultName As String = "MyChart"
+
+
+' === Box sizes ===
+' Box sizes expressed as proportion of chart width / height
+'top
+Public Const FigureBoxHeightProportion As Double = 0.04
+Public Const titleBoxHeightProportion As Double = 0.06
+Public Const subtitleBoxHeightProportion As Double = 0.05
+Public Const yAxisLabelHeightProportion As Double = 0.04
+Public Const legendHeightProportion As Double = 0.04
+Public Const titleBoxWidthProportion As Double = 1 ' keep this as one unless you are moving logo to the top
+Public Const titleBoxNudgeProportion As Double = 0
+'bottom
+Public Const sourceBoxWidthProportion As Double = 0.8
+Public Const sourceBoxHeightProportion As Double = 0.08
+Public Const sourceBoxNudgeProportion As Double = 0.01
+
+'padding
+Public Const legendLeftPadProportion As Double = 0.01
+Public Const plotAreaLeftProportion As Double = 0.005
+Public Const xAxisTitle_plotGap As Double = 20        ' gap between plot area base and x-axis title
+
+'=== Layout and logo ===
+Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of chart height
+Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
+Public Const logoMarginRight As Double = chartWidth * 0.01
+Public Const logoMarginBottom As Double = chartHeight * 0.01
+
+
+' +---------------------------------------------------------+
+' |  DERIVED CONSTANTS                                      |
+' |  Computed from Section 1. Do not edit directly.         |
+' +---------------------------------------------------------+
+'=== Logo geometry ===
+Public Const logoHeight As Double = chartHeight * logoHeightScale
+Public Const logoTop As Double = chartHeight - logoHeight - logoMarginBottom
+
+'=== Title area ===
+Public Const figureBoxTop As Double = 0
+
+Public Const figureBoxHeight As Double = chartHeight * FigureBoxHeightProportion
+Public Const titleBoxHeight As Double = 30 'chartHeight * titleBoxHeightProportion
+Public Const subtitleBoxHeight As Double = chartHeight * subtitleBoxHeightProportion
+Public Const titleBoxWidth As Double = chartWidth * titleBoxWidthProportion
+Public Const titleBoxNudge As Double = chartWidth * titleBoxNudgeProportion
+'Calculations
+Public Const calcTitlesHeight As Double = figureBoxHeight + titleBoxHeight + subtitleBoxHeight
+
+'=== Plot area ===
+' All values are in Excel points (1pt = 1/72" or about 13/360cm). Origin is the top-left corner of the
+' chart area. Changing plotAreaHeight or plotAreaTop will shift the x-axis title, and
+' may require adjusting legendTop and the yAxisLabel_* constants to keep elements
+' visually balanced. All plot area bottoms (Top + Height) must stay below logoTop (532 pt).
+Public Const legendTop As Double = calcTitlesHeight
+Public Const legendLeftPad As Double = chartWidth * legendLeftPadProportion
+Public Const LegendHeight As Double = chartHeight * legendHeightProportion
+
+'Y axis
+Public Const yAxisLabelTop As Double = calcTitlesHeight + LegendHeight
+Public Const yAXisLabelHeight As Double = chartHeight * yAxisLabelHeightProportion
+Public Const yAxisLabelTop_noLegend As Double = calcTitlesHeight
+
+' Plot area
+Public Const plotAreaWidth As Double = chartWidth
+Public Const plotAreaLeft As Double = chartWidth * plotAreaLeftProportion
+
+Public Const PlotAreaTop As Double = yAxisLabelTop + yAXisLabelHeight
+Public Const PlotAreaTop_noLegend As Double = yAxisLabelTop_noLegend + yAXisLabelHeight
+
+Public Const PlotAreaHeight_noLegend As Double = chartHeight - calcTitlesHeight - yAXisLabelHeight - logoHeight
+Public Const PlotAreaHeight As Double = PlotAreaHeight_noLegend - LegendHeight
+
+'Calculations
+
+'=== Source box ===
+Public Const sourceBoxWidth As Double = chartWidth * sourceBoxWidthProportion
+Public Const sourceBoxLeftNudge As Double = chartWidth * sourceBoxNudgeProportion
+Public Const sourceBoxHeight As Double = chartHeight * sourceBoxHeightProportion
+
+'=== Title area ===
+
+Public Const titleBoxTop As Double = figureBoxHeight
+Public Const subtitleBoxTop As Double = titleBoxTop + titleBoxHeight
+
+
+'=== Remove legend resize — mirrors noLegend-multi plot area ===
+Public Const removelegendHeight As Double = PlotAreaHeight_noLegend
+Public Const removelegendTop As Double = PlotAreaTop_noLegend
+Public Const removeLegend_Width As Double = plotAreaWidth
+Public Const removeLegend_Left As Double = plotAreaLeft
+
+'=== Export ===
+Public Const exportAppName As String = orgName & " Chart Styles"

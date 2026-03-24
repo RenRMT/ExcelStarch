@@ -92,13 +92,13 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
             If IsLineTarget(srs) Then
                 With srs.Format.Line
                     .Visible = msoTrue
-                    .ForeColor.rgb = colorRGB
+                    .ForeColor.RGB = colorRGB
                 End With
             Else
                 With srs.Format.Fill
                     .Visible = msoTrue
                     .Solid
-                    .ForeColor.rgb = colorRGB
+                    .ForeColor.RGB = colorRGB
                     .transparency = transparency
                 End With
             End If
@@ -109,13 +109,13 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
     If IsLineTarget(tgt) Then
         With tgt.Format.Line
             .Visible = msoTrue
-            .ForeColor.rgb = colorRGB
+            .ForeColor.RGB = colorRGB
         End With
     Else
         With tgt.Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.rgb = colorRGB
+            .ForeColor.RGB = colorRGB
 
             ' Charts: .Transparency 0-1
             ' Shapes:   .Transparency 0-1 (Excel normalizes)
@@ -190,7 +190,7 @@ Private Function IsLineTarget(ByVal tgt As Object) As Boolean
 
     Dim ct As Long
     On Error Resume Next
-    ct = srs.ChartType
+    ct = srs.chartType
     On Error GoTo 0
 
     Select Case ct

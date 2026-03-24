@@ -269,7 +269,7 @@
 					<button
 						id="TogglePaletteOrder"
 						image="i_menu_order"
-						size="large"
+						size="normal"
 						label="Toggle Palette Order"
 						supertip="Switch the series colour order between Contrasting and Complementary."
 						onAction="TogglePaletteOrder_onAction"/>
@@ -277,14 +277,14 @@
 						id="InvertRampButton"
 						image="i_menu_invert"
 						label="Invert Ramp"
-						size="large"
+						size="normal"
 						supertip="Reverse the fill colour order across all chart series."
 						onAction="InvertRamp_onAction"/>
 					<button
 						id="StartWithGrayButton"
 						image="i_menu_grey"
 						label="Reset to Grey"
-						size="large"
+						size="normal"
 						supertip="Reset all chartobjects to grey."
 						onAction="StartWithGrayButton_onAction"/>
 				</group>
@@ -293,42 +293,42 @@
 						id="LabelLastPointButton"
 						image="i_menu_labels"
 						label="Label Last Point"
-						size="large"
+						size="normal"
 						supertip="Add series names to the last point on the graph."
 						onAction="LabelLastPointButton_onAction"/>
 					<button
 						id="ToggleDataLabelsButton"
 						image="i_menu_labels"
 						label="Toggle Data Labels"
-						size="large"
+						size="normal"
 						supertip="Cycle data labels: none → outside end → inside centre. Applies to selected series or all series."
 						onAction="ToggleDataLabelsButton_onAction"/>
 					<button
 						id="ToggleGridlinesButton"
 						image="i_menu_gridlines"
 						label="Toggle Gridlines"
-						size="large"
+						size="normal"
 						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."
 						onAction="ToggleGridlinesButton_onAction"/>
 					<button
 						id="ToggleAxisButton"
 						image="i_menu_axislines"
 						label="Toggle Axis Lines"
-						size="large"
+						size="normal"
 						supertip="Cycle axis lines on the selected chart: none → x-axis → y-axis → both."
 						onAction="ToggleAxesButton_onAction"/>
 					<button
 						id="RemoveLegendResizeButton"
 						image="i_menu_none"
 						label="Remove Legend"
-						size="large"
+						size="normal"
 						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
 						onAction="RemoveLegendResizeButton_onAction"/>
 					<button
 						id="ToggleChartVariantButton"
 						image="i_menu_none"
 						label="Toggle Variant"
-						size="large"
+						size="normal"
 						supertip="Toggle between chart type variants: stacked ↔ 100% stacked, pie ↔ donut, line ↔ line with markers."
 						onAction="ToggleChartVariantButton_onAction"/>
 				</group>

@@ -66,7 +66,7 @@ Private Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
             With .Fill
                 .Visible = msoTrue
                 .Solid
-                .ForeColor.rgb = palette(i)
+                .ForeColor.RGB = palette(i)
             End With
             .Line.Visible = msoFalse
         End With
@@ -89,17 +89,17 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
         .Height = chartHeight
     End With
 
-    cht.ChartArea.Font.Name = fontPrimary
+    cht.ChartArea.Font.name = fontPrimary
     cht.ChartArea.Border.LineStyle = xlNone
 
     FormatTitle cht
 
-    plotSize = IIf(cht.HasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
+    plotSize = IIf(cht.hasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
     cht.PlotArea.Select
     Selection.Width = plotSize
     Selection.Height = plotSize
-    Selection.Left = piePlotAreaLeft_web
-    Selection.Top = piePlotAreaTop_web
+    Selection.Left = piePlotAreaLeft
+    Selection.Top = piePlotAreaTop
 
     Set chtObj = cht.Parent
     With chtObj
@@ -107,14 +107,14 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart)
         chtWidth = .Chart.ChartArea.Width
         pltHeight = .Chart.PlotArea.Height
         pltWidth = .Chart.PlotArea.Width
-        .Chart.PlotArea.Top = (chtHeight - pltHeight) * piePlotTopRatio_web
+        .Chart.PlotArea.Top = (chtHeight - pltHeight) * piePlotTopRatio
         .Chart.PlotArea.Left = (chtWidth - pltWidth) / 2
     End With
 
-    If cht.HasLegend Then
+    If cht.hasLegend Then
         cht.Legend.Position = xlLegendPositionTop
         cht.Legend.Select
-        Selection.Top = pieLegendTop_web
+        Selection.Top = pieLegendTop
         Selection.Font.Size = axisFontSize
     End If
 End Sub
@@ -132,11 +132,11 @@ Private Sub BuildTreemapChart()
         .Width = chartWidth
         .Height = chartHeight
     End With
-    cht.ChartArea.Font.Name = fontPrimary
+    cht.ChartArea.Font.name = fontPrimary
     cht.ChartArea.Border.LineStyle = xlNone
 
     ' Tile labels make a legend redundant
-    If cht.HasLegend Then cht.Legend.Delete
+    If cht.hasLegend Then cht.Legend.Delete
 
     InsertSource cht
     FormatTitle cht

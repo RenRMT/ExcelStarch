@@ -97,14 +97,14 @@ Public Sub MsgTooManySeries(cht As Chart)
     Dim txtB As Shape
     Set txtB = cht.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, errorBoxWidth, errorBoxHeight)
     With txtB
-        .Name = "ErrorBox"
+        .name = "ErrorBox"
         With .TextFrame2.TextRange
             .Text = "You have too many data series for this chart type."
             .Font.Size = errorBoxFontSize
-            .Font.Name = fontPrimary
-            .Font.Fill.ForeColor.rgb = vbRed
+            .Font.name = fontPrimary
+            .Font.Fill.ForeColor.RGB = vbRed
             .ParagraphFormat.Alignment = msoTextEffectAlignmentLeft
         End With
-        .Fill.ForeColor.rgb = vbYellow
+        .Fill.ForeColor.RGB = vbYellow
     End With
 End Sub
