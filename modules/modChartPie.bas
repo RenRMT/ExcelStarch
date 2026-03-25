@@ -42,7 +42,7 @@ CleanFail:
     MsgError "BuildPieChart"
 End Sub
 
-Private Sub BuildPieChartWithDefaults(cht As Chart, ByVal defaults As ChartDefaults)
+Private Sub BuildPieChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     Dim pointscount As Long
@@ -95,7 +95,7 @@ CleanFail:
 End Sub
 
 
-Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByVal defaults As ChartDefaults)
+Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
@@ -117,12 +117,12 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByVal defaults As ChartDefau
 
     FormatTitle cht
 
-    plotSize = IIf(cht.hasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
+    plotSize = IIf(cht.hasLegend, pieplotAreaSize_legend, pieplotAreaSize_noLegend)
     With cht.PlotArea
         .Width = plotSize
         .Height = plotSize
-        .Left = piePlotAreaLeft
-        .Top = piePlotAreaTop
+        .Left = pieplotAreaLeft
+        .Top = pieplotAreaTop
     End With
 
     Set chtObj = cht.Parent
@@ -167,7 +167,7 @@ CleanFail:
     MsgError "BuildTreemapChart"
 End Sub
 
-Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByVal defaults As ChartDefaults)
+Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' Custom pipeline — treemaps have no axes or gridlines

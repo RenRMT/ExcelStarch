@@ -7,7 +7,7 @@ Attribute VB_Name = "modChartTools"
 ' -----
 '   LabelLastPointButton  — adds series-name labels to the final data point of each
 '                           series; duplicates the chart first
-'   ToggleGridlines       — cycles major gridlines: None → Horizontal → Vertical → Both
+'   ToggleGridlines       — cycles major gridlines: None -> Horizontal -> Vertical -> Both
 '   ToggleLegendButton       — toggles legend visibility and resizes the plot area;
 '                           pie/donut use square plot area constants; operates in-place
 '   StartWithGray         — duplicates the chart and resets all series to Silver;
@@ -151,7 +151,7 @@ End Sub
 '   TOGGLE GRIDLINES
 ' ============================================================
 ' Cycles major gridlines through four states in sequence:
-'   None → Horizontal only → Vertical only → Both → None
+'   None -> Horizontal only -> Vertical only -> Both -> None
 ' Operates in-place on the active chart (no duplication).
 
 Public Sub ToggleGridlines()
@@ -174,13 +174,13 @@ Public Sub ToggleGridlines()
     Dim nextV As Boolean
 
     If Not hasH And Not hasV Then
-        nextH = True:  nextV = False        ' None → Horizontal only
+        nextH = True:  nextV = False        ' None -> Horizontal only
     ElseIf hasH And Not hasV Then
-        nextH = False: nextV = True         ' Horizontal → Vertical only
+        nextH = False: nextV = True         ' Horizontal -> Vertical only
     ElseIf Not hasH And hasV Then
-        nextH = True:  nextV = True         ' Vertical → Both
+        nextH = True:  nextV = True         ' Vertical -> Both
     Else
-        nextH = False: nextV = False        ' Both → None
+        nextH = False: nextV = False        ' Both -> None
     End If
 
     ' Apply gridlines only to currently visible axes; remove from any axis (even hidden ones).
@@ -254,10 +254,10 @@ End Sub
 
 
 ' ============================================================
-'   TOGGLE AxES
+'   TOGGLE AXES
 ' ============================================================
 ' Cycles axis visibility through four states in sequence:
-'   None → Y axis only → X axis only → Both → None
+'   None -> Y axis only -> X axis only -> Both -> None
 ' Operates in-place on the active chart (no duplication).
 
 Public Sub ToggleAxes()
@@ -279,13 +279,13 @@ Public Sub ToggleAxes()
     Dim nextX As Boolean
 
     If Not hasY And Not hasX Then
-        nextY = True:  nextX = False        ' None → Y only
+        nextY = True:  nextX = False        ' None -> Y only
     ElseIf hasY And Not hasX Then
-        nextY = False: nextX = True         ' Y only → X only
+        nextY = False: nextX = True         ' Y only -> X only
     ElseIf Not hasY And hasX Then
-        nextY = True:  nextX = True         ' X only → Both
+        nextY = True:  nextX = True         ' X only -> Both
     Else
-        nextY = False: nextX = False        ' Both → None
+        nextY = False: nextX = False        ' Both -> None
     End If
 
     cht.HasAxis(xlValue, xlPrimary) = nextY
@@ -338,15 +338,15 @@ Public Sub ToggleLegend()
     Set cht = ActiveChart
 
     ' Single-series: legend is redundant. Treemap uses tile labels instead.
-    If cht.SeriesCollection.Count <= 1 Or cht.ChartType = xlTreemap Then
+    If cht.SeriesCollection.Count <= 1 Or cht.chartType = xlTreemap Then
         MsgLegendNotApplicable
         Exit Sub
     End If
 
     Dim addLegend As Boolean
-    addLegend = Not cht.HasLegend
+    addLegend = Not cht.hasLegend
 
-    If IsPieChartType(cht.ChartType) Then
+    If IsPieChartType(cht.chartType) Then
         ToggleLegendPie cht, addLegend
     Else
         ToggleLegendStandard cht, addLegend
@@ -355,14 +355,14 @@ End Sub
 
 Private Function IsPieChartType(ByVal ct As Long) As Boolean
     IsPieChartType = (ct = xlPie Or ct = xlDoughnut Or _
-                      ct = xlPie3D Or ct = xlDoughnutExploded)
+                      ct = xlPieEx Or ct = xlDoughnutExploded)
 End Function
 
 Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     On Error GoTo CleanFail
 
     If addLegend Then
-        cht.HasLegend = True
+        cht.hasLegend = True
         With cht.Legend
             .Position = xlLegendPositionTop
             .Left = legendLeftPad
@@ -370,8 +370,8 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
             .Font.Size = axisFontSize
         End With
         With cht.PlotArea
-            .Height = PlotAreaHeight
-            .Top = PlotAreaTop
+            .Height = plotAreaHeight
+            .Top = plotAreaTop
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
@@ -398,18 +398,18 @@ Private Sub ToggleLegendPie(cht As Chart, ByVal addLegend As Boolean)
     Dim chtWidth As Double
 
     If addLegend Then
-        cht.HasLegend = True
-        plotSize = piePlotAreaSize_legend
+        cht.hasLegend = True
+        plotSize = pieplotAreaSize_legend
     Else
         cht.Legend.Delete
-        plotSize = piePlotAreaSize_noLegend
+        plotSize = pieplotAreaSize_noLegend
     End If
 
     With cht.PlotArea
         .Width = plotSize
         .Height = plotSize
-        .Left = piePlotAreaLeft
-        .Top = piePlotAreaTop
+        .Left = pieplotAreaLeft
+        .Top = pieplotAreaTop
     End With
 
     chtHeight = cht.ChartArea.Height
@@ -441,7 +441,7 @@ End Sub
 '   TOGGLE AXIS LABELS
 ' ============================================================
 ' Cycles axis tick-label visibility through four states in sequence:
-'   None → X only → Y only → Both → None
+'   None -> X only -> Y only -> Both -> None
 ' Uses TickLabelPosition to show/hide labels without removing the axis.
 ' Axes that do not exist (removed via ToggleAxes) are treated as "not visible"
 ' and skipped during assignment. Chart types with no axes (pie, donut) are a no-op.
@@ -466,13 +466,13 @@ Public Sub ToggleAxisLabels()
     Dim nextY As Boolean
 
     If Not hasX And Not hasY Then
-        nextX = True:  nextY = False        ' None → X only
+        nextX = True:  nextY = False        ' None -> X only
     ElseIf hasX And Not hasY Then
-        nextX = False: nextY = True         ' X only → Y only
+        nextX = False: nextY = True         ' X only -> Y only
     ElseIf Not hasX And hasY Then
-        nextX = True:  nextY = True         ' Y only → Both
+        nextX = True:  nextY = True         ' Y only -> Both
     Else
-        nextX = False: nextY = False        ' Both → None
+        nextX = False: nextY = False        ' Both -> None
     End If
 
     If cht.HasAxis(xlCategory) Then SetAxisLabelState cht.Axes(xlCategory), nextX
@@ -611,7 +611,7 @@ End Sub
 ' ============================================================
 '   TOGGLE DATA LABELS
 ' ============================================================
-' Cycles data labels through three states: None → Outside End → Inside Centre → None.
+' Cycles data labels through three states: None -> Outside End -> Inside Centre -> None.
 ' Operates in-place on the active chart.
 ' Scope: if a specific series is selected, only that series is affected;
 '        otherwise all series in the chart are affected.
@@ -789,7 +789,7 @@ Private Function GetLabelContrastColor(srs As Series) As Long
     Dim lum As Double
     lum = 0.299 * r + 0.587 * g + 0.114 * b
 
-    ' Dark fill → use light label (colorBrand4); light fill → use dark label (colorBrand3)
+    ' Dark fill -> use light label (colorBrand4); light fill -> use dark label (colorBrand3)
     If lum < 128 Then
         GetLabelContrastColor = colorBrand4
     Else

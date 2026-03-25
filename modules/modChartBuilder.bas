@@ -16,7 +16,7 @@ Option Explicit
 '   8. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
 '
 ' Chart types that skip steps (slope, dot plot, scatter) call individual functions directly.
-Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByVal defaults As ChartDefaults)
+Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByRef defaults As ChartDefaults)
     Call OuterFormat(cht, defaults)
     Call FormatXAxisTitle(cht)
     Call InsertLogo(cht)
@@ -29,7 +29,7 @@ Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByVal def
 End Sub
 
 
-Function OuterFormat(cht As Chart, ByVal defaults As ChartDefaults) As Boolean
+Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
     On Error GoTo Fail
 
     Dim seriescount As Long
@@ -80,8 +80,8 @@ Function OuterFormat(cht As Chart, ByVal defaults As ChartDefaults) As Boolean
         'Remove legend
         If cht.hasLegend Then cht.Legend.Delete
 
-        pa.Height = PlotAreaHeight_noLegend
-        pa.Top = PlotAreaTop_noLegend
+        pa.Height = plotAreaHeight_noLegend
+        pa.Top = plotAreaTop_noLegend
         pa.Width = plotAreaWidth
         pa.Left = plotAreaLeft
 
@@ -93,15 +93,15 @@ Function OuterFormat(cht As Chart, ByVal defaults As ChartDefaults) As Boolean
             cht.Legend.Left = legendLeftPad
             cht.Legend.Font.Color = legendFontColor
 
-            pa.Height = PlotAreaHeight
-            pa.Top = PlotAreaTop
+            pa.Height = plotAreaHeight
+            pa.Top = plotAreaTop
             pa.Width = plotAreaWidth
             pa.Left = plotAreaLeft
 
         Else
 
-            pa.Height = PlotAreaHeight_noLegend
-            pa.Top = PlotAreaTop_noLegend
+            pa.Height = plotAreaHeight_noLegend
+            pa.Top = plotAreaTop_noLegend
             pa.Width = plotAreaWidth
             pa.Left = plotAreaLeft
 
@@ -171,8 +171,8 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     Else
         ' No legend — use no-legend plot area dimensions
         With plt
-            .Height = PlotAreaHeight_noLegend
-            .Top = PlotAreaTop_noLegend
+            .Height = plotAreaHeight_noLegend
+            .Top = plotAreaTop_noLegend
         End With
     End If
 
@@ -247,7 +247,7 @@ End Function
 Function InsertSource(cht As Chart) As Boolean
     On Error GoTo Fail
 
-    Dim sourceB As TextBox
+    Dim sourceB As Shape
     Dim chHeight As Long
 
     SafeDeleteShape cht, "SourceBox"
@@ -255,19 +255,21 @@ Function InsertSource(cht As Chart) As Boolean
     'Chart dimensions
     chHeight = cht.Parent.Height
 
-    'Add textbox at bottom-left
-    Set sourceB = cht.TextBoxes.Add(0, chHeight, sourceBoxWidth, sourceBoxHeight)
+    'Add textbox at bottom-left using Shapes, not TextBoxes
+    Set sourceB = cht.Shapes.AddTextbox( _
+                    msoTextOrientationHorizontal, _
+                    0, chHeight, sourceBoxWidth, sourceBoxHeight)
 
     With sourceB
         .name = "SourceBox"
-        .Text = sourceDefaultText & vbNewLine & notesDefaultText
-        .Font.Size = sourceTextFontSize
-        .Font.name = fontPrimary
+        .TextFrame.Characters.Text = sourceDefaultText & vbNewLine & notesDefaultText
+        .TextFrame.Characters.Font.Size = sourceTextFontSize
+        .TextFrame.Characters.Font.name = fontPrimary
     End With
 
-    'Bottom-align the text and apply padding directly via the shape object
+    'Bottom-align the text and nudge it
     With cht.Shapes("SourceBox")
-        .VerticalAlignment = xlBottom
+        .TextFrame.VerticalAlignment = xlVAlignBottom
         .IncrementLeft -sourceBoxLeftNudge
     End With
 
@@ -277,6 +279,7 @@ Function InsertSource(cht As Chart) As Boolean
 Fail:
     MsgError "InsertSource"
 End Function
+
 
 
 Function FormatTitle(cht As Chart) As Boolean
@@ -514,7 +517,7 @@ End Sub
 ' Applies defaults after the full pipeline completes.
 ' Undoes gridlines added by FormatGridlines and removes axes per defaults.AxisDisplay.
 ' Called as the final step of ApplyChartPipeline so earlier steps can still access axes.
-Private Sub ApplyDefaultFormatting(cht As Chart, ByVal defaults As ChartDefaults)
+Private Sub ApplyDefaultFormatting(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' --- Gridlines: remove value-axis gridlines unless Y or Both are requested
@@ -548,7 +551,7 @@ Public Function GetTargetChart(ByVal chartType As Long) As Chart
     On Error GoTo Fail
 
     If Not ActiveChart Is Nothing Then
-        ActiveChart.ChartType = chartType
+        ActiveChart.chartType = chartType
         Set GetTargetChart = ActiveChart
         Exit Function
     End If
