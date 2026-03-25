@@ -34,8 +34,6 @@ Private Sub BuildLabelLastPoint()
     Dim bLabeled As Boolean
     Dim cht As Chart
     Dim srs As Series
-    Dim plHeight As Double
-    Dim plWidth As Double
     Dim shp As Shape
     Dim iColor As Long
     Dim lbl As DataLabel
@@ -45,35 +43,38 @@ Private Sub BuildLabelLastPoint()
         Exit Sub
     End If
 
-    ' Duplicate and activate the copy
-    ActiveChart.Parent.Duplicate.Select
-    ActiveChart.PlotArea.Select
+    ' Duplicate the chart and capture new chart reference directly (no Select required)
+    Dim dupShp As Shape
+    Set dupShp = ActiveChart.Parent.Duplicate
+    Set cht = dupShp.Chart
 
     ' Narrow plot area only on line charts to make room for end labels
-    If ActiveChart.chartType = xlLine Then
-        Selection.Width = chartWidth - labelLastPointPlotWidthInset
-    End If
-    Selection.Left = 0
-
-    Set cht = ActiveChart
+    With cht.PlotArea
+        If cht.chartType = xlLine Then
+            .Width = chartWidth - labelLastPointPlotWidthInset
+        End If
+        .Left = 0
+    End With
 
     ' Nudge Y-axis label box upward when legend is present
     If cht.hasLegend Then
         For Each shp In cht.Shapes
             If shp.name = "YAxisLabelBox" Then
-                cht.Shapes.Range(Array("YAxisLabelBox")).Select
-                Selection.ShapeRange.IncrementTop labelLastPointTitleNudge
+                shp.IncrementTop labelLastPointTitleNudge
             End If
         Next shp
     End If
 
-    ' Adjust plot area dimensions
-    cht.PlotArea.Select
-    plHeight = cht.PlotArea.Height
-    plWidth = cht.PlotArea.Width
-    Selection.Top = labelLastPointPlotTop
-    Selection.Width = plWidth * labelLastPointPlotWidthRatio
-    Selection.Height = plHeight
+    ' Adjust plot area dimensions using direct object references (no Select required)
+    Dim plHeight As Double
+    Dim plWidth As Double
+    With cht.PlotArea
+        plHeight = .Height
+        plWidth = .Width
+        .Top = labelLastPointPlotTop
+        .Width = plWidth * labelLastPointPlotWidthRatio
+        .Height = plHeight
+    End With
 
     ' Remove legend (labels replace it)
     If cht.hasLegend Then
@@ -580,12 +581,13 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
     If MsgGrayOutConfirm(duplicateChart) <> vbOK Then Exit Sub
 
     If duplicateChart Then
-        targetChart.Parent.Duplicate.Select
-        Set targetChart = ActiveChart
-        If targetChart Is Nothing Then
+        Dim dupShp As Shape
+        Set dupShp = targetChart.Parent.Duplicate
+        If dupShp Is Nothing Then
             MsgCouldNotResolveDuplicate
             Exit Sub
         End If
+        Set targetChart = dupShp.Chart
     End If
 
     n = targetChart.SeriesCollection.Count
@@ -632,10 +634,11 @@ Public Sub ToggleDataLabels()
     Set cht = ActiveChart
 
     ' Resolve target: single selected series, or Nothing for all series.
+    ' Intentional: read user's current selection to determine single-series scope.
     Dim targetSrs As Series
-    On Error Resume Next
-    Set targetSrs = Selection
-    On Error GoTo 0
+    If TypeName(Selection) = "Series" Then
+        Set targetSrs = Selection
+    End If
 
     ' Detect current state from the first (or only) target series.
     Dim firstSrs As Series
@@ -752,12 +755,15 @@ Public Sub ToggleChartVariant()
         Exit Sub
     End If
 
+    Dim cht As Chart
+    Set cht = ActiveChart
+
     Dim altType As Long
-    altType = GetAlternativeChartType(ActiveChart.chartType)
+    altType = GetAlternativeChartType(cht.chartType)
 
     If altType = -1 Then Exit Sub   ' unsupported type — do nothing
 
-    ActiveChart.chartType = altType
+    cht.chartType = altType
 End Sub
 
 Private Function GetAlternativeChartType(ByVal ct As Long) As Long
