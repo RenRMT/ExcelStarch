@@ -11,6 +11,9 @@ Public Const axisX As Long = 1
 Public Const axisY As Long = 2
 Public Const axisBoth As Long = 3
 
+'=== Data label contrast settings ===
+Public Const wcagLuminanceThreshold As Double = 0.179   ' WCAG threshold for black vs white label text
+
 '=== Default formatting for new/reformatted charts ===
 Public Const defaultGridlines As Long = axisNone        ' gridline visibility
 Public Const defaultAxisDisplay As Long = axisNone      ' axis visibility (HasAxis)

@@ -771,32 +771,66 @@ Private Function GetAlternativeChartType(ByVal ct As Long) As Long
 End Function
 
 
-' Returns a label color (colorBrand3 dark or colorBrand4 light) chosen for best
-' contrast against the series fill color. Falls back to colorBrand4 on any error.
+' Returns a label color (white or black) chosen for best contrast against the
+' series fill color, based on WCAG relative luminance. Falls back to white on error.
 Private Function GetLabelContrastColor(srs As Series) As Long
     On Error GoTo UseFallback
 
     Dim fillRGB As Long
     fillRGB = srs.Format.Fill.ForeColor.RGB
 
-    ' Excel stores RGB as R + G*256 + B*65536
-    Dim r As Long, g As Long, b As Long
-    r = fillRGB And &HFF
-    g = (fillRGB \ 256) And &HFF
-    b = (fillRGB \ 65536) And &HFF
-
-    ' Perceived luminance (ITU-R BT.601)
+    ' Calculate WCAG relative luminance
     Dim lum As Double
-    lum = 0.299 * r + 0.587 * g + 0.114 * b
+    lum = RelativeLuminance(fillRGB)
 
-    ' Dark fill -> use light label (colorBrand4); light fill -> use dark label (colorBrand3)
-    If lum < 128 Then
-        GetLabelContrastColor = colorBrand4
+    ' Use white text if luminance < threshold, black text otherwise
+    If lum < wcagLuminanceThreshold Then
+        GetLabelContrastColor = RGB(255, 255, 255)  ' White
     Else
-        GetLabelContrastColor = colorBrand3
+        GetLabelContrastColor = RGB(0, 0, 0)        ' Black
     End If
     Exit Function
 
 UseFallback:
-    GetLabelContrastColor = colorBrand4
+    GetLabelContrastColor = RGB(255, 255, 255)      ' Default to white on error
+End Function
+
+' Calculates WCAG relative luminance of an RGB color.
+' Input: clr as Long (Excel RGB format: R + G*256 + B*65536)
+' Returns: Double in range [0, 1], where 0 is black and 1 is white
+Private Function RelativeLuminance(ByVal clr As Long) As Double
+    Dim R As Double, G As Double, B As Double
+    Dim Rs As Double, Gs As Double, Bs As Double
+
+    ' Extract 8-bit RGB components from Long
+    R = clr Mod 256
+    G = (clr \ 256) Mod 256
+    B = (clr \ 65536) Mod 256
+
+    ' Normalize to 0–1
+    Rs = R / 255#
+    Gs = G / 255#
+    Bs = B / 255#
+
+    ' Convert sRGB to linear RGB
+    If Rs <= 0.03928 Then
+        Rs = Rs / 12.92
+    Else
+        Rs = ((Rs + 0.055) / 1.055) ^ 2.4
+    End If
+
+    If Gs <= 0.03928 Then
+        Gs = Gs / 12.92
+    Else
+        Gs = ((Gs + 0.055) / 1.055) ^ 2.4
+    End If
+
+    If Bs <= 0.03928 Then
+        Bs = Bs / 12.92
+    Else
+        Bs = ((Bs + 0.055) / 1.055) ^ 2.4
+    End If
+
+    ' WCAG luminance formula
+    RelativeLuminance = 0.2126 * Rs + 0.7152 * Gs + 0.0722 * Bs
 End Function
