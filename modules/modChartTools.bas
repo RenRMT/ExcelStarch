@@ -306,14 +306,20 @@ End Sub
 
 Private Sub ApplyCategoryAxisStyle(cht As Chart)
     If Not cht.HasAxis(xlCategory) Then Exit Sub
-    cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
-    cht.Axes(xlCategory, xlPrimary).TickLabels.Font.Color = colorBrand3
-    cht.Axes(xlCategory).Select
-    With Selection.Format.Line
-        .Visible = msoTrue
-        .ForeColor.RGB = colorBrand3
-        .ForeColor.TintAndShade = 0
-        .ForeColor.Brightness = 0
+
+    Dim ax As Axis
+    Set ax = cht.Axes(xlCategory, xlPrimary)
+
+    'Format tick labels
+    With ax.TickLabels
+        .Font.Size = axisFontSize
+        .Font.Color = colorBrand3
+    End With
+
+    'Format axis line using Axis.Border (no Select required)
+    With ax.Border
+        .LineStyle = xlLineStyleSolid
+        .Color = colorBrand3
         .Weight = axisLineWeight
     End With
 End Sub

@@ -32,29 +32,23 @@ End Sub
 Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
     On Error GoTo Fail
 
-    Dim seriescount As Long
+    Dim SeriesCount As Long
 
     'Font
     cht.ChartArea.Font.name = fontPrimary
 
-    'Hide Y-axis line
-    If cht.HasAxis(xlValue) Then
-        cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    'Hide Y-axis line using Axis.Border (no Select required)
+    If cht.HasAxis(xlValue, xlPrimary) Then
+        cht.Axes(xlValue, xlPrimary).Border.LineStyle = xlLineStyleNone
     End If
 
-    'Hide X-axis line (requires Select.  Excel doesn't expose Format.Line on Axis directly)
-    If cht.HasAxis(xlCategory) Then
-        cht.Axes(xlCategory).Select
-        Selection.Format.Line.Visible = msoFalse
+    'Hide X-axis line using Axis.Border (no Select required)
+    If cht.HasAxis(xlCategory, xlPrimary) Then
+        HideAxisLine cht.Axes(xlCategory, xlPrimary)
     End If
 
     'Remove axis titles
-    If cht.HasAxis(xlValue) Then
-        If cht.Axes(xlValue).HasTitle Then cht.Axes(xlValue).AxisTitle.Delete
-    End If
-    If cht.HasAxis(xlCategory) Then
-        If cht.Axes(xlCategory).HasTitle Then cht.Axes(xlCategory).AxisTitle.Delete
-    End If
+    RemoveAxisTitles cht
 
     'Chart size
     If TypeName(cht.Parent) = "ChartObject" Then
@@ -68,46 +62,14 @@ Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
     cht.ChartArea.Border.LineStyle = xlNone
 
     'Series count
-    If cht.SeriesCollection.Count = 0 Then Exit Function
-    seriescount = cht.SeriesCollection.Count
-
-    ' Plot area adjustments
-    Dim pa As PlotArea
-    Set pa = cht.PlotArea
-
-    If seriescount = 1 Or Not defaults.Legend Then
-
-        'Remove legend
-        If cht.hasLegend Then cht.Legend.Delete
-
-        pa.Height = plotAreaHeight_noLegend
-        pa.Top = plotAreaTop_noLegend
-        pa.Width = plotAreaWidth
-        pa.Left = plotAreaLeft
-
-    Else
-
-        If cht.hasLegend Then
-
-            cht.Legend.Position = xlLegendPositionTop
-            cht.Legend.Left = legendLeftPad
-            cht.Legend.Font.Color = legendFontColor
-
-            pa.Height = plotAreaHeight
-            pa.Top = plotAreaTop
-            pa.Width = plotAreaWidth
-            pa.Left = plotAreaLeft
-
-        Else
-
-            pa.Height = plotAreaHeight_noLegend
-            pa.Top = plotAreaTop_noLegend
-            pa.Width = plotAreaWidth
-            pa.Left = plotAreaLeft
-
-        End If
-
+    SeriesCount = cht.SeriesCollection.Count
+    If SeriesCount = 0 Then
+        OuterFormat = True
+        Exit Function
     End If
+
+    'Plot area adjustments
+    ApplyPlotAreaGeometry cht, SeriesCount, defaults.Legend
 
     OuterFormat = True
     Exit Function
@@ -115,6 +77,61 @@ Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
 Fail:
     OuterFormat = False
 End Function
+
+
+Private Sub HideAxisLine(ax As Axis)
+    'Axis.Border is the correct object for axis line formatting.
+    'No Select/Selection required.
+    On Error Resume Next
+    ax.Border.LineStyle = xlLineStyleNone
+    On Error GoTo 0
+End Sub
+
+
+Private Sub RemoveAxisTitles(cht As Chart)
+    If cht.HasAxis(xlValue) Then
+        If cht.Axes(xlValue).HasTitle Then cht.Axes(xlValue).AxisTitle.Delete
+    End If
+    If cht.HasAxis(xlCategory) Then
+        If cht.Axes(xlCategory).HasTitle Then cht.Axes(xlCategory).AxisTitle.Delete
+    End If
+End Sub
+
+
+Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal ShowLegend As Boolean)
+    Dim pa As PlotArea
+    Set pa = cht.PlotArea
+
+    Dim HasMultipleSeries As Boolean, HasLegend As Boolean
+    HasMultipleSeries = (SeriesCount > 1)
+    HasLegend = HasMultipleSeries And ShowLegend And cht.hasLegend
+
+    'Remove legend if single series or legend disabled in defaults
+    If Not HasLegend And cht.hasLegend Then
+        cht.Legend.Delete
+    End If
+
+    'Position legend and adjust plot area
+    If HasLegend Then
+        cht.Legend.Position = xlLegendPositionTop
+        cht.Legend.Left = legendLeftPad
+        cht.Legend.Font.Color = legendFontColor
+
+        With pa
+            .Height = plotAreaHeight
+            .Top = plotAreaTop
+            .Width = plotAreaWidth
+            .Left = plotAreaLeft
+        End With
+    Else
+        With pa
+            .Height = plotAreaHeight_noLegend
+            .Top = plotAreaTop_noLegend
+            .Width = plotAreaWidth
+            .Left = plotAreaLeft
+        End With
+    End If
+End Sub
 
 
 Function FormatXAxisTitle(cht As Chart) As Boolean
@@ -187,59 +204,57 @@ End Function
 Public Function InsertLogo(cht As Chart) As Boolean
     On Error GoTo Fail
 
-    ' 1. Decode Base64 -> temp file
-    Dim tmp As String
-    tmp = Environ$("TEMP") & "\logo_temp.svg"
+    'Decode Base64 to temp file
+    Dim tmpPath As String
+    tmpPath = Environ$("TEMP") & "\logo_temp.svg"
 
-    If Not Base64ToFile(LogoPNG_Base64, tmp) Then
+    If Not Base64ToFile(LogoPNG_Base64, tmpPath) Then
         MsgLogoDecodeFailed
+        InsertLogo = False
         Exit Function
     End If
 
-    ' 2. Remove existing logo (avoid duplicates)
-    Dim s As Shape
-    For Each s In cht.Shapes
-        If s.name = "LogoImage" Then s.Delete
-    Next s
+    'Remove existing logo to avoid duplicates
+    SafeDeleteShape cht, "LogoImage"
 
-    ' 3. Insert at native size, no locking
-    Dim shp As Shape
-    Set shp = cht.Shapes.AddPicture( _
-                Filename:=tmp, _
+    'Insert logo at native size
+    Dim logoShape As Shape
+    Set logoShape = cht.Shapes.AddPicture( _
+                Filename:=tmpPath, _
                 LinkToFile:=msoFalse, _
                 SaveWithDocument:=msoTrue, _
                 Left:=0, Top:=0, _
                 Width:=-1, Height:=-1)
 
-    shp.name = "LogoImage"
+    logoShape.name = "LogoImage"
 
-    ' 4. Apply target dimensions: height = logoHeightScale x chart height, width = logoAspectRatio x height
-    Dim chW As Single, chH As Single
-    chW = cht.Parent.Width
-    chH = cht.Parent.Height
+    'Scale to target dimensions
+    Dim ChartWidth As Single, ChartHeight As Single
+    ChartWidth = cht.Parent.Width
+    ChartHeight = cht.Parent.Height
 
-    Dim targetH As Single, targetW As Single
-    targetH = chH * logoHeightScale
-    targetW = targetH * logoAspectRatio
+    Dim TargetHeight As Single, TargetWidth As Single
+    TargetHeight = ChartHeight * logoHeightScale
+    TargetWidth = TargetHeight * logoAspectRatio
 
-    ' Must unlock aspect ratio so we can apply our own ratio
-    shp.LockAspectRatio = msoFalse
+    logoShape.LockAspectRatio = msoFalse
+    logoShape.Height = TargetHeight
+    logoShape.Width = TargetWidth
 
-    shp.Height = targetH
-    shp.Width = targetW
+    'Position bottom right
+    logoShape.Left = ChartWidth - logoShape.Width - logoMarginRight
+    logoShape.Top = ChartHeight - logoShape.Height - logoMarginBottom
 
-    ' 5. Position bottom right
-    shp.Left = chW - shp.Width - logoMarginRight
-    shp.Top = chH - shp.Height - logoMarginBottom
-
+    'Clean up temp file
     On Error Resume Next
-    Kill tmp
+    Kill tmpPath
     On Error GoTo 0
 
     InsertLogo = True
     Exit Function
 
 Fail:
+    InsertLogo = False
     MsgError "InsertLogo"
 End Function
 
@@ -247,28 +262,22 @@ End Function
 Function InsertSource(cht As Chart) As Boolean
     On Error GoTo Fail
 
-    Dim sourceB As Shape
-    Dim chHeight As Long
-
     SafeDeleteShape cht, "SourceBox"
 
-    'Chart dimensions
-    chHeight = cht.Parent.Height
+    'Add textbox at bottom-left
+    Dim SourceBox As Shape
+    Dim ChartHeight As Long
+    ChartHeight = cht.Parent.Height
 
-    'Add textbox at bottom-left using Shapes, not TextBoxes
-    Set sourceB = cht.Shapes.AddTextbox( _
+    Set SourceBox = cht.Shapes.AddTextbox( _
                     msoTextOrientationHorizontal, _
-                    0, chHeight, sourceBoxWidth, sourceBoxHeight)
+                    0, ChartHeight, sourceBoxWidth, sourceBoxHeight)
 
-    With sourceB
+    With SourceBox
         .name = "SourceBox"
         .TextFrame.Characters.Text = sourceDefaultText & vbNewLine & notesDefaultText
         .TextFrame.Characters.Font.Size = sourceTextFontSize
         .TextFrame.Characters.Font.name = fontPrimary
-    End With
-
-    'Bottom-align the text and nudge it
-    With cht.Shapes("SourceBox")
         .TextFrame.VerticalAlignment = xlVAlignBottom
         .IncrementLeft -sourceBoxLeftNudge
     End With
@@ -277,6 +286,7 @@ Function InsertSource(cht As Chart) As Boolean
     Exit Function
 
 Fail:
+    InsertSource = False
     MsgError "InsertSource"
 End Function
 
@@ -285,120 +295,20 @@ End Function
 Function FormatTitle(cht As Chart) As Boolean
     On Error GoTo Fail
 
-    Dim figureB As Shape
-    Dim titleB1 As Shape, titleB2 As Shape, titleB3 As Shape
-    Dim plt As PlotArea
-    Dim seriescount As Long
-    Dim yAxisTop As Single
-    Dim hasLegend As Boolean
-
-    ' Delete existing title-related boxes safely
+    'Delete existing title-related boxes
     SafeDeleteShape cht, "FigureBox"
     SafeDeleteShape cht, "TitleBox"
     SafeDeleteShape cht, "SubTitleBox"
     SafeDeleteShape cht, "YAxisLabelBox"
 
-    ' Remove built-in chart title if present
+    'Remove built-in chart title
     If cht.HasTitle Then cht.ChartTitle.Delete
 
-    ' Capture chart state
-    seriescount = cht.SeriesCollection.Count
-    hasLegend = cht.hasLegend
-    Set plt = cht.PlotArea
-
-    ' Figure number box (above title)
-    Set figureB = cht.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=figureBoxTop, Width:=titleBoxWidth, Height:=figureBoxHeight)
-
-    With figureB
-        .name = "FigureBox"
-        With .TextFrame2.TextRange
-            .Text = figureBoxDefaultText
-            With .Font
-                .Size = figureFontSize
-                .name = fontPrimary
-                .Fill.ForeColor.RGB = figureFontColor
-                .Bold = msoFalse
-            End With
-        End With
-        .Top = .Top - titleBoxNudge
-        .Left = .Left - titleBoxNudge
-    End With
-
-    ' Title (positioned below FigureBox)
-    Set titleB1 = cht.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=titleBoxTop, Width:=titleBoxWidth, Height:=titleBoxHeight)
-
-    With titleB1
-        .name = "TitleBox"
-        With .TextFrame2
-        .VerticalAnchor = msoAnchorMiddle
-        With .TextRange
-            .Text = titleDefaultText
-            With .Font
-                .Size = titleFontSize
-                .name = fontPrimary
-                .Fill.ForeColor.RGB = titleFontColor
-                .Bold = msoTrue
-            End With
-        End With
-        End With
-
-        ' nudge
-        .Top = .Top - titleBoxNudge
-        .Left = .Left - titleBoxNudge
-    End With
-
-    ' Subtitle
-    Set titleB2 = cht.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=subtitleBoxTop, Width:=titleBoxWidth, Height:=subtitleBoxHeight)
-
-    With titleB2
-        .name = "SubTitleBox"
-        With .TextFrame2.TextRange
-            .Text = subtitleDefaultText
-            With .Font
-                .Size = subTitleFontSize
-                .Fill.ForeColor.RGB = subTitleFontColor
-                .name = fontPrimary
-                .Bold = msoFalse
-            End With
-        End With
-
-        ' nudge
-        .Top = .Top - titleBoxNudge
-        .Left = .Left - titleBoxNudge
-    End With
-
-    ' Y-axis Label
-    If hasLegend Then
-        yAxisTop = yAxisLabelTop
-    Else
-        yAxisTop = yAxisLabelTop_noLegend
-    End If
-
-    Set titleB3 = cht.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=yAxisTop, Width:=titleBoxWidth, _
-                    Height:=yAxisLabelHeight)
-
-    With titleB3
-        .name = "YAxisLabelBox"
-        With .TextFrame2.TextRange
-            .Text = yAxisDefaultText
-            With .Font
-                .Size = axisFontSize
-                .name = fontPrimaryItalic
-                .Bold = msoFalse
-                .Italic = msoTrue
-            End With
-        End With
-
-        .Left = .Left - titleBoxNudge
-    End With
+    'Create all title boxes
+    CreateFigureBox cht
+    CreateTitleBox cht
+    CreateSubtitleBox cht
+    CreateYAxisLabelBox cht, cht.hasLegend
 
     FormatTitle = True
     Exit Function
@@ -406,6 +316,94 @@ Function FormatTitle(cht As Chart) As Boolean
 Fail:
     FormatTitle = False
 End Function
+
+
+Private Sub CreateFigureBox(cht As Chart)
+    Dim shp As Shape
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=figureBoxTop, Width:=titleBoxWidth, Height:=figureBoxHeight)
+
+    With shp
+        .name = "FigureBox"
+        .TextFrame2.TextRange.Text = figureBoxDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = figureFontSize
+            .name = fontPrimary
+            .Fill.ForeColor.RGB = figureFontColor
+            .Bold = msoFalse
+        End With
+        .Top = .Top - titleBoxNudge
+        .Left = .Left - titleBoxNudge
+    End With
+End Sub
+
+
+Private Sub CreateTitleBox(cht As Chart)
+    Dim shp As Shape
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=titleBoxTop, Width:=titleBoxWidth, Height:=titleBoxHeight)
+
+    With shp
+        .name = "TitleBox"
+        .TextFrame2.VerticalAnchor = msoAnchorMiddle
+        .TextFrame2.TextRange.Text = titleDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = titleFontSize
+            .name = fontPrimary
+            .Fill.ForeColor.RGB = titleFontColor
+            .Bold = msoTrue
+        End With
+        .Top = .Top - titleBoxNudge
+        .Left = .Left - titleBoxNudge
+    End With
+End Sub
+
+
+Private Sub CreateSubtitleBox(cht As Chart)
+    Dim shp As Shape
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=subtitleBoxTop, Width:=titleBoxWidth, Height:=subtitleBoxHeight)
+
+    With shp
+        .name = "SubTitleBox"
+        .TextFrame2.TextRange.Text = subtitleDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = subTitleFontSize
+            .Fill.ForeColor.RGB = subTitleFontColor
+            .name = fontPrimary
+            .Bold = msoFalse
+        End With
+        .Top = .Top - titleBoxNudge
+        .Left = .Left - titleBoxNudge
+    End With
+End Sub
+
+
+Private Sub CreateYAxisLabelBox(cht As Chart, ByVal HasLegend As Boolean)
+    Dim shp As Shape
+    Dim yAxisTop As Single
+
+    yAxisTop = IIf(HasLegend, yAxisLabelTop, yAxisLabelTop_noLegend)
+
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=yAxisTop, Width:=titleBoxWidth, Height:=yAxisLabelHeight)
+
+    With shp
+        .name = "YAxisLabelBox"
+        .TextFrame2.TextRange.Text = yAxisDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = axisFontSize
+            .name = fontPrimaryItalic
+            .Bold = msoFalse
+            .Italic = msoTrue
+        End With
+        .Left = .Left - titleBoxNudge
+    End With
+End Sub
 
 
 Function FormatGridlines(cht As Chart) As Boolean
@@ -443,32 +441,21 @@ End Function
 Function FormatXAxis(cht As Chart) As Boolean
     On Error GoTo Fail
 
-    'Format size of x-axis & y-axis tick mark labels
-    If cht.HasAxis(xlCategory) = True Then
-        cht.Axes(xlCategory).TickLabels.Font.Size = axisFontSize
-
-        'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlCategory, xlPrimary).TickLabels.Font.Color = legendFontColor
-
-        'Change x-axis line color
-        ' Note: Excel does not expose Format.Line on an Axis object directly —
-        ' the property is only accessible via Selection after .Select
-        cht.Axes(xlCategory).Select
-        With Selection.Format.Line
-            .Visible = msoFalse
-            .ForeColor.TintAndShade = 0
-            .ForeColor.Brightness = 0
-            .Weight = axisLineWeight
+    'Format category (X) axis
+    If cht.HasAxis(xlCategory) Then
+        With cht.Axes(xlCategory)
+            .TickLabels.Font.Size = axisFontSize
+            .TickLabels.Font.Color = legendFontColor
         End With
-
+        FormatCategoryAxisLine cht.Axes(xlCategory)
     End If
 
-    If cht.HasAxis(xlValue) = True Then
-        cht.Axes(xlValue).TickLabels.Font.Size = axisFontSize
-
-        'Change color of x-axis and y-axis text to black (affects 2013 & 2016)
-        cht.Axes(xlValue, xlPrimary).TickLabels.Font.Color = axisFontColor
-
+    'Format value (Y) axis
+    If cht.HasAxis(xlValue) Then
+        With cht.Axes(xlValue)
+            .TickLabels.Font.Size = axisFontSize
+            .TickLabels.Font.Color = axisFontColor
+        End With
     End If
 
     FormatXAxis = True
@@ -477,6 +464,17 @@ Function FormatXAxis(cht As Chart) As Boolean
 Fail:
     FormatXAxis = False
 End Function
+
+
+Private Sub FormatCategoryAxisLine(ax As Axis)
+    'Format category axis line using Axis.Border object (no Select required).
+    On Error Resume Next
+    With ax.Border
+        .LineStyle = xlLineStyleNone
+        .Weight = axisLineWeight
+    End With
+    On Error GoTo 0
+End Sub
 
 
 Function RemoveShadow(cht As Chart) As Boolean
@@ -543,28 +541,37 @@ CleanFail:
 End Sub
 
 
-' Returns the chart to style, modifying it in-place. Two entry paths:
-'   1. A chart is already active  → retype it to chartType; return it.
-'   2. A range is selected        → create a new chart of chartType; return it.
-' Returns Nothing on any other selection state.
+'Returns the chart to style, modifying it in-place. Two entry paths:
+'  1. A chart is already active  → retype it to chartType; return it.
+'  2. A range is selected        → create a new chart of chartType; return it.
+'Returns Nothing on any other selection state or error.
 Public Function GetTargetChart(ByVal chartType As Long) As Chart
     On Error GoTo Fail
 
+    Set GetTargetChart = Nothing
+
+    'Path 1: Retype active chart
     If Not ActiveChart Is Nothing Then
         ActiveChart.chartType = chartType
         Set GetTargetChart = ActiveChart
         Exit Function
     End If
 
+    'Path 2: Create new chart from selected range
     If TypeName(Selection) <> "Range" Then
         MsgSelectRangeOrChart
         Exit Function
     End If
 
+    On Error Resume Next
     ActiveSheet.Shapes.AddChart2(-1, chartType).Select
-    If Not ActiveChart Is Nothing Then Set GetTargetChart = ActiveChart
+    If Not ActiveChart Is Nothing Then
+        Set GetTargetChart = ActiveChart
+    End If
+    On Error GoTo 0
+
     Exit Function
 
 Fail:
-    Set GetTargetChart = Nothing
+    'Already set to Nothing on entry
 End Function
