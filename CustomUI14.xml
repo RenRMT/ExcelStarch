@@ -318,12 +318,19 @@
 						supertip="Cycle axis lines on the selected chart: none → x-axis → y-axis → both."
 						onAction="ToggleAxesButton_onAction"/>
 					<button
-						id="RemoveLegendResizeButton"
+						id="ToggleAxisLabelsButton"
 						image="i_menu_none"
-						label="Remove Legend"
+						label="Toggle Axis Labels"
 						size="normal"
-						supertip="Remove the chart legend and resize the plot area to standard web dimensions."
-						onAction="RemoveLegendResizeButton_onAction"/>
+						supertip="Cycle axis tick labels on the selected chart: none → x-axis → y-axis → both."
+						onAction="ToggleAxisLabelsButton_onAction"/>
+					<button
+						id="ToggleLegendButton"
+						image="i_menu_none"
+						label="Toggle Legend"
+						size="normal"
+						supertip="Toggle the chart legend on or off and resize the plot area to match."
+						onAction="ToggleLegendButton_onAction"/>
 					<button
 						id="ToggleChartVariantButton"
 						image="i_menu_none"

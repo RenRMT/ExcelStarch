@@ -31,13 +31,24 @@ Private Sub BuildPieChart()
     On Error GoTo CleanFail
 
     Dim cht As Chart
-    Dim pointscount As Long
 
     Set cht = GetTargetChart(xlPie)
     If cht Is Nothing Then Exit Sub
 
+    Call BuildPieChartWithDefaults(cht, PieChartDefaults())
+
+    Exit Sub
+CleanFail:
+    MsgError "BuildPieChart"
+End Sub
+
+Private Sub BuildPieChartWithDefaults(cht As Chart, ByVal defaults As ChartDefaults)
+    On Error GoTo CleanFail
+
+    Dim pointscount As Long
+
     InsertSource cht
-    SetRoundChartSizeAndTitle cht
+    SetRoundChartSizeAndTitle cht, defaults
     InsertLogo cht      ' must follow SetRoundChartSizeAndTitle so chart is 600×600 when logo is sized
 
     pointscount = cht.SeriesCollection(1).Points.Count
@@ -45,7 +56,7 @@ Private Sub BuildPieChart()
 
     Exit Sub
 CleanFail:
-    MsgError "BuildPieChart"
+    MsgError "BuildPieChartWithDefaults"
 End Sub
 
 
@@ -84,7 +95,7 @@ CleanFail:
 End Sub
 
 
-Private Sub SetRoundChartSizeAndTitle(cht As Chart)
+Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByVal defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
@@ -147,6 +158,16 @@ Private Sub BuildTreemapChart()
     Set cht = GetTargetChart(xlTreemap)
     If cht Is Nothing Then Exit Sub
 
+    Call BuildTreemapChartWithDefaults(cht, TreemapChartDefaults())
+
+    Exit Sub
+CleanFail:
+    MsgError "BuildTreemapChart"
+End Sub
+
+Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByVal defaults As ChartDefaults)
+    On Error GoTo CleanFail
+
     ' Custom pipeline — treemaps have no axes or gridlines
     With cht.Parent
         .Width = chartWidth
@@ -164,7 +185,7 @@ Private Sub BuildTreemapChart()
 
     Exit Sub
 CleanFail:
-    MsgError "BuildTreemapChart"
+    MsgError "BuildTreemapChartWithDefaults"
 End Sub
 
 

@@ -31,7 +31,7 @@ Private Sub BuildBarChart()
     Set cht = GetTargetChart(xlBarClustered)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", BarChartDefaults()
     Call RemoveShadow(cht)
 
     If cht.HasAxis(xlCategory) Then
@@ -55,7 +55,7 @@ Private Sub BuildStackedBarChart()
     Set cht = GetTargetChart(xlBarStacked)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", BarChartDefaults()
     Call RemoveShadow(cht)
 
     If cht.HasAxis(xlCategory) Then

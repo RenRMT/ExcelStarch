@@ -3,6 +3,7 @@ Option Explicit
 
 ' Shared formatting pipeline applied to every chart type.
 ' colorMode: "FILL" for bar/column charts; "LINE" for line/slope/scatter charts.
+' defaults: ChartDefaults UDT containing all five formatting options.
 '
 ' Step order matters:
 '   1. OuterFormat    — sets chart size and plot area geometry first; everything else depends on it
@@ -15,8 +16,8 @@ Option Explicit
 '   8. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
 '
 ' Chart types that skip steps (slope, dot plot, scatter) call individual functions directly.
-Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String)
-    Call OuterFormat(cht)
+Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByVal defaults As ChartDefaults)
+    Call OuterFormat(cht, defaults)
     Call FormatXAxisTitle(cht)
     Call InsertLogo(cht)
     Call InsertSource(cht)
@@ -24,11 +25,11 @@ Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String)
     Call FormatGridlines(cht)
     Call FormatXAxis(cht)
     Call FormatSeriesColors(cht, UCase$(colorMode))
-    Call ApplyDefaultFormatting(cht)
+    Call ApplyDefaultFormatting(cht, defaults)
 End Sub
 
 
-Function OuterFormat(cht As Chart) As Boolean
+Function OuterFormat(cht As Chart, ByVal defaults As ChartDefaults) As Boolean
     On Error GoTo Fail
 
     Dim seriescount As Long
@@ -74,7 +75,7 @@ Function OuterFormat(cht As Chart) As Boolean
     Dim pa As PlotArea
     Set pa = cht.PlotArea
 
-    If seriescount = 1 Or Not defaultLegend Then
+    If seriescount = 1 Or Not defaults.Legend Then
 
         'Remove legend
         If cht.hasLegend Then cht.Legend.Delete
@@ -510,14 +511,14 @@ Public Sub SafeDeleteShape(cht As Chart, ByVal nm As String)
 End Sub
 
 
-' Applies defaults from modConfig after the full pipeline completes.
-' Undoes gridlines added by FormatGridlines and removes axes per defaultAxisDisplay.
+' Applies defaults after the full pipeline completes.
+' Undoes gridlines added by FormatGridlines and removes axes per defaults.AxisDisplay.
 ' Called as the final step of ApplyChartPipeline so earlier steps can still access axes.
-Private Sub ApplyDefaultFormatting(cht As Chart)
+Private Sub ApplyDefaultFormatting(cht As Chart, ByVal defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' --- Gridlines: remove value-axis gridlines unless Y or Both are requested
-    If defaultGridlines = axisNone Or defaultGridlines = axisX Then
+    If defaults.Gridlines = axisNone Or defaults.Gridlines = axisX Then
         If cht.HasAxis(xlValue) Then
             If cht.Axes(xlValue).HasMajorGridlines Then
                 cht.Axes(xlValue).MajorGridlines.Delete
@@ -525,10 +526,10 @@ Private Sub ApplyDefaultFormatting(cht As Chart)
         End If
     End If
 
-    ' --- Axis display: show/hide each axis per default constant
+    ' --- Axis display: show/hide each axis per defaults parameter
     Dim showX As Boolean, showY As Boolean
-    showX = (defaultAxisDisplay = axisX Or defaultAxisDisplay = axisBoth)
-    showY = (defaultAxisDisplay = axisY Or defaultAxisDisplay = axisBoth)
+    showX = (defaults.AxisDisplay = axisX Or defaults.AxisDisplay = axisBoth)
+    showY = (defaults.AxisDisplay = axisY Or defaults.AxisDisplay = axisBoth)
 
     cht.HasAxis(xlValue) = showY
     cht.HasAxis(xlCategory) = showX

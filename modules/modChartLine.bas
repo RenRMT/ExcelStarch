@@ -9,8 +9,8 @@ Private Sub BuildLineChart()
     Set cht = GetTargetChart(xlLine)
     If cht Is Nothing Then Exit Sub
 
-    ' Shared formatting pipeline
-    ApplyChartPipeline cht, "LINE"
+    ' Shared formatting pipeline with line-specific defaults
+    ApplyChartPipeline cht, "LINE", LineChartDefaults()
     Call RemoveShadow(cht)
 
     ' Line-specific: axis starts on first data point (not between categories)

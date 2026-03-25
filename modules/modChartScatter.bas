@@ -21,7 +21,7 @@ Private Sub BuildScatterChart()
     Set cht = GetTargetChart(xlXYScatter)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", ScatterChartDefaults()
 
     ' Scatter-specific: tick marks outside on both axes
     If cht.HasAxis(xlCategory) Then
@@ -48,7 +48,7 @@ Private Sub BuildBubbleChart()
     Set cht = GetTargetChart(xlBubble)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", ScatterChartDefaults()
 
     ' Bubble-specific: tick marks outside on both axes
     If cht.HasAxis(xlCategory) Then

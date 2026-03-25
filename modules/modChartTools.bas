@@ -8,8 +8,8 @@ Attribute VB_Name = "modChartTools"
 '   LabelLastPointButton  — adds series-name labels to the final data point of each
 '                           series; duplicates the chart first
 '   ToggleGridlines       — cycles major gridlines: None → Horizontal → Vertical → Both
-'   RemoveLegendResizeButton — deletes the legend and resizes the plot area to standard
-'                           web dimensions; operates in-place
+'   ToggleLegendButton       — toggles legend visibility and resizes the plot area;
+'                           pie/donut use square plot area constants; operates in-place
 '   StartWithGray         — duplicates the chart and resets all series to Silver;
 '                           GrayOutChart is the parameterised core (also public for
 '                           potential pipeline use)
@@ -320,31 +320,188 @@ End Sub
 
 
 ' ============================================================
-'   REMOVE LEGEND AND RESIZE
+'   TOGGLE LEGEND
 ' ============================================================
-' Deletes the chart legend and resizes the plot area to standard web dimensions.
-' Operates in-place — intended for iterative adjustment after chart creation.
+' Toggles legend visibility and resizes the plot area to match.
+' Pie/donut:       uses square plot area constants from modConfig.
+' Standard charts: uses remove-legend / with-legend constants from modConfig.
+' Single-series or treemap charts: informational message, no change.
+' Operates in-place on the active chart (no duplication).
 
-Private Sub BuildRemoveLegendResize()
+Public Sub ToggleLegend()
     If ActiveChart Is Nothing Then
         MsgNoActiveChart
         Exit Sub
     End If
-    RemoveLegendAndResize ActiveChart
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    ' Single-series: legend is redundant. Treemap uses tile labels instead.
+    If cht.SeriesCollection.Count <= 1 Or cht.ChartType = xlTreemap Then
+        MsgLegendNotApplicable
+        Exit Sub
+    End If
+
+    Dim addLegend As Boolean
+    addLegend = Not cht.HasLegend
+
+    If IsPieChartType(cht.ChartType) Then
+        ToggleLegendPie cht, addLegend
+    Else
+        ToggleLegendStandard cht, addLegend
+    End If
 End Sub
 
-Private Sub RemoveLegendAndResize(cht As Chart)
-    If cht.hasLegend Then cht.Legend.Delete
+Private Function IsPieChartType(ByVal ct As Long) As Boolean
+    IsPieChartType = (ct = xlPie Or ct = xlDoughnut Or _
+                      ct = xlPie3D Or ct = xlDoughnutExploded)
+End Function
 
-    cht.PlotArea.Select
-    Selection.Height = removelegendHeight
-    Selection.Top = removelegendTop
-    Selection.Width = removeLegend_Width
-    Selection.Left = removeLegend_Left
+Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
+    On Error GoTo CleanFail
+
+    If addLegend Then
+        cht.HasLegend = True
+        With cht.Legend
+            .Position = xlLegendPositionTop
+            .Left = legendLeftPad
+            .Font.Color = legendFontColor
+            .Font.Size = axisFontSize
+        End With
+        With cht.PlotArea
+            .Height = PlotAreaHeight
+            .Top = PlotAreaTop
+            .Width = plotAreaWidth
+            .Left = plotAreaLeft
+        End With
+    Else
+        cht.Legend.Delete
+        With cht.PlotArea
+            .Height = removelegendHeight
+            .Top = removelegendTop
+            .Width = removeLegend_Width
+            .Left = removeLegend_Left
+        End With
+    End If
+
+    Exit Sub
+CleanFail:
+    MsgError "ToggleLegendStandard"
 End Sub
 
-Sub RemoveLegendResizeButton()
-    BuildRemoveLegendResize
+Private Sub ToggleLegendPie(cht As Chart, ByVal addLegend As Boolean)
+    On Error GoTo CleanFail
+
+    Dim plotSize As Long
+    Dim chtHeight As Double
+    Dim chtWidth As Double
+
+    If addLegend Then
+        cht.HasLegend = True
+        plotSize = piePlotAreaSize_legend
+    Else
+        cht.Legend.Delete
+        plotSize = piePlotAreaSize_noLegend
+    End If
+
+    With cht.PlotArea
+        .Width = plotSize
+        .Height = plotSize
+        .Left = piePlotAreaLeft
+        .Top = piePlotAreaTop
+    End With
+
+    chtHeight = cht.ChartArea.Height
+    chtWidth = cht.ChartArea.Width
+    cht.PlotArea.Top = (chtHeight - plotSize) * piePlotTopRatio
+    cht.PlotArea.Left = (chtWidth - plotSize) / 2
+
+    If addLegend Then
+        With cht.Legend
+            .Position = xlLegendPositionTop
+            .Left = legendLeftPad
+            .Font.Color = legendFontColor
+            .Top = pieLegendTop
+            .Font.Size = axisFontSize
+        End With
+    End If
+
+    Exit Sub
+CleanFail:
+    MsgError "ToggleLegendPie"
+End Sub
+
+Sub ToggleLegendButton()
+    ToggleLegend
+End Sub
+
+
+' ============================================================
+'   TOGGLE AXIS LABELS
+' ============================================================
+' Cycles axis tick-label visibility through four states in sequence:
+'   None → X only → Y only → Both → None
+' Uses TickLabelPosition to show/hide labels without removing the axis.
+' Axes that do not exist (removed via ToggleAxes) are treated as "not visible"
+' and skipped during assignment. Chart types with no axes (pie, donut) are a no-op.
+' Operates in-place on the active chart (no duplication).
+
+Public Sub ToggleAxisLabels()
+    If ActiveChart Is Nothing Then
+        MsgNoActiveChart
+        Exit Sub
+    End If
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    Dim hasX As Boolean   ' category axis labels visible
+    Dim hasY As Boolean   ' value axis labels visible
+
+    hasX = GetAxisLabelState(cht, xlCategory)
+    hasY = GetAxisLabelState(cht, xlValue)
+
+    Dim nextX As Boolean
+    Dim nextY As Boolean
+
+    If Not hasX And Not hasY Then
+        nextX = True:  nextY = False        ' None → X only
+    ElseIf hasX And Not hasY Then
+        nextX = False: nextY = True         ' X only → Y only
+    ElseIf Not hasX And hasY Then
+        nextX = True:  nextY = True         ' Y only → Both
+    Else
+        nextX = False: nextY = False        ' Both → None
+    End If
+
+    If cht.HasAxis(xlCategory) Then SetAxisLabelState cht.Axes(xlCategory), nextX
+    If cht.HasAxis(xlValue) Then SetAxisLabelState cht.Axes(xlValue), nextY
+End Sub
+
+' Returns True if the axis exists and has visible tick labels.
+Private Function GetAxisLabelState(cht As Chart, ByVal axisType As Long) As Boolean
+    If Not cht.HasAxis(axisType) Then Exit Function
+    On Error Resume Next
+    GetAxisLabelState = (cht.Axes(axisType).TickLabelPosition <> xlTickLabelPositionNone)
+    On Error GoTo 0
+End Function
+
+' Shows or hides tick labels on an axis; applies brand styling when showing.
+Private Sub SetAxisLabelState(ax As Axis, ByVal show As Boolean)
+    On Error Resume Next
+    If show Then
+        ax.TickLabelPosition = xlTickLabelPositionNextToAxis
+        ax.TickLabels.Font.Size = axisFontSize
+        ax.TickLabels.Font.Color = axisFontColor
+    Else
+        ax.TickLabelPosition = xlTickLabelPositionNone
+    End If
+    On Error GoTo 0
+End Sub
+
+Sub ToggleAxisLabelsButton()
+    ToggleAxisLabels
 End Sub
 
 

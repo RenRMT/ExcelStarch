@@ -21,7 +21,7 @@ Private Sub BuildStackedAreaChart()
     Set cht = GetTargetChart(xlAreaStacked)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", AreaChartDefaults()
 
     ' Area-specific: axis starts on first data point so areas fill to chart edges
     If cht.HasAxis(xlCategory) Then

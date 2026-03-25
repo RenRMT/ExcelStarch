@@ -82,6 +82,11 @@ Public Sub MsgUnknownRamp(ByVal rampName As String)
     MsgBox "Unknown ramp '" & rampName & "'.", vbExclamation, "Unknown Ramp"
 End Sub
 
+' ToggleLegend: chart does not support a legend (single-series or treemap)
+Public Sub MsgLegendNotApplicable()
+    MsgBox "This chart has only 1 data series or does not support a legend.", vbInformation, "Legend Not Applicable"
+End Sub
+
 ' TogglePaletteOrder: confirms new palette state after toggle
 Public Sub MsgPaletteOrderToggled(ByVal altOrder As Boolean)
     If altOrder Then

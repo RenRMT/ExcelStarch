@@ -28,7 +28,7 @@ Private Sub BuildColumnChart()
     Set cht = GetTargetChart(xlColumnClustered)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", ColumnChartDefaults()
     Call RemoveShadow(cht)
 
     If cht.HasAxis(xlCategory) Then
@@ -52,7 +52,7 @@ Private Sub BuildStackedColumnChart()
     Set cht = GetTargetChart(xlColumnStacked)
     If cht Is Nothing Then Exit Sub
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", ColumnChartDefaults()
     Call RemoveShadow(cht)
 
     If cht.HasAxis(xlCategory) Then
