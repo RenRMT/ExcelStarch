@@ -318,7 +318,7 @@ Private Sub ApplyCategoryAxisStyle(cht As Chart)
 
     'Format axis line using Axis.Border (no Select required)
     With ax.Border
-        .LineStyle = xlLineStyleSolid
+        .LineStyle = xlContinuous
         .Color = colorBrand3
         .Weight = axisLineWeight
     End With
