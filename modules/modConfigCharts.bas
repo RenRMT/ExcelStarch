@@ -1,5 +1,6 @@
 Attribute VB_Name = "modConfigCharts"
 
+Option Explicit
 ' +---------------------------------------------------------+
 ' |  DEFAULT CHART FORMATTING                               |
 ' |  Controls pipeline defaults for new charts.             |
