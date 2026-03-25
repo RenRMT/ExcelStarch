@@ -118,11 +118,12 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByVal defaults As ChartDefau
     FormatTitle cht
 
     plotSize = IIf(cht.hasLegend, piePlotAreaSize_legend, piePlotAreaSize_noLegend)
-    cht.PlotArea.Select
-    Selection.Width = plotSize
-    Selection.Height = plotSize
-    Selection.Left = piePlotAreaLeft
-    Selection.Top = piePlotAreaTop
+    With cht.PlotArea
+        .Width = plotSize
+        .Height = plotSize
+        .Left = piePlotAreaLeft
+        .Top = piePlotAreaTop
+    End With
 
     Set chtObj = cht.Parent
     With chtObj
@@ -135,12 +136,13 @@ Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByVal defaults As ChartDefau
     End With
 
     If cht.hasLegend Then
-        cht.Legend.Position = xlLegendPositionTop
-        cht.Legend.Left = legendLeftPad
-        cht.Legend.Font.Color = legendFontColor
-        cht.Legend.Select
-        Selection.Top = pieLegendTop
-        Selection.Font.Size = axisFontSize
+        With cht.Legend
+            .Position = xlLegendPositionTop
+            .Left = legendLeftPad
+            .Font.Color = legendFontColor
+            .Top = pieLegendTop
+            .Font.Size = axisFontSize
+        End With
     End If
 
     Exit Sub

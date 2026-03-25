@@ -16,6 +16,8 @@ Option Explicit
 
 
 Private Sub BuildScatterChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlXYScatter)
@@ -39,10 +41,15 @@ Private Sub BuildScatterChart()
         cht.Axes(xlCategory).Select
         Selection.Format.Line.Visible = msoFalse
     End If
+    Exit Sub
+CleanFail:
+    MsgError "BuildScatterChart"
 End Sub
 
 
 Private Sub BuildBubbleChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBubble)
@@ -66,6 +73,9 @@ Private Sub BuildBubbleChart()
         cht.Axes(xlCategory).Select
         Selection.Format.Line.Visible = msoFalse
     End If
+    Exit Sub
+CleanFail:
+    MsgError "BuildBubbleChart"
 End Sub
 
 

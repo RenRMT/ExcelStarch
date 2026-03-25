@@ -178,12 +178,12 @@ Public Const defaultAxisLabels As Long = axisNone       ' tick label visibility
 Public Const defaultLegend As Boolean = False           ' False = no legend
 
 '=== ChartDefaults User-Defined Type ===
-'Bundles all five formatting options into a single parameter for chart pipeline
+'Bundles formatting options into a single parameter for chart pipeline.
+'Only Gridlines, AxisDisplay, and Legend are currently consumed by ApplyDefaultFormatting.
+'AxisLines and AxisLabels are reserved for future use (phase 6+).
 Public Type ChartDefaults
-    Gridlines As Long       ' axisNone, axisX, axisY, axisBoth
-    AxisDisplay As Long     ' axisNone, axisX, axisY, axisBoth
-    AxisLines As Long       ' axisNone, axisX, axisY, axisBoth
-    AxisLabels As Long      ' axisNone, axisX, axisY, axisBoth
+    Gridlines As Long       ' axisNone, axisX, axisY, axisBoth (controls gridline visibility)
+    AxisDisplay As Long     ' axisNone, axisX, axisY, axisBoth (controls axis visibility)
     Legend As Boolean       ' True = show legend, False = hide
 End Type
 
@@ -192,8 +192,6 @@ Public Function DefaultChartDefaults() As ChartDefaults
     With DefaultChartDefaults
         .Gridlines = defaultGridlines
         .AxisDisplay = defaultAxisDisplay
-        .AxisLines = defaultAxisLines
-        .AxisLabels = defaultAxisLabels
         .Legend = defaultLegend
     End With
 End Function
@@ -203,8 +201,6 @@ Public Function LineChartDefaults() As ChartDefaults
     With LineChartDefaults
         .Gridlines = axisY          ' Y-gridlines only (horizontal lines showing value scale)
         .AxisDisplay = axisBoth     ' Show both X and Y axes
-        .AxisLines = axisNone       ' Hidden axis lines (per OuterFormat)
-        .AxisLabels = axisBoth      ' Show tick labels on both axes
         .Legend = defaultLegend     ' Use global default
     End With
 End Function
@@ -213,8 +209,6 @@ Public Function BarChartDefaults() As ChartDefaults
     With BarChartDefaults
         .Gridlines = axisX          ' X-gridlines only (vertical lines showing value scale)
         .AxisDisplay = axisBoth     ' Show both X and Y axes
-        .AxisLines = axisNone       ' Hidden axis lines (per OuterFormat)
-        .AxisLabels = axisBoth      ' Show tick labels on both axes
         .Legend = defaultLegend     ' Use global default
     End With
 End Function
@@ -223,8 +217,6 @@ Public Function ColumnChartDefaults() As ChartDefaults
     With ColumnChartDefaults
         .Gridlines = axisY          ' Y-gridlines only (horizontal lines showing value scale)
         .AxisDisplay = axisBoth     ' Show both X and Y axes
-        .AxisLines = axisNone       ' Hidden axis lines (per OuterFormat)
-        .AxisLabels = axisBoth      ' Show tick labels on both axes
         .Legend = defaultLegend     ' Use global default
     End With
 End Function
@@ -233,8 +225,6 @@ Public Function AreaChartDefaults() As ChartDefaults
     With AreaChartDefaults
         .Gridlines = axisY          ' Y-gridlines only (horizontal lines showing value scale)
         .AxisDisplay = axisBoth     ' Show both X and Y axes
-        .AxisLines = axisNone       ' Hidden axis lines (per OuterFormat)
-        .AxisLabels = axisBoth      ' Show tick labels on both axes
         .Legend = defaultLegend     ' Use global default
     End With
 End Function
@@ -243,8 +233,6 @@ Public Function ScatterChartDefaults() As ChartDefaults
     With ScatterChartDefaults
         .Gridlines = axisBoth       ' Both gridlines for reference grid
         .AxisDisplay = axisBoth     ' Show both X and Y axes
-        .AxisLines = axisNone       ' Hidden axis lines (per OuterFormat)
-        .AxisLabels = axisBoth      ' Show tick labels on both axes
         .Legend = defaultLegend     ' Use global default
     End With
 End Function
@@ -253,8 +241,6 @@ Public Function PieChartDefaults() As ChartDefaults
     With PieChartDefaults
         .Gridlines = axisNone       ' No gridlines (pie has no axes)
         .AxisDisplay = axisNone     ' No axes for pie charts
-        .AxisLines = axisNone       ' No axis lines
-        .AxisLabels = axisNone      ' No axis labels
         .Legend = True              ' Pie typically shows legend for slice labels
     End With
 End Function
@@ -263,8 +249,6 @@ Public Function TreemapChartDefaults() As ChartDefaults
     With TreemapChartDefaults
         .Gridlines = axisNone       ' No gridlines (treemap has no axes)
         .AxisDisplay = axisNone     ' No axes for treemaps
-        .AxisLines = axisNone       ' No axis lines
-        .AxisLabels = axisNone      ' No axis labels
         .Legend = defaultLegend     ' Use global default (tile labels usually suffice)
     End With
 End Function

@@ -521,7 +521,7 @@ Public Sub ApplyChartStyle()
     Dim cht As Chart
     Set cht = ActiveChart
 
-    OuterFormat cht
+    OuterFormat cht, DefaultChartDefaults()
     FormatXAxisTitle cht
     InsertLogo cht
     InsertSource cht
