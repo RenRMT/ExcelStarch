@@ -366,7 +366,9 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     If addLegend Then
         cht.hasLegend = True
         With cht.Legend
-            .Position = xlLegendPositionCustom
+            ' Setting Top/Left promotes the legend to custom positioning implicitly.
+            ' Assigning .Position = xlLegendPositionCustom directly fails on a
+            ' freshly-created legend (runtime error -2147467259).
             .Top = legendTop
             .Left = legendLeftPad
             .Font.Color = legendFontColor
