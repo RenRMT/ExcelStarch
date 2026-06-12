@@ -732,7 +732,7 @@ Public Sub ToggleDataLabels()
                 End If
                 If srs.HasDataLabels Then
                     With srs.DataLabels
-                        .Font.Color.RGB = GetLabelContrastColor(srs)
+                        .Font.Color = GetLabelContrastColor(srs)
                         .Font.Size = axisFontSize
                         .Font.name = fontPrimary
                     End With
