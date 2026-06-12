@@ -96,3 +96,8 @@ Public Sub MsgPaletteOrderToggled(ByVal altOrder As Boolean)
     End If
 End Sub
 
+' ApplyFill: no specific series selected when fill color button clicked
+Public Sub MsgSelectSeries()
+    MsgBox "Select a specific data series or data point to apply fill colour.", vbExclamation, "No Series Selected"
+End Sub
+

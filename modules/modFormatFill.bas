@@ -69,7 +69,7 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
     Set tgt = GetFillTarget()
 
     If tgt Is Nothing Then
-        ' No specific element selected — apply to all series in the active chart.
+        ' No specific element selected — user must select a specific series or data point.
         Dim cht As Chart
         If Not ActiveChart Is Nothing Then
             Set cht = ActiveChart
@@ -79,30 +79,9 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
 
         If cht Is Nothing Then
             MsgSelectTarget
-            Exit Sub
+        Else
+            MsgSelectSeries
         End If
-
-        If transparency < 0 Then transparency = 0
-        If transparency > 1 Then transparency = 1
-
-        Dim i As Long
-        For i = 1 To cht.SeriesCollection.Count
-            Dim srs As Series
-            Set srs = cht.SeriesCollection(i)
-            If IsLineTarget(srs) Then
-                With srs.Format.Line
-                    .Visible = msoTrue
-                    .ForeColor.RGB = colorRGB
-                End With
-            Else
-                With srs.Format.Fill
-                    .Visible = msoTrue
-                    .Solid
-                    .ForeColor.RGB = colorRGB
-                    .transparency = transparency
-                End With
-            End If
-        Next i
         Exit Sub
     End If
 

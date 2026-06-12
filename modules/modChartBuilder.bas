@@ -381,6 +381,8 @@ End Sub
 
 
 Private Sub CreateYAxisLabelBox(cht As Chart, ByVal HasLegend As Boolean)
+    If Not cht.HasAxis(xlValue) Then Exit Sub
+
     Dim shp As Shape
     Dim yAxisTop As Single
 

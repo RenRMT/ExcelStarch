@@ -27,8 +27,24 @@ Public Function GetPaletteColor(ByVal i As Long) As Long
 End Function
 
 Public Sub TogglePaletteOrder()
+    On Error GoTo CleanFail
+
     m_useAltOrder = Not m_useAltOrder
+
+    Dim cht As Chart
+    Set cht = ResolveActiveChart()
+
+    If cht Is Nothing Then
+        MsgSelectTarget
+        Exit Sub
+    End If
+
+    FormatSeriesColors cht, mode:="FILL"
     MsgPaletteOrderToggled m_useAltOrder
+    Exit Sub
+
+CleanFail:
+    MsgError "TogglePaletteOrder"
 End Sub
 
 ' mode: "FILL" or "LINE"

@@ -608,7 +608,39 @@ CleanFail:
 End Sub
 
 Public Sub StartWithGray()
-    GrayOutChart cht:=Nothing, duplicateChart:=True, grayColor:=colorNeutral1
+    On Error GoTo CleanFail
+
+    Dim cht As Chart
+    Set cht = ResolveActiveChart()
+
+    If cht Is Nothing Then
+        MsgSelectTarget
+        Exit Sub
+    End If
+
+    Dim i As Long, n As Long
+    Dim grayColor As Long
+    grayColor = colorNeutral1
+
+    n = cht.SeriesCollection.Count
+    For i = 1 To n
+        With cht.SeriesCollection(i).Format
+            With .Line
+                .Visible = msoTrue
+                .ForeColor.RGB = grayColor
+            End With
+            With .Fill
+                .Visible = msoTrue
+                .ForeColor.RGB = grayColor
+                .Solid
+            End With
+        End With
+    Next i
+
+    Exit Sub
+
+CleanFail:
+    MsgError "StartWithGray"
 End Sub
 
 
