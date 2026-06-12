@@ -108,10 +108,17 @@ Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal
 
     'Position legend and adjust plot area
     If HasLegend Then
-        cht.Legend.Position = xlLegendPositionCustom
-        cht.Legend.Top = legendTop
-        cht.Legend.Left = legendLeftPad
-        cht.Legend.Font.Color = legendFontColor
+        ' xlLegendPositionBottom lays entries out in a horizontal row and lets Excel
+        ' auto-size the legend to its content width; setting Top/Left then places it
+        ' (and avoids assigning xlLegendPositionCustom directly, which can fail on a
+        ' freshly-created legend). Mirrors ToggleLegendStandard.
+        With cht.Legend
+            .Position = xlLegendPositionBottom
+            .Top = legendTop
+            .Left = legendLeftPad
+            .Font.Color = legendFontColor
+            .Font.Size = axisFontSize
+        End With
 
         With pa
             .Height = plotAreaHeight
