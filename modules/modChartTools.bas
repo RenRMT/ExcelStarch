@@ -299,10 +299,10 @@ End Sub
 Private Sub ApplyValueAxisStyle(cht As Chart)
     If Not cht.HasAxis(xlValue) Then Exit Sub
     With cht.Axes(xlValue)
-        .Format.Line.Visible = msoFalse
         .TickLabels.Font.Size = axisFontSize
         .TickLabels.Font.Color = colorBrand3
     End With
+    FormatAxisLineWhite cht.Axes(xlValue)
 End Sub
 
 Private Sub ApplyCategoryAxisStyle(cht As Chart)
@@ -317,12 +317,7 @@ Private Sub ApplyCategoryAxisStyle(cht As Chart)
         .Font.Color = colorBrand3
     End With
 
-    'Format axis line using Axis.Border (no Select required)
-    With ax.Border
-        .LineStyle = xlContinuous
-        .Color = colorBrand3
-        .Weight = axisLineWeight
-    End With
+    FormatAxisLineWhite ax
 End Sub
 
 

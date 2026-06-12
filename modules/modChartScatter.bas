@@ -11,7 +11,7 @@ Attribute VB_Name = "modChartScatter"
 ' by the brand palette via Format.Fill.ForeColor.rgb. Tick marks are applied outside
 ' on both axes (scatter axes are value axes, not category axes). HasAxis guards are
 ' used for axis operations in case a particular chart variant omits an axis.
-' Axis lines are re-hidden after tick-mark assignment.
+' Axis lines are re-formatted to white after tick-mark assignment.
 Option Explicit
 
 
@@ -36,20 +36,8 @@ Private Sub BuildScatterChart()
     End If
 
     ' Re-format axis lines to white: tick-mark assignment can re-show them
-    If cht.HasAxis(xlValue) Then
-        With cht.Axes(xlValue).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
-    End If
-    If cht.HasAxis(xlCategory) Then
-        With cht.Axes(xlCategory).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
-    End If
+    If cht.HasAxis(xlValue) Then FormatAxisLineWhite cht.Axes(xlValue)
+    If cht.HasAxis(xlCategory) Then FormatAxisLineWhite cht.Axes(xlCategory)
     Exit Sub
 CleanFail:
     MsgError "BuildScatterChart"
@@ -77,20 +65,8 @@ Private Sub BuildBubbleChart()
     End If
 
     ' Re-format axis lines to white: tick-mark assignment can re-show them
-    If cht.HasAxis(xlValue) Then
-        With cht.Axes(xlValue).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
-    End If
-    If cht.HasAxis(xlCategory) Then
-        With cht.Axes(xlCategory).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
-    End If
+    If cht.HasAxis(xlValue) Then FormatAxisLineWhite cht.Axes(xlValue)
+    If cht.HasAxis(xlCategory) Then FormatAxisLineWhite cht.Axes(xlCategory)
     Exit Sub
 CleanFail:
     MsgError "BuildBubbleChart"

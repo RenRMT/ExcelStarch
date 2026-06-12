@@ -19,21 +19,13 @@ Private Sub BuildLineChart()
         cht.Axes(xlCategory).MajorTickMark = xlTickMarkOutside
         cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
         ' Re-format axis line to white: AxisBetweenCategories assignment can re-show it
-        With cht.Axes(xlCategory).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
+        FormatAxisLineWhite cht.Axes(xlCategory)
     End If
 
     If cht.HasAxis(xlValue) Then
         cht.Axes(xlValue).MajorTickMark = xlTickMarkOutside
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
-        With cht.Axes(xlValue).Format.Line
-            .Visible = msoTrue
-            .Color.RGB = colorWhite
-            .Weight = axisLineWeight
-        End With
+        FormatAxisLineWhite cht.Axes(xlValue)
     End If
     Exit Sub
 CleanFail:

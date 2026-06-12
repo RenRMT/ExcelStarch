@@ -37,19 +37,9 @@ Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
     'Font
     cht.ChartArea.Font.name = fontPrimary
 
-    'Format Y-axis line to white using Axis.Border (no Select required)
-    If cht.HasAxis(xlValue, xlPrimary) Then
-        With cht.Axes(xlValue, xlPrimary).Border
-            .LineStyle = xlContinuous
-            .Color = colorWhite
-            .Weight = axisLineWeight
-        End With
-    End If
-
-    'Format X-axis line to white using Axis.Border (no Select required)
-    If cht.HasAxis(xlCategory, xlPrimary) Then
-        FormatAxisLineWhite cht.Axes(xlCategory, xlPrimary)
-    End If
+    'Format axis lines to white
+    If cht.HasAxis(xlValue, xlPrimary) Then FormatAxisLineWhite cht.Axes(xlValue, xlPrimary)
+    If cht.HasAxis(xlCategory, xlPrimary) Then FormatAxisLineWhite cht.Axes(xlCategory, xlPrimary)
 
     'Remove axis titles
     RemoveAxisTitles cht
@@ -83,12 +73,12 @@ Fail:
 End Function
 
 
-Private Sub FormatAxisLineWhite(ax As Axis)
-    'Format axis line to white using Axis.Border (no Select required).
+Public Sub FormatAxisLineWhite(ax As Axis)
+    'Format axis line to white using Format.Line (no Select required).
     On Error Resume Next
-    With ax.Border
-        .LineStyle = xlContinuous
-        .Color = colorWhite
+    With ax.Format.Line
+        .Visible = msoTrue
+        .ForeColor.RGB = colorWhite
         .Weight = axisLineWeight
     End With
     On Error GoTo 0
@@ -120,7 +110,8 @@ Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal
 
     'Position legend and adjust plot area
     If HasLegend Then
-        cht.Legend.Position = xlLegendPositionTop
+        cht.Legend.Position = xlLegendPositionCustom
+        cht.Legend.Top = legendTop
         cht.Legend.Left = legendLeftPad
         cht.Legend.Font.Color = legendFontColor
 
@@ -188,7 +179,7 @@ Function FormatXAxisTitle(cht As Chart) As Boolean
     If cht.hasLegend Then
         With cht.Legend
             .Font.Size = axisFontSize
-
+            .Position = xlLegendPositionCustom
             .Top = legendTop
             .Left = legendLeftPad
         End With
@@ -474,14 +465,7 @@ End Function
 
 
 Private Sub FormatCategoryAxisLine(ax As Axis)
-    'Format category axis line to white using Axis.Border object (no Select required).
-    On Error Resume Next
-    With ax.Border
-        .LineStyle = xlContinuous
-        .Color = colorWhite
-        .Weight = axisLineWeight
-    End With
-    On Error GoTo 0
+    FormatAxisLineWhite ax
 End Sub
 
 

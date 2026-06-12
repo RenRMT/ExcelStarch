@@ -14,8 +14,8 @@ Public Const colorBrand4 As Long = 16382457    'Light Grey    RGB(249, 249, 249)
 Public Const colorNeutral1 As Long = 13421772  'Silver  RGB(204, 204, 204)
 Public Const colorNeutral2 As Long = 12303291  'Steel   RGB(187, 187, 187)
 Public Const colorNeutral3 As Long = 10263708  'Ash     RGB(156, 156, 156)
-Public Const colorNeutral4 As Long = 16777215  'White   RGB(255, 255, 255)
-Public Const colorWhite As Long = 16777215    'White   RGB(255, 255, 255) — alias for axis line styling
+Public Const colorNeutral4 As Long = 16777215  'White   RGB(255, 255, 255) — used by name-lookup palette (modFormatFill)
+Public Const colorWhite As Long = colorNeutral4  'Semantic alias — use this for axis/border white styling
 
 '=== Data colors ===
 Public Const colorData1 As Long = 12285696     'Ocean    RGB(0, 119, 187)
