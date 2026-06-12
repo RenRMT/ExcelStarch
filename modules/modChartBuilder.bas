@@ -37,14 +37,18 @@ Function OuterFormat(cht As Chart, ByRef defaults As ChartDefaults) As Boolean
     'Font
     cht.ChartArea.Font.name = fontPrimary
 
-    'Hide Y-axis line using Axis.Border (no Select required)
+    'Format Y-axis line to white using Axis.Border (no Select required)
     If cht.HasAxis(xlValue, xlPrimary) Then
-        cht.Axes(xlValue, xlPrimary).Border.LineStyle = xlLineStyleNone
+        With cht.Axes(xlValue, xlPrimary).Border
+            .LineStyle = xlContinuous
+            .Color = colorWhite
+            .Weight = axisLineWeight
+        End With
     End If
 
-    'Hide X-axis line using Axis.Border (no Select required)
+    'Format X-axis line to white using Axis.Border (no Select required)
     If cht.HasAxis(xlCategory, xlPrimary) Then
-        HideAxisLine cht.Axes(xlCategory, xlPrimary)
+        FormatAxisLineWhite cht.Axes(xlCategory, xlPrimary)
     End If
 
     'Remove axis titles
@@ -79,11 +83,14 @@ Fail:
 End Function
 
 
-Private Sub HideAxisLine(ax As Axis)
-    'Axis.Border is the correct object for axis line formatting.
-    'No Select/Selection required.
+Private Sub FormatAxisLineWhite(ax As Axis)
+    'Format axis line to white using Axis.Border (no Select required).
     On Error Resume Next
-    ax.Border.LineStyle = xlLineStyleNone
+    With ax.Border
+        .LineStyle = xlContinuous
+        .Color = colorWhite
+        .Weight = axisLineWeight
+    End With
     On Error GoTo 0
 End Sub
 
@@ -467,10 +474,11 @@ End Function
 
 
 Private Sub FormatCategoryAxisLine(ax As Axis)
-    'Format category axis line using Axis.Border object (no Select required).
+    'Format category axis line to white using Axis.Border object (no Select required).
     On Error Resume Next
     With ax.Border
-        .LineStyle = xlLineStyleNone
+        .LineStyle = xlContinuous
+        .Color = colorWhite
         .Weight = axisLineWeight
     End With
     On Error GoTo 0

@@ -18,15 +18,22 @@ Private Sub BuildLineChart()
         cht.Axes(xlCategory).AxisBetweenCategories = False
         cht.Axes(xlCategory).MajorTickMark = xlTickMarkOutside
         cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
-        ' Re-hide axis line: AxisBetweenCategories assignment can re-show it
-        cht.Axes(xlCategory).Select
-        Selection.Format.Line.Visible = msoFalse
+        ' Re-format axis line to white: AxisBetweenCategories assignment can re-show it
+        With cht.Axes(xlCategory).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
     End If
 
     If cht.HasAxis(xlValue) Then
         cht.Axes(xlValue).MajorTickMark = xlTickMarkOutside
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
-        cht.Axes(xlValue).Format.Line.Visible = msoFalse
+        With cht.Axes(xlValue).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
     End If
     Exit Sub
 CleanFail:

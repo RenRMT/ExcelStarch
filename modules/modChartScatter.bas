@@ -35,11 +35,20 @@ Private Sub BuildScatterChart()
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
     End If
 
-    ' Re-hide axis lines: tick-mark assignment can re-show them
-    If cht.HasAxis(xlValue) Then cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    ' Re-format axis lines to white: tick-mark assignment can re-show them
+    If cht.HasAxis(xlValue) Then
+        With cht.Axes(xlValue).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
+    End If
     If cht.HasAxis(xlCategory) Then
-        cht.Axes(xlCategory).Select
-        Selection.Format.Line.Visible = msoFalse
+        With cht.Axes(xlCategory).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
     End If
     Exit Sub
 CleanFail:
@@ -67,11 +76,20 @@ Private Sub BuildBubbleChart()
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
     End If
 
-    ' Re-hide axis lines: tick-mark assignment can re-show them
-    If cht.HasAxis(xlValue) Then cht.Axes(xlValue).Format.Line.Visible = msoFalse
+    ' Re-format axis lines to white: tick-mark assignment can re-show them
+    If cht.HasAxis(xlValue) Then
+        With cht.Axes(xlValue).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
+    End If
     If cht.HasAxis(xlCategory) Then
-        cht.Axes(xlCategory).Select
-        Selection.Format.Line.Visible = msoFalse
+        With cht.Axes(xlCategory).Format.Line
+            .Visible = msoTrue
+            .Color.RGB = colorWhite
+            .Weight = axisLineWeight
+        End With
     End If
     Exit Sub
 CleanFail:
