@@ -47,7 +47,6 @@ Public Const figureBoxDefaultText As String = "Figure XX (optional)"
 Public Const titleDefaultText    As String = "Title in 28pt sentence case"
 Public Const subtitleDefaultText As String = "Subtitle in 22pt sentence case"
 Public Const yAxisDefaultText    As String = "Y axis title (unit)"
-Public Const xAxisDefaultText    As String = "X axis title (unit)"
 Public Const sourceDefaultText   As String = "Source: Source text goes here."
 Public Const notesDefaultText    As String = "Notes: Notes text goes here."
 
@@ -144,7 +143,6 @@ Public Const sourceBoxNudgeProportion As Double = 0.01
 'padding
 Public Const legendLeftPadProportion As Double = 0
 Public Const plotAreaLeftProportion As Double = 0.005
-Public Const xAxisTitle_plotGap As Double = 20        ' gap between plot area base and x-axis title
 Public Const yAxisLabelPad As Double = 10
 
 '=== Layout and logo ===
@@ -159,7 +157,7 @@ Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of
 Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
 Public Const logoMarginRightProp As Double = 0.01 'chartWidth * 0.01
 Public Const logoMarginBottomProp As Double = 0.01 'chartHeight * 0.01
-Public Const plotAreaBottomMarginProp As Double = 0.1 ' bottom margin as fraction of chart height
+Public Const plotAreaBottomMarginProp As Double = 0.03 ' clearance between x-axis labels and top logo, as fraction of chart height
 
 ' +---------------------------------------------------------+
 ' |  DERIVED CONSTANTS                                      |

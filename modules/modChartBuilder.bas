@@ -7,18 +7,16 @@ Option Explicit
 '
 ' Step order matters:
 '   1. OuterFormat    — sets chart size and plot area geometry first; everything else depends on it
-'   2. FormatXAxisTitle — positions relative to plot area InsideTop/InsideHeight, so must follow OuterFormat
-'   3. InsertLogo     — anchored to chart bottom-right; independent of plot area
-'   4. InsertSource   — anchored to chart bottom-left; must exist before FormatTitle so boxes don't overlap
-'   5. FormatTitle    — adds title/subtitle/y-axis label text boxes at top-left
-'   6. FormatGridlines — applies major gridline style to value axis
-'   7. FormatXAxis    — sizes and colors axis tick labels; runs after gridlines to avoid selection conflicts
-'   8. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
+'   2. InsertLogo     — anchored to chart bottom-right; independent of plot area
+'   3. InsertSource   — anchored to chart bottom-left; must exist before FormatTitle so boxes don't overlap
+'   4. FormatTitle    — adds title/subtitle/y-axis label text boxes at top-left
+'   5. FormatGridlines — applies major gridline style to value axis
+'   6. FormatXAxis    — sizes and colors axis tick labels; runs after gridlines to avoid selection conflicts
+'   7. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
 '
 ' Chart types that skip steps (slope, dot plot, scatter) call individual functions directly.
 Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByRef defaults As ChartDefaults)
     Call OuterFormat(cht, defaults)
-    Call FormatXAxisTitle(cht)
     Call InsertLogo(cht)
     Call InsertSource(cht)
     Call FormatTitle(cht)
@@ -130,73 +128,6 @@ Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal
         End With
     End If
 End Sub
-
-
-Function FormatXAxisTitle(cht As Chart) As Boolean
-    On Error GoTo Fail
-
-    Dim shp As Shape
-    Dim plt As PlotArea
-    Dim tr As TextRange2
-    Dim seriescount As Long
-
-    Set plt = cht.PlotArea
-    seriescount = cht.SeriesCollection.Count
-
-    ' Remove existing XAxisBox if present
-    SafeDeleteShape cht, "XAxisBox"
-
-    ' Create X-axis title textbox
-    Set shp = cht.Shapes.AddTextbox( _
-                Orientation:=msoTextOrientationHorizontal, _
-                Left:=10, Top:=10, Width:=100, Height:=2)
-
-    shp.name = "XAxisBox"
-
-    Set tr = shp.TextFrame2.TextRange
-    tr.Text = xAxisDefaultText
-
-    With tr.Font
-        .Italic = msoTrue
-        .Size = axisFontSize
-        .Fill.ForeColor.RGB = axisFontColor
-        .name = fontPrimary
-    End With
-
-    With shp.TextFrame2
-        .VerticalAnchor = msoAnchorMiddle
-        .WordWrap = msoFalse
-        .AutoSize = msoAutoSizeShapeToFitText
-    End With
-
-    ' Position below plot area, centered.
-    ' InsideTop/InsideHeight refer to the inner plot boundary (excluding axis tick labels),
-    ' so this places the title just below where the data ends, not below the axis labels.
-    shp.Top = plt.InsideTop + plt.InsideHeight + xAxisTitle_plotGap
-    shp.Left = plt.InsideLeft + (plt.InsideWidth - shp.Width) / 2
-
-    ' Legend repositioning
-    If cht.hasLegend Then
-        With cht.Legend
-            .Font.Size = axisFontSize
-            .Position = xlLegendPositionCustom
-            .Top = legendTop
-            .Left = legendLeftPad
-        End With
-    Else
-        ' No legend — use no-legend plot area dimensions
-        With plt
-            .Height = plotAreaHeight_noLegend
-            .Top = plotAreaTop_noLegend
-        End With
-    End If
-
-    FormatXAxisTitle = True
-    Exit Function
-
-Fail:
-    FormatXAxisTitle = False
-End Function
 
 
 Public Function InsertLogo(cht As Chart) As Boolean

@@ -244,11 +244,10 @@ All values are in Excel points unless noted. These are the defaults at 600 × 60
 | `plotArea_noLegendMultiHeight` | Height — multi-series, no legend | `460` pt |
 | `plotArea_noLegendMultiTop` | Top — multi-series, no legend | `79` pt |
 
-### Legend and x-axis title
+### Legend
 
 | Constant | Description | Default |
 |---|---|---|
-| `xAxisTitle_plotGap` | Gap between plot area base and x-axis title | `20` pt |
 | `legend_top` | Legend top offset | `92` pt |
 | `legend_leftPad` | Legend left offset | `7` pt |
 

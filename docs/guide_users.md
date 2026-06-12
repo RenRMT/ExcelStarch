@@ -31,7 +31,6 @@ After creating a chart, click into the text boxes to replace the placeholder tex
 - **TitleBox** — "Title in 20pt sentence case"
 - **SubTitleBox** — "Subtitle in 16pt sentence case"
 - **YAxisLabelBox** — "Y axis title (unit)"
-- **XAxisBox** — "X axis title (unit)"
 - **SourceBox** — "Source: …" / "Notes: …"
 
 ---

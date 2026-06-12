@@ -113,7 +113,7 @@ Private Sub BuildPieChart()
     ' ... sizing and title setup ...
     Call InsertLogo(cht)
     Call InsertSource(cht)
-    ' Skips: OuterFormat, FormatXAxisTitle, FormatGridlines, FormatXAxis, FormatSeriesColors
+    ' Skips: OuterFormat, FormatGridlines, FormatXAxis, FormatSeriesColors
     Call ApplySliceColors(cht)
 End Sub
 ```
