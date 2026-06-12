@@ -13,6 +13,8 @@ Attribute VB_Name = "modChartLollipop"
 Option Explicit
 
 Private Sub BuildLollipopChart()
+    On Error GoTo CleanFail
+
     Dim cht As Chart
     Dim srs As Series
     Dim n As Long, i As Long
@@ -21,7 +23,7 @@ Private Sub BuildLollipopChart()
     ' Create and pipeline-format a bar chart, then convert to lollipop style
     BarChart
 
-    Set cht = ActiveChart
+    Set cht = ResolveActiveChart()
     If cht Is Nothing Then Exit Sub
 
     n = cht.SeriesCollection.Count
@@ -46,8 +48,7 @@ Private Sub BuildLollipopChart()
         srs.ErrorBars.EndStyle = xlNoCap
 
         ' Format stick: brand colour, round join, oval arrowhead at the value end (the candy)
-        srs.ErrorBars.Select
-        With Selection.Format.Line
+        With srs.ErrorBars.Format.Line
             .Visible = msoTrue
             .ForeColor.RGB = clr
             .Weight = lollipopStickWeight
@@ -57,6 +58,10 @@ Private Sub BuildLollipopChart()
             .BeginArrowheadWidth = msoArrowheadWidthMedium
         End With
     Next i
+    Exit Sub
+
+CleanFail:
+    MsgError "BuildLollipopChart"
 End Sub
 
 

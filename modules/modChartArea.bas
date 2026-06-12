@@ -8,8 +8,8 @@ Attribute VB_Name = "modChartArea"
 '
 ' Uses the full FILL pipeline. AxisBetweenCategories = False so areas
 ' fill flush to both chart edges (same pattern as line charts). Tick marks are hidden
-' on both axes (consistent with bar/column style). Axis lines are re-hidden after
-' AxisBetweenCategories assignment, which can re-show them.
+' on both axes (consistent with bar/column style). Axis lines are re-formatted to white
+' after AxisBetweenCategories assignment, which can re-show them.
 Option Explicit
 
 
@@ -28,15 +28,14 @@ Private Sub BuildStackedAreaChart()
         cht.Axes(xlCategory).AxisBetweenCategories = False
         cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
         cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
-        ' Re-hide axis line: AxisBetweenCategories assignment can re-show it
-        cht.Axes(xlCategory).Select
-        Selection.Format.Line.Visible = msoFalse
+        ' Re-format axis line to white: AxisBetweenCategories assignment can re-show it
+        FormatAxisLineWhite cht.Axes(xlCategory)
     End If
 
     If cht.HasAxis(xlValue) Then
         cht.Axes(xlValue).MajorTickMark = xlTickMarkNone
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
-        cht.Axes(xlValue).Format.Line.Visible = msoFalse
+        FormatAxisLineWhite cht.Axes(xlValue)
     End If
     Exit Sub
 CleanFail:
