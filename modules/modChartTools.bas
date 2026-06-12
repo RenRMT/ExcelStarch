@@ -371,7 +371,8 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     If addLegend Then
         cht.hasLegend = True
         With cht.Legend
-            .Position = xlLegendPositionTop
+            .Position = xlLegendPositionCustom
+            .Top = legendTop
             .Left = legendLeftPad
             .Font.Color = legendFontColor
             .Font.Size = axisFontSize
