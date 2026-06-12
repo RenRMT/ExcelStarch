@@ -10,14 +10,14 @@ Attribute VB_Name = "modChartTools"
 '   ToggleGridlines       — cycles major gridlines: None -> Horizontal -> Vertical -> Both
 '   ToggleLegendButton       — toggles legend visibility and resizes the plot area;
 '                           pie/donut use square plot area constants; operates in-place
-'   StartWithGray         — duplicates the chart and resets all series to Silver;
-'                           GrayOutChart is the parameterised core (also public for
-'                           potential pipeline use)
+'   StartWithGray         — resets all series to neutral grey (colorNeutral1) in-place;
+'                           GrayOutChart is the parameterised core with optional duplication
+'                           and confirmation prompt (also public for potential pipeline use)
 '
 ' Duplication behaviour
 ' ---------------------
-'   LabelLastPoint and StartWithGray both duplicate the source chart by default so the
-'   original is preserved. ToggleGridlines and RemoveLegendResize operate in-place on
+'   LabelLastPoint duplicates the source chart by default so the original is preserved.
+'   StartWithGray, ToggleGridlines, and ToggleLegendButton operate in-place on
 '   the active chart — they are intended for iterative adjustment, not one-shot creation.
 Option Explicit
 
@@ -560,7 +560,6 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
     On Error GoTo CleanFail
 
     Dim targetChart As Chart
-    Dim i As Long, n As Long
 
     If cht Is Nothing Then
         If ActiveChart Is Nothing Then
@@ -586,21 +585,7 @@ Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
         Set targetChart = dupShp.Chart
     End If
 
-    n = targetChart.SeriesCollection.Count
-    For i = 1 To n
-        With targetChart.SeriesCollection(i).Format
-            With .Line
-                .Visible = msoTrue
-                .ForeColor.RGB = grayColor
-            End With
-            With .Fill
-                .Visible = msoTrue
-                .ForeColor.RGB = grayColor
-                .Solid
-            End With
-        End With
-    Next i
-
+    ApplyGrayToChart targetChart, grayColor
     Exit Sub
 
 CleanFail:
@@ -618,10 +603,17 @@ Public Sub StartWithGray()
         Exit Sub
     End If
 
-    Dim i As Long, n As Long
-    Dim grayColor As Long
-    grayColor = colorNeutral1
+    ApplyGrayToChart cht, colorNeutral1
+    Exit Sub
 
+CleanFail:
+    MsgError "StartWithGray"
+End Sub
+
+
+Private Sub ApplyGrayToChart(cht As Chart, ByVal grayColor As Long)
+    ' Applies gray color to all series line and fill in a chart.
+    Dim i As Long, n As Long
     n = cht.SeriesCollection.Count
     For i = 1 To n
         With cht.SeriesCollection(i).Format
@@ -636,11 +628,6 @@ Public Sub StartWithGray()
             End With
         End With
     Next i
-
-    Exit Sub
-
-CleanFail:
-    MsgError "StartWithGray"
 End Sub
 
 

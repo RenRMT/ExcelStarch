@@ -212,7 +212,7 @@ End Sub
 ' Returns ActiveChart if a chart is in edit mode, or the chart from a selected
 ' ChartObject (single-click). Handles ribbon buttons deactivating the chart before
 ' the onAction callback fires.
-Private Function ResolveActiveChart() As Chart
+Public Function ResolveActiveChart() As Chart
     If Not ActiveChart Is Nothing Then
         Set ResolveActiveChart = ActiveChart
     ElseIf TypeName(Selection) = "ChartObject" Then
