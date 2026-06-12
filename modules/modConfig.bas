@@ -152,11 +152,14 @@ Public Const yAxisLabelPad As Double = 10
 ' - logoHeightScale: as proportion of chart height.
 ' - logoAspectRatio: the keep aspect ratio setting in Excel does not work properly.
 '   setting it here prevents your logo from getting distorted on chart resize.
+' - plotAreaBottomMarginProp: reserved space below plot area to prevent X-axis labels
+'   from overlapping the logo. Adjust based on axis label height and desired spacing.
 Public Const logoFileType As String = "svg"
 Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of chart height
 Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
 Public Const logoMarginRightProp As Double = 0.01 'chartWidth * 0.01
 Public Const logoMarginBottomProp As Double = 0.01 'chartHeight * 0.01
+Public Const plotAreaBottomMarginProp As Double = 0.1 ' bottom margin as fraction of chart height
 
 ' +---------------------------------------------------------+
 ' |  DERIVED CONSTANTS                                      |
@@ -173,6 +176,9 @@ Public Const logoHeight As Double = chartHeight * logoHeightScale
 Public Const logoMarginBottom As Double = chartHeight * logoMarginBottomProp
 Public Const logoTop As Double = chartHeight - logoHeight - logoMarginBottom
 Public Const logoMarginRight As Double = chartWidth * logoMarginRightProp
+
+'=== Plot area bottom margin ===
+Public Const plotAreaBottomMargin As Double = chartHeight * plotAreaBottomMarginProp
 
 
 '=== Title area ===
@@ -200,7 +206,7 @@ Public Const plotAreaWidth As Double = chartWidth
 Public Const plotAreaLeft As Double = chartWidth * plotAreaLeftProportion
 Public Const plotAreaTop As Double = yAxisLabelTop + yAxisLabelHeight + yAxisLabelPad
 Public Const plotAreaTop_noLegend As Double = yAxisLabelTop_noLegend + yAxisLabelHeight + yAxisLabelPad
-Public Const plotAreaHeight_noLegend As Double = chartHeight - calcTitlesHeight - yAxisLabelHeight - logoHeight
+Public Const plotAreaHeight_noLegend As Double = chartHeight - calcTitlesHeight - yAxisLabelHeight - logoHeight - plotAreaBottomMargin
 Public Const plotAreaHeight As Double = plotAreaHeight_noLegend - LegendHeight
 
 '=== Source box ===
