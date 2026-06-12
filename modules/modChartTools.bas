@@ -366,17 +366,14 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     If addLegend Then
         cht.hasLegend = True
         With cht.Legend
-            ' Assign a standard position first so Excel auto-sizes the legend to fit
-            ' all entries, then set Top/Left to promote it to custom positioning while
-            ' preserving that fitted size. Setting Top/Left (rather than assigning
-            ' xlLegendPositionCustom directly) also avoids the fresh-legend crash
-            ' (runtime error -2147467259).
-            .Position = xlLegendPositionRight
-            .IncludeInLayout = False          ' detach from plot-area layout; our geometry below holds
+            ' xlLegendPositionBottom lays entries out in a horizontal row and lets Excel
+            ' auto-size the legend to its content width. Do NOT set .Width afterwards — that
+            ' would override the content fit and (at full width) was forcing items to stack.
+            ' Only nudge .Top to place it; the content-fitted width is preserved.
+            .Position = xlLegendPositionBottom
             .Font.Color = legendFontColor
             .Font.Size = axisFontSize
             .Top = legendTop
-            .Left = legendLeftPad
         End With
         ' Shift the y-axis title box down to sit below the legend (with-legend layout)
         MoveYAxisLabelBox cht, yAxisLabelTop
