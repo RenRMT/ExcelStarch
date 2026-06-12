@@ -366,14 +366,20 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     If addLegend Then
         cht.hasLegend = True
         With cht.Legend
-            ' Setting Top/Left promotes the legend to custom positioning implicitly.
-            ' Assigning .Position = xlLegendPositionCustom directly fails on a
-            ' freshly-created legend (runtime error -2147467259).
-            .Top = legendTop
-            .Left = legendLeftPad
+            ' Assign a standard position first so Excel auto-sizes the legend to fit
+            ' all entries, then set Top/Left to promote it to custom positioning while
+            ' preserving that fitted size. Setting Top/Left (rather than assigning
+            ' xlLegendPositionCustom directly) also avoids the fresh-legend crash
+            ' (runtime error -2147467259).
+            .Position = xlLegendPositionRight
+            .IncludeInLayout = False          ' detach from plot-area layout; our geometry below holds
             .Font.Color = legendFontColor
             .Font.Size = axisFontSize
+            .Top = legendTop
+            .Left = legendLeftPad
         End With
+        ' Shift the y-axis title box down to sit below the legend (with-legend layout)
+        MoveYAxisLabelBox cht, yAxisLabelTop
         With cht.PlotArea
             .Height = plotAreaHeight
             .Top = plotAreaTop
@@ -382,6 +388,8 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
         End With
     Else
         cht.Legend.Delete
+        ' Restore the y-axis title box to its no-legend position
+        MoveYAxisLabelBox cht, yAxisLabelTop_noLegend
         With cht.PlotArea
             .Height = removelegendHeight
             .Top = removelegendTop
@@ -393,6 +401,18 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     Exit Sub
 CleanFail:
     MsgError "ToggleLegendStandard"
+End Sub
+
+' Moves the y-axis title box ("YAxisLabelBox") to an absolute top position.
+' Setting an absolute Top (not IncrementTop) keeps this idempotent across repeated toggles.
+Private Sub MoveYAxisLabelBox(cht As Chart, ByVal newTop As Single)
+    Dim shp As Shape
+    For Each shp In cht.Shapes
+        If shp.name = "YAxisLabelBox" Then
+            shp.Top = newTop
+            Exit For
+        End If
+    Next shp
 End Sub
 
 Private Sub ToggleLegendPie(cht As Chart, ByVal addLegend As Boolean)
