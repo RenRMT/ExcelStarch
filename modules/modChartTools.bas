@@ -369,11 +369,13 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
             ' xlLegendPositionBottom lays entries out in a horizontal row and lets Excel
             ' auto-size the legend to its content width. Do NOT set .Width afterwards — that
             ' would override the content fit and (at full width) was forcing items to stack.
-            ' Only nudge .Top to place it; the content-fitted width is preserved.
+            ' Set .Top to place it vertically and .Left to anchor it to the left edge
+            ' (Excel centers it horizontally by default); the content-fitted width is preserved.
             .Position = xlLegendPositionBottom
             .Font.Color = legendFontColor
             .Font.Size = axisFontSize
             .Top = legendTop
+            .Left = legendLeftPad
         End With
         ' Shift the y-axis title box down to sit below the legend (with-legend layout)
         MoveYAxisLabelBox cht, yAxisLabelTop
