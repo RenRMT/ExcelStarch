@@ -40,7 +40,6 @@ Public Sub TogglePaletteOrder()
     End If
 
     FormatSeriesColors cht, mode:="FILL"
-    MsgPaletteOrderToggled m_useAltOrder
     Exit Sub
 
 CleanFail:
