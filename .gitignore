@@ -47,5 +47,5 @@ commands/
 rules/ 
 PLAN.md
 
-# source files for icons
-src/
+# source files for icons (untracked working SVGs)
+svg/
