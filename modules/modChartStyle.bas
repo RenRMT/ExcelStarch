@@ -229,9 +229,23 @@ Public Sub ApplyChartStyle()
             InsertLogo cht, silent:=True
             InsertSource cht, silent:=True
             FormatTitle cht
-            ' Best-guess colour; silent because some modern types (sunburst,
-            ' treemap, funnel) don't accept standard per-series colouring.
-            FormatSeriesColors cht, GetStyleColorMode(cht.chartType), silent:=True
+            If cht.chartType = xlTreemap Then
+                ' Treemap tiles are points of a single series, so colour them
+                ' per-point from the palette (matching the dedicated builder)
+                ' rather than the per-series best-guess below. Point-count read
+                ' is guarded in case Excel rejects per-point colouring.
+                Dim nTiles As Long
+                On Error Resume Next
+                nTiles = cht.SeriesCollection(1).Points.Count
+                On Error GoTo CleanFail
+                ' silent: this bucket degrades gracefully, so a treemap that
+                ' rejects per-point colouring must not surface a message.
+                If nTiles > 0 Then ApplySliceColors cht, nTiles, silent:=True
+            Else
+                ' Best-guess colour; silent because some modern types (sunburst,
+                ' funnel) don't accept standard per-series colouring.
+                FormatSeriesColors cht, GetStyleColorMode(cht.chartType), silent:=True
+            End If
     End Select
 
 CleanExit:
