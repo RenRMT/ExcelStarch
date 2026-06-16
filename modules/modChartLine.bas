@@ -3,11 +3,12 @@ Option Explicit
 
 Private Sub BuildLineChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlLine)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ' Shared formatting pipeline with line-specific defaults
     ApplyChartPipeline cht, "LINE", LineChartDefaults()
@@ -27,8 +28,11 @@ Private Sub BuildLineChart()
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
         FormatAxisLineWhite cht.Axes(xlValue)
     End If
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildLineChart"
 End Sub
 

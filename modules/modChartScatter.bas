@@ -17,11 +17,12 @@ Option Explicit
 
 Private Sub BuildScatterChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlXYScatter)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", ScatterChartDefaults()
 
@@ -38,19 +39,23 @@ Private Sub BuildScatterChart()
     ' Re-format axis lines to white: tick-mark assignment can re-show them
     If cht.HasAxis(xlValue) Then FormatAxisLineWhite cht.Axes(xlValue)
     If cht.HasAxis(xlCategory) Then FormatAxisLineWhite cht.Axes(xlCategory)
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildScatterChart"
 End Sub
 
 
 Private Sub BuildBubbleChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBubble)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", ScatterChartDefaults()
 
@@ -67,8 +72,11 @@ Private Sub BuildBubbleChart()
     ' Re-format axis lines to white: tick-mark assignment can re-show them
     If cht.HasAxis(xlValue) Then FormatAxisLineWhite cht.Axes(xlValue)
     If cht.HasAxis(xlCategory) Then FormatAxisLineWhite cht.Axes(xlCategory)
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildBubbleChart"
 End Sub
 

@@ -22,11 +22,12 @@ Option Explicit
 
 Private Sub BuildColumnChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlColumnClustered)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", ColumnChartDefaults()
     Call RemoveShadow(cht)
@@ -38,19 +39,23 @@ Private Sub BuildColumnChart()
 
     cht.ChartGroups(1).Overlap = seriesOverlap
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildColumnChart"
 End Sub
 
 
 Private Sub BuildStackedColumnChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlColumnStacked)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", ColumnChartDefaults()
     Call RemoveShadow(cht)
@@ -62,8 +67,11 @@ Private Sub BuildStackedColumnChart()
 
     cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildStackedColumnChart"
 End Sub
 

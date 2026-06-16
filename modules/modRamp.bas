@@ -22,16 +22,19 @@ Private Const LASTUSED_DIV_KEY  As String = "LastUsedDivergingTag"
 ' ============================================================
 
 Public Sub InvertColorRamp()
+    On Error GoTo CleanFail
+    AppFast
+
     Dim cht As Chart
     Set cht = ResolveActiveChart()
     If cht Is Nothing Then
         MsgNoActiveChart
-        Exit Sub
+        GoTo CleanExit
     End If
 
     Dim n As Long
     n = cht.SeriesCollection.Count
-    If n < 2 Then Exit Sub
+    If n < 2 Then GoTo CleanExit
 
     ' Snapshot current fill colors
     Dim colors() As Long
@@ -50,14 +53,23 @@ Public Sub InvertColorRamp()
             .ForeColor.RGB = colors(n - i + 1)
         End With
     Next i
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "InvertColorRamp"
 End Sub
 
 Public Sub ApplyColorRamp(ByVal rampName As String)
+    On Error GoTo CleanFail
+    AppFast
+
     Dim cht As Chart
     Set cht = ResolveActiveChart()
     If cht Is Nothing Then
         MsgNoActiveChart
-        Exit Sub
+        GoTo CleanExit
     End If
 
     rampName = UCase$(Trim$(rampName))
@@ -69,6 +81,12 @@ Public Sub ApplyColorRamp(ByVal rampName As String)
 
     BuildColorRamp cht, rampName
     SaveLastUsedRampTag rampName
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "ApplyColorRamp"
 End Sub
 
 Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
@@ -91,13 +109,22 @@ Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
 End Sub
 
 Public Sub ApplyDivergingRamp(ByVal leftRamp As String, ByVal rightRamp As String)
+    On Error GoTo CleanFail
+    AppFast
+
     Dim cht As Chart
     Set cht = ResolveActiveChart()
     If cht Is Nothing Then
         MsgNoActiveChart
-        Exit Sub
+        GoTo CleanExit
     End If
     BuildDivergingRamp cht, UCase$(Trim$(leftRamp)), UCase$(Trim$(rightRamp))
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "ApplyDivergingRamp"
 End Sub
 
 

@@ -77,6 +77,7 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
     ' transparency: 0 = opaque, 1 = fully transparent (chart model)
     ' For line/scatter series the colour lives on .Format.Line; transparency is not applicable.
     On Error GoTo CleanFail
+    AppFast
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
@@ -92,7 +93,7 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
 
         If cht Is Nothing Then
             MsgSelectTarget
-            Exit Sub
+            GoTo CleanExit
         End If
 
         Dim i As Long
@@ -115,7 +116,7 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
                 End With
             End If
         Next i
-        Exit Sub
+        GoTo CleanExit
     End If
 
     If IsLineTarget(tgt) Then
@@ -137,15 +138,19 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
         End With
     End If
 
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "ApplyFill"
 End Sub
 
 
 Public Sub RemoveFill()
     On Error GoTo CleanFail
+    AppFast
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
@@ -161,7 +166,7 @@ Public Sub RemoveFill()
 
         If cht Is Nothing Then
             MsgSelectTarget
-            Exit Sub
+            GoTo CleanExit
         End If
 
         Dim i As Long
@@ -174,7 +179,7 @@ Public Sub RemoveFill()
                 srs.Format.Fill.Visible = msoFalse
             End If
         Next i
-        Exit Sub
+        GoTo CleanExit
     End If
 
     If IsLineTarget(tgt) Then
@@ -183,9 +188,12 @@ Public Sub RemoveFill()
         tgt.Format.Fill.Visible = msoFalse
     End If
 
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "RemoveFill"
 End Sub
 

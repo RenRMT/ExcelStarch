@@ -28,6 +28,7 @@ Option Explicit
 
 Private Sub BuildLabelLastPoint()
     On Error GoTo CleanFail
+    AppFast
 
     Dim ipts As Long
     Dim Npts As Long
@@ -40,7 +41,7 @@ Private Sub BuildLabelLastPoint()
 
     If ActiveChart Is Nothing Then
         MsgNoActiveChart
-        Exit Sub
+        GoTo CleanExit
     End If
 
     ' Duplicate the chart and capture new chart reference directly (no Select required)
@@ -137,9 +138,12 @@ Private Sub BuildLabelLastPoint()
             srs.DataLabels.AutoText = True
         End With
     Next srs
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "BuildLabelLastPoint"
 End Sub
 
