@@ -34,7 +34,6 @@ Public Sub InvertRamp_onAction(control As IRibbonControl): InvertColorRamp: End 
 '=== Colour tools ===
 Public Sub TogglePaletteOrder_onAction(control As IRibbonControl): TogglePaletteOrder: End Sub
 Public Sub Format_onAction(control As IRibbonControl): ApplyFillFromTag control.Tag: End Sub
-Public Sub StartWithGrayButton_onAction(control As IRibbonControl): StartWithGray: End Sub
 
 '=== Utilities ===
 Public Sub ChartExport_onAction(control As IRibbonControl): ExportChart: End Sub

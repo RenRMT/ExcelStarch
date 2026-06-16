@@ -113,7 +113,6 @@ The <img src="../icons/i_menu_invert.png" height="20"> *Invert Ramp* button reve
 |---|---|---|
 | <img src="../icons/i_menu_order.png" height="28"> | Toggle Palette Order | Switch series colour order between Contrasting and Complementary |
 | <img src="../icons/i_menu_invert.png" height="28"> | Invert Ramp | Reverse fill colour order across all series |
-| <img src="../icons/i_menu_grey.png" height="28"> | Reset to Grey | Reset all series fills to Silver |
 | <img src="../icons/i_menu_labels.png" height="28"> | Label Last Point | Add series name labels to the last data point (line charts); narrows the plot area to make room |
 | <img src="../icons/i_menu_gridlines.png" height="28"> | Toggle Gridlines | Cycle the active chart through four states: none → horizontal → vertical → both |
 | <img src="../icons/i_menu_none.png" height="28"> | Remove Legend | Delete the chart legend and resize the plot area |
