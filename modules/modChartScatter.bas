@@ -20,6 +20,8 @@ Private Sub BuildScatterChart()
     AppFast
 
     Dim cht As Chart
+    Dim n As Long, i As Long
+    Dim markerSymbols As Variant
 
     Set cht = GetTargetChart(xlXYScatter)
     If cht Is Nothing Then GoTo CleanExit
@@ -39,6 +41,25 @@ Private Sub BuildScatterChart()
     ' Re-format axis lines to white: tick-mark assignment can re-show them
     If cht.HasAxis(xlValue) Then FormatAxisLineWhite cht.Axes(xlValue)
     If cht.HasAxis(xlCategory) Then FormatAxisLineWhite cht.Axes(xlCategory)
+
+    ' Enlarge markers and give each series a distinct symbol. The FILL pipeline
+    ' colours .Fill.ForeColor, but markers-only scatter carries its brand colour
+    ' on the marker, so set MarkerBackgroundColor here to match the palette.
+    ' Marker writes are guarded: a no-marker scatter variant would raise here,
+    ' and we let it degrade rather than abort the whole build.
+    markerSymbols = Array(xlCircle, xlSquare, xlTriangle, xlX)
+    n = cht.SeriesCollection.Count
+
+    On Error Resume Next
+    For i = 1 To n
+        With cht.SeriesCollection(i)
+            .MarkerStyle = markerSymbols((i - 1) Mod (UBound(markerSymbols) + 1))
+            .MarkerSize = scatterMarkerSize
+            .MarkerBackgroundColor = GetPaletteColor(i)
+            .MarkerForegroundColor = GetPaletteColor(i)
+        End With
+    Next i
+    On Error GoTo CleanFail
 CleanExit:
     AppRestore
     Exit Sub
@@ -58,6 +79,13 @@ Private Sub BuildBubbleChart()
     If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", ScatterChartDefaults()
+
+    ' Re-apply fill colours with transparency through the canonical styler so the
+    ' 50% transparency is expressed as part of series colouring. The pipeline's
+    ' FormatSeriesColors call defaults transparency to 0 (opaque); routing it
+    ' through the existing fillTransparency parameter keeps the bubbles
+    ' semi-transparent and lets a later restyle reproduce it.
+    FormatSeriesColors cht, "FILL", bubbleTransparency
 
     ' Bubble-specific: tick marks outside on both axes
     If cht.HasAxis(xlCategory) Then
