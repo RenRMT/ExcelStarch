@@ -49,10 +49,13 @@ End Sub
 ' mode: "FILL" or "LINE"
 ' fillTransparency: 0..1 (only used when mode="FILL")
 ' lineWeight: points (only used when mode="LINE")
+' silent: when True, a failure returns False without a message. Used by the
+'   agnostic styler on chart types whose series don't accept standard colouring.
 Public Function FormatSeriesColors(cht As Chart, _
                                    ByVal mode As String, _
                                    Optional ByVal fillTransparency As Single = 0!, _
-                                   Optional ByVal lineWeight As Single = 2!) As Boolean
+                                   Optional ByVal lineWeight As Single = 2!, _
+                                   Optional ByVal silent As Boolean = False) As Boolean
     On Error GoTo CleanFail
 
     Dim n As Long, i As Long
@@ -99,5 +102,5 @@ Public Function FormatSeriesColors(cht As Chart, _
     Exit Function
 
 CleanFail:
-    MsgError "FormatSeriesColors"
+    If Not silent Then MsgError "FormatSeriesColors"
 End Function

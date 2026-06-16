@@ -137,7 +137,11 @@ Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal
 End Sub
 
 
-Public Function InsertLogo(cht As Chart) As Boolean
+' silent: when True, a failure returns False without showing a message. Used by
+' the chart-type-agnostic styler, where some chart types (e.g. waterfall,
+' sunburst, treemap, funnel) don't support added shapes and the step is meant to
+' be skipped quietly. The creation pipeline calls without it and keeps messaging.
+Public Function InsertLogo(cht As Chart, Optional ByVal silent As Boolean = False) As Boolean
     On Error GoTo Fail
 
     'Decode Base64 to temp file
@@ -164,10 +168,17 @@ Public Function InsertLogo(cht As Chart) As Boolean
 
     logoShape.name = "LogoImage"
 
-    'Scale to target dimensions
+    'Scale to target dimensions. cht.Parent is a ChartObject for embedded charts
+    '(has .Width/.Height) but the Workbook for a chart sheet — fall back to the
+    'canvas constants so chart sheets still get a correctly-sized logo.
     Dim ChartWidth As Single, ChartHeight As Single
-    ChartWidth = cht.Parent.Width
-    ChartHeight = cht.Parent.Height
+    If TypeName(cht.Parent) = "ChartObject" Then
+        ChartWidth = cht.Parent.Width
+        ChartHeight = cht.Parent.Height
+    Else
+        ChartWidth = modConfig.chartWidth
+        ChartHeight = modConfig.chartHeight
+    End If
 
     Dim TargetHeight As Single, TargetWidth As Single
     TargetHeight = ChartHeight * logoHeightScale
@@ -191,19 +202,26 @@ Public Function InsertLogo(cht As Chart) As Boolean
 
 Fail:
     InsertLogo = False
-    MsgError "InsertLogo"
+    If Not silent Then MsgError "InsertLogo"
 End Function
 
 
-Function InsertSource(cht As Chart) As Boolean
+' silent: see InsertLogo — suppresses the failure message for the agnostic styler.
+Function InsertSource(cht As Chart, Optional ByVal silent As Boolean = False) As Boolean
     On Error GoTo Fail
 
     SafeDeleteShape cht, "SourceBox"
 
-    'Add textbox at bottom-left
+    'Add textbox at bottom-left. cht.Parent is a ChartObject for embedded charts
+    'but the Workbook for a chart sheet — fall back to the canvas constant so the
+    'source box still positions on a chart sheet.
     Dim SourceBox As Shape
     Dim ChartHeight As Long
-    ChartHeight = cht.Parent.Height
+    If TypeName(cht.Parent) = "ChartObject" Then
+        ChartHeight = cht.Parent.Height
+    Else
+        ChartHeight = modConfig.chartHeight
+    End If
 
     Set SourceBox = cht.Shapes.AddTextbox( _
                     msoTextOrientationHorizontal, _
@@ -223,7 +241,7 @@ Function InsertSource(cht As Chart) As Boolean
 
 Fail:
     InsertSource = False
-    MsgError "InsertSource"
+    If Not silent Then MsgError "InsertSource"
 End Function
 
 
