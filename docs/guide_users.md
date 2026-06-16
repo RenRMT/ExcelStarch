@@ -7,22 +7,21 @@ Once the add-in is installed, a **COMPANY Chart Styles** tab appears in the Exce
 ## Creating a chart
 
 1. Select a data range in any worksheet.
-2. Click a chart type button. The add-in creates a formatted chart as a new object on the sheet.
+2. Pick a chart type. The add-in creates a formatted chart as a new object on the sheet.
 
-If a chart is already active (double-clicked into edit mode) or selected (single-clicked), the button re-styles that chart instead of creating one from the selection.
+If a chart is already active (double-clicked into edit mode) or selected (single-clicked), the action re-styles that chart instead of creating one from the selection.
 
-| | Button | Chart Type |
-|---|---|---|
-| <img src="../icons/i_chart_vbar.png" height="28"> | Column Chart | Clustered vertical column |
-| <img src="../icons/i_chart_stacked_vbar.png" height="28"> | Stacked Column | Stacked vertical column |
-| <img src="../icons/i_chart_line.png" height="28"> | Line Chart | Standard line chart |
-| <img src="../icons/i_chart_hbar.png" height="28"> | Bar Chart | Clustered horizontal bar |
-| <img src="../icons/i_chart_lollipop.png" height="28"> | Lollipop Chart | Horizontal lollipop (bar with error-bar sticks and dot markers) |
-| <img src="../icons/i_chart_stacked_hbar.png" height="28"> | Stacked Bar | Stacked horizontal bar |
-| <img src="../icons/i_chart_pie.png" height="28"> | Pie Chart | Pie chart |
-| <img src="../icons/i_menu_none.png" height="28"> | Stacked Area Chart | Stacked area chart |
+Each chart group is a **split button**: clicking the large button body applies the group's default chart, and clicking the dropdown arrow lists every variant in that group.
 
-> **Donut charts:** there is no separate donut button. Create a pie chart, then use **Toggle Variant** (see [Chart tools](#chart-tools)) to switch between pie and donut.
+| | Group | Default (button body) | Dropdown variants |
+|---|---|---|---|
+| <img src="../icons/i_chart_vbar.png" height="28"> | Column | Clustered column | Column, Stacked Column, 100% Stacked Column |
+| <img src="../icons/i_chart_hbar.png" height="28"> | Bar | Clustered bar | Bar, Stacked Bar, 100% Stacked Bar, Lollipop |
+| <img src="../icons/i_chart_line.png" height="28"> | Line & Area | Line | Line, Area (stacked), 100% Area |
+| <img src="../icons/i_chart_pie.png" height="28"> | Pie | Pie | Pie, Donut |
+| <img src="../icons/i_menu_none.png" height="28"> | Scatter | Scatter plot | Scatter Plot, Bubble Plot |
+
+> **Lollipop** is a horizontal bar with error-bar sticks and dot markers. **Scatter** and **Bubble** plots expect X/Y numeric data.
 
 The pipeline applies automatically: chart size, font, axis styling, gridlines, series colours, title/subtitle text boxes, figure and y-axis labels, logo, and a source/notes placeholder.
 
@@ -122,7 +121,6 @@ The *Customisation* group adjusts an existing chart. Select or activate the char
 | <img src="../icons/i_menu_gridlines.png" height="28"> | Toggle Gridlines | Cycle gridlines: none → horizontal → vertical → both |
 | <img src="../icons/i_menu_axislines.png" height="28"> | Toggle Axis Labels | Cycle axis tick labels: none → x-axis → y-axis → both |
 | <img src="../icons/i_menu_none.png" height="28"> | Toggle Legend | Toggle the chart legend on/off and resize the plot area to match |
-| <img src="../icons/i_menu_none.png" height="28"> | Toggle Variant | Switch between chart-type variants: stacked ↔ 100% stacked, pie ↔ donut, line ↔ line with markers |
 
 ---
 

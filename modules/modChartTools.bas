@@ -654,51 +654,6 @@ Private Function TrySetLabelPosition(srs As Series, ByVal pos As Long) As Boolea
 Fail:
 End Function
 
-' ============================================================
-'   TOGGLE CHART VARIANT
-' ============================================================
-' Switches the active chart between its default and alternative type:
-'   Stacked Bar    ↔  100% Stacked Bar
-'   Stacked Column ↔  100% Stacked Column
-'   Pie            ↔  Donut
-'   Line           ↔  Line with Markers
-'   Stacked Area   ↔  100% Stacked Area
-' Operates in-place. Does nothing for unsupported chart types.
-
-Public Sub ToggleChartVariant()
-    If ActiveChart Is Nothing Then
-        MsgNoActiveChart
-        Exit Sub
-    End If
-
-    Dim cht As Chart
-    Set cht = ActiveChart
-
-    Dim altType As Long
-    altType = GetAlternativeChartType(cht.chartType)
-
-    If altType = -1 Then Exit Sub   ' unsupported type — do nothing
-
-    cht.chartType = altType
-End Sub
-
-Private Function GetAlternativeChartType(ByVal ct As Long) As Long
-    Select Case ct
-        Case xlBarStacked:       GetAlternativeChartType = xlBarStacked100
-        Case xlBarStacked100:    GetAlternativeChartType = xlBarStacked
-        Case xlColumnStacked:    GetAlternativeChartType = xlColumnStacked100
-        Case xlColumnStacked100: GetAlternativeChartType = xlColumnStacked
-        Case xlPie:              GetAlternativeChartType = xlDoughnut
-        Case xlDoughnut:         GetAlternativeChartType = xlPie
-        Case xlLine:             GetAlternativeChartType = xlLineMarkers
-        Case xlLineMarkers:      GetAlternativeChartType = xlLine
-        Case xlAreaStacked:      GetAlternativeChartType = xlAreaStacked100
-        Case xlAreaStacked100:   GetAlternativeChartType = xlAreaStacked
-        Case Else:               GetAlternativeChartType = -1
-    End Select
-End Function
-
-
 ' Returns a label color (white or black) chosen for best contrast against the
 ' background the label sits on, based on WCAG relative luminance.
 ' For fill-based series (bars, columns, area) the background is the series fill.
