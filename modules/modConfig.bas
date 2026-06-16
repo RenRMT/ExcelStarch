@@ -105,12 +105,14 @@ Public Const lollipopGapWidth As Double = 150
 Public Const lollipopStickWeight As Single = 2
 
 ' Pie chart settings
-Public Const pieplotAreaSize_legend As Long = 421   ' width and height (square) when legend present
+Public Const pieplotAreaSize_legend As Long = 400   ' width and height (square) when legend present
 Public Const pieplotAreaSize_noLegend As Long = 447 ' width and height (square) without legend
 Public Const pieplotAreaLeft As Long = 131
 Public Const pieplotAreaTop As Long = 53
 Public Const piePlotTopRatio As Double = 0.75   ' vertical centering ratio
-Public Const pieLegendTop As Long = 79
+Public Const pieLegendGap As Double = 6          ' gap between subtitle box and legend
+' Note: pieLegendTop is defined in the Title area section below, since it derives
+' from subtitleBoxTop/subtitleBoxHeight (VBA Const cannot forward-reference).
 
 ' Weights
 '   - gridLineWeight:  weight of chart gridlines expressed in Excel points
@@ -189,6 +191,8 @@ Public Const subtitleBoxHeight As Double = chartHeight * subtitleBoxHeightPropor
 Public Const titleBoxWidth As Double = chartWidth * titleBoxWidthProportion
 Public Const titleBoxNudge As Double = chartWidth * titleBoxNudgeProportion
 Public Const calcTitlesHeight As Double = figureBoxHeight + titleBoxHeight + subtitleBoxHeight ' For calculation only
+' Pie/donut legend sits just below the subtitle box to avoid overlapping it.
+Public Const pieLegendTop As Double = subtitleBoxTop + subtitleBoxHeight + pieLegendGap
 
 '=== Plot area ===
 'Legend

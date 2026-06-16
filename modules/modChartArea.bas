@@ -15,11 +15,12 @@ Option Explicit
 
 Private Sub BuildStackedAreaChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlAreaStacked)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", AreaChartDefaults()
 
@@ -37,8 +38,11 @@ Private Sub BuildStackedAreaChart()
         cht.Axes(xlValue).MinorTickMark = xlTickMarkNone
         FormatAxisLineWhite cht.Axes(xlValue)
     End If
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildStackedAreaChart"
 End Sub
 

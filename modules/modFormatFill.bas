@@ -2,9 +2,11 @@ Attribute VB_Name = "modFormatFill"
 '==== Module: modFormatFill ====
 Option Explicit
 
+Private Const LASTUSED_KEY As String = "LastUsedFillTag"
+
 '   TAG DISPATCHER
 ' Called from modRibbonHandlers. Parses the ribbon button tag and calls ApplyFill or RemoveFill.
-' Tag format: "FILL:ColorName" | "FILL:ColorName|0.3" | "FILL:NONE"
+' Tag format: "FILL:ColorName" | "FILL:ColorName|0.3" | "FILL:NONE" | "FILL:LASTUSED"
 Public Sub ApplyFillFromTag(ByVal tagValue As String)
     tagValue = Trim$(tagValue)
 
@@ -21,6 +23,16 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     If payload = "NONE" Or payload = "NOFILL" Or payload = "OFF" Then
         RemoveFill
         Exit Sub
+    End If
+
+    If payload = "LASTUSED" Then
+        Dim lastTag As String: lastTag = GetLastUsedFillTag()
+        If lastTag = "" Then
+            ' No prior selection — default to Ocean
+            payload = "DATA1"
+        Else
+            payload = lastTag
+        End If
     End If
 
     Dim subp() As String
@@ -40,6 +52,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     End If
 
     ApplyFill colorRGB, transparency
+    SaveLastUsedFillTag colorName
 End Sub
 
 
@@ -52,7 +65,7 @@ Private Function ColorFromName(ByVal name As String) As Long
         Case "DATA5":    ColorFromName = colorData5
         Case "DATA6":    ColorFromName = colorData6
         Case "DATA7":    ColorFromName = colorData7
-        Case "NEUTRAL1": ColorFromName = colorNeutral1
+        Case "NEUTRAL2": ColorFromName = colorNeutral2
         Case "NEUTRAL4": ColorFromName = colorNeutral4
         Case Else:       ColorFromName = -1
     End Select
@@ -64,12 +77,13 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
     ' transparency: 0 = opaque, 1 = fully transparent (chart model)
     ' For line/scatter series the colour lives on .Format.Line; transparency is not applicable.
     On Error GoTo CleanFail
+    AppFast
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
 
     If tgt Is Nothing Then
-        ' No specific element selected — user must select a specific series or data point.
+        ' No specific element selected — apply to all series in the active chart.
         Dim cht As Chart
         If Not ActiveChart Is Nothing Then
             Set cht = ActiveChart
@@ -79,10 +93,30 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
 
         If cht Is Nothing Then
             MsgSelectTarget
-        Else
-            MsgSelectSeries
+            GoTo CleanExit
         End If
-        Exit Sub
+
+        Dim i As Long
+        For i = 1 To cht.SeriesCollection.Count
+            Dim srs As Series
+            Set srs = cht.SeriesCollection(i)
+            If IsLineTarget(srs) Then
+                With srs.Format.Line
+                    .Visible = msoTrue
+                    .ForeColor.RGB = colorRGB
+                End With
+            Else
+                With srs.Format.Fill
+                    .Visible = msoTrue
+                    .Solid
+                    .ForeColor.RGB = colorRGB
+                    If transparency < 0 Then transparency = 0
+                    If transparency > 1 Then transparency = 1
+                    .transparency = transparency
+                End With
+            End If
+        Next i
+        GoTo CleanExit
     End If
 
     If IsLineTarget(tgt) Then
@@ -104,15 +138,19 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
         End With
     End If
 
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "ApplyFill"
 End Sub
 
 
 Public Sub RemoveFill()
     On Error GoTo CleanFail
+    AppFast
 
     Dim tgt As Object
     Set tgt = GetFillTarget()
@@ -128,7 +166,7 @@ Public Sub RemoveFill()
 
         If cht Is Nothing Then
             MsgSelectTarget
-            Exit Sub
+            GoTo CleanExit
         End If
 
         Dim i As Long
@@ -141,7 +179,7 @@ Public Sub RemoveFill()
                 srs.Format.Fill.Visible = msoFalse
             End If
         Next i
-        Exit Sub
+        GoTo CleanExit
     End If
 
     If IsLineTarget(tgt) Then
@@ -150,9 +188,12 @@ Public Sub RemoveFill()
         tgt.Format.Fill.Visible = msoFalse
     End If
 
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "RemoveFill"
 End Sub
 
@@ -195,25 +236,61 @@ Private Function GetFillTarget() As Object
 
     If Not cht Is Nothing Then
         If Not Selection Is Nothing Then
-            If HasFillFormat(Selection) And TypeName(Selection) <> "ChartObject" Then
+            If IsSeriesOrPoint(Selection) Then
                 Set GetFillTarget = Selection
                 Exit Function
             End If
         End If
-        ' No specific element selected inside the chart — return Nothing so the caller
-        ' applies the fill to all series instead of the chart background.
+        ' Selection is a chart background element (plot area, chart area, etc.) —
+        ' return Nothing so the caller applies fill to all series instead.
         Exit Function
     End If
 
     If Not Selection Is Nothing Then
-        If HasFillFormat(Selection) Then Set GetFillTarget = Selection
+        If IsSeriesOrPoint(Selection) Then Set GetFillTarget = Selection
     End If
 End Function
 
 
-Private Function HasFillFormat(o As Object) As Boolean
+Private Function IsSeriesOrPoint(ByVal o As Object) As Boolean
+    ' Returns True only for Series and Point objects — the elements the user
+    ' intends to colour. Chart area, plot area, walls, etc. are deliberately
+    ' excluded so clicks on those background elements fall through to the
+    ' "apply to all series" branch in ApplyFill.
+    Dim srs As Series
+    Dim pt As Point
     On Error Resume Next
-    Dim x: Set x = o.Format.Fill
-    HasFillFormat = (Err.Number = 0)
+    Set srs = o
+    If Err.Number = 0 Then IsSeriesOrPoint = Not (srs Is Nothing): Exit Function
     Err.Clear
+    Set pt = o
+    If Err.Number = 0 Then IsSeriesOrPoint = Not (pt Is Nothing)
+    Err.Clear
+    On Error GoTo 0
+End Function
+
+
+'   LAST USED TRACKING
+
+Private Sub SaveLastUsedFillTag(ByVal colorName As String)
+    On Error Resume Next
+    ThisWorkbook.CustomDocumentProperties(LASTUSED_KEY).Value = colorName
+    ' If the property doesn't exist, create it
+    If Err.Number <> 0 Then
+        Err.Clear
+        ThisWorkbook.CustomDocumentProperties.Add LASTUSED_KEY, , msoPropertyTypeString, colorName
+    End If
+    On Error GoTo 0
+End Sub
+
+
+Private Function GetLastUsedFillTag() As String
+    On Error Resume Next
+    Dim val As String
+    val = ThisWorkbook.CustomDocumentProperties(LASTUSED_KEY).Value
+    If Err.Number = 0 And val <> "" Then
+        GetLastUsedFillTag = val
+    End If
+    Err.Clear
+    On Error GoTo 0
 End Function

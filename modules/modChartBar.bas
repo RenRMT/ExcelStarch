@@ -25,11 +25,12 @@ Option Explicit
 
 Private Sub BuildBarChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBarClustered)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", BarChartDefaults()
     Call RemoveShadow(cht)
@@ -41,19 +42,23 @@ Private Sub BuildBarChart()
 
     cht.ChartGroups(1).Overlap = seriesOverlap
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildBarChart"
 End Sub
 
 
 Private Sub BuildStackedBarChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlBarStacked)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     ApplyChartPipeline cht, "FILL", BarChartDefaults()
     Call RemoveShadow(cht)
@@ -65,8 +70,11 @@ Private Sub BuildStackedBarChart()
 
     cht.ChartGroups(1).Overlap = 100
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildStackedBarChart"
 End Sub
 

@@ -29,16 +29,20 @@ Option Explicit
 
 Private Sub BuildPieChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlPie)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     Call BuildPieChartWithDefaults(cht, PieChartDefaults())
 
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildPieChart"
 End Sub
 
@@ -153,17 +157,21 @@ End Sub
 
 Private Sub BuildTreemapChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
 
     ' xlTreemap requires Excel 2016+
     Set cht = GetTargetChart(xlTreemap)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     Call BuildTreemapChartWithDefaults(cht, TreemapChartDefaults())
 
+CleanExit:
+    AppRestore
     Exit Sub
 CleanFail:
+    AppRestore
     MsgError "BuildTreemapChart"
 End Sub
 

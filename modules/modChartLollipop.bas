@@ -14,6 +14,7 @@ Option Explicit
 
 Private Sub BuildLollipopChart()
     On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
     Dim srs As Series
@@ -21,10 +22,12 @@ Private Sub BuildLollipopChart()
     Dim clr As Long
 
     ' Create and pipeline-format a bar chart, then convert to lollipop style
+    ' (BarChart manages its own screen-updating state; the depth counter in
+    '  modAppState keeps it suppressed until this outer call completes).
     BarChart
 
     Set cht = ResolveActiveChart()
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
     n = cht.SeriesCollection.Count
 
@@ -58,9 +61,12 @@ Private Sub BuildLollipopChart()
             .BeginArrowheadWidth = msoArrowheadWidthMedium
         End With
     Next i
+CleanExit:
+    AppRestore
     Exit Sub
 
 CleanFail:
+    AppRestore
     MsgError "BuildLollipopChart"
 End Sub
 
