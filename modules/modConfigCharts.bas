@@ -15,6 +15,10 @@ Public Const axisBoth As Long = 3
 '=== Data label contrast settings ===
 Public Const wcagLuminanceThreshold As Double = 0.179   ' WCAG threshold for black vs white label text
 
+'=== Scatter / bubble styling ===
+Public Const scatterMarkerSize As Long = 9              ' marker point size (points) for scatter charts
+Public Const bubbleTransparency As Single = 0.5         ' bubble fill transparency (0 = opaque, 1 = clear)
+
 '=== Default formatting for new/reformatted charts ===
 Public Const defaultGridlines As Long = axisNone        ' gridline visibility
 Public Const defaultAxisDisplay As Long = axisNone      ' axis visibility (HasAxis)
