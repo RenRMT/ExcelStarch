@@ -90,7 +90,7 @@ End Sub
 '   SHARED PRIVATE HELPERS
 ' ============================================================
 
-' Public so the chart-type-agnostic styler (modChartTools.ApplyChartStyle) can
+' Public so the chart-type-agnostic styler (modChartStyle.ApplyChartStyle) can
 ' reuse per-slice colouring instead of duplicating the loop.
 Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
     On Error GoTo CleanFail
@@ -123,7 +123,7 @@ CleanFail:
 End Sub
 
 
-' Public so the chart-type-agnostic styler (modChartTools.ApplyChartStyle) can
+' Public so the chart-type-agnostic styler (modChartStyle.ApplyChartStyle) can
 ' reuse pie/donut square-plot sizing + title instead of the rectangular pipeline.
 Public Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
