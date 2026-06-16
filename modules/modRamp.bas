@@ -12,6 +12,11 @@ Attribute VB_Name = "modRamp"
 ' (1 = lightest, 7 = darkest) before being assigned as a gradient.
 '
 ' Maximum series: 7 (single), 15 (diverging: 7 + grey + 7).
+'
+' The step-ordering decisions (OrderedRampSteps, DivergingSideCount/HasMiddle) and
+' the tag parser (ParseDivergingTag) are pure functions with no chart dependency,
+' kept separate from the object-model fill loops so they can be unit-tested from
+' modTestHarness.
 Option Explicit
 
 Private Const LASTUSED_RAMP_KEY As String = "LastUsedRampTag"
@@ -97,16 +102,32 @@ Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
         If tagValue = "" Then tagValue = "A|B"  ' default to Ocean - Coral
     End If
 
-    Dim parts() As String
-    parts = Split(tagValue, "|")
-    If UBound(parts) < 1 Then
+    Dim leftRamp As String, rightRamp As String
+    If Not ParseDivergingTag(tagValue, leftRamp, rightRamp) Then
         MsgInvalidDivergingTag
         Exit Sub
     End If
 
-    ApplyDivergingRamp parts(0), parts(1)
+    ApplyDivergingRamp leftRamp, rightRamp
     SaveLastUsedDivergingTag tagValue
 End Sub
+
+' Parses a diverging-ramp tag "LEFT|RIGHT" (e.g. "A|B") into its two ramp names.
+' Pure (no UI): returns False when the pipe separator or either side is missing,
+' so the caller decides how to report the error. outLeft/outRight are set only on
+' success.
+Public Function ParseDivergingTag(ByVal tagValue As String, _
+                                  ByRef outLeft As String, _
+                                  ByRef outRight As String) As Boolean
+    Dim parts() As String
+    parts = Split(tagValue, "|")
+    If UBound(parts) < 1 Then Exit Function          ' no separator → invalid
+    If Len(parts(0)) = 0 Or Len(parts(1)) = 0 Then Exit Function
+
+    outLeft = parts(0)
+    outRight = parts(1)
+    ParseDivergingTag = True
+End Function
 
 Public Sub ApplyDivergingRamp(ByVal leftRamp As String, ByVal rightRamp As String)
     On Error GoTo CleanFail
@@ -145,34 +166,17 @@ Private Sub BuildColorRamp(cht As Chart, ByVal rampName As String)
     Dim palette(1 To 7) As Long
     If Not LoadPalette(rampName, palette) Then Exit Sub
 
-    ' Select first n steps from priority order, sort ascending, assign descending
-    ' (dark → light), matching the left side of a diverging ramp.
-    Dim priority(1 To 7) As Integer
-    priority(1) = 5: priority(2) = 2: priority(3) = 3: priority(4) = 6
-    priority(5) = 1: priority(6) = 4: priority(7) = 7
+    ' Pure decision: the 1-based step index to give each series, darkest first.
+    Dim steps As Variant
+    steps = OrderedRampSteps(n)
 
-    Dim steps() As Integer
-    ReDim steps(1 To n)
-    Dim i As Integer, j As Integer, tmp As Integer
-    For i = 1 To n
-        steps(i) = priority(i)
-    Next i
-
-    ' Bubble sort ascending (1=lightest → 7=darkest)
-    For i = 1 To n - 1
-        For j = 1 To n - i
-            If steps(j) > steps(j + 1) Then
-                tmp = steps(j): steps(j) = steps(j + 1): steps(j + 1) = tmp
-            End If
-        Next j
-    Next i
-
-    ' Assign descending so series 1 = darkest, series N = lightest
+    ' Object-model application: series 1 = darkest, series N = lightest.
+    Dim i As Long
     For i = 1 To n
         With cht.SeriesCollection(i).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.RGB = palette(steps(n + 1 - i))
+            .ForeColor.RGB = palette(steps(i - 1))
         End With
     Next i
 End Sub
@@ -192,41 +196,24 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
     If Not LoadPalette(leftRamp, leftPalette) Then Exit Sub
     If Not LoadPalette(rightRamp, rightPalette) Then Exit Sub
 
-    Dim sideCount As Long
-    sideCount = n \ 2                       ' floor(N/2)
-    Dim hasMiddle As Boolean
-    hasMiddle = (n Mod 2 = 1)
+    ' Pure decision: side size, odd-series middle flag, and the side step indices
+    ' sorted ascending (1 = lightest .. 7 = darkest).
+    Dim sideCount As Long, hasMiddle As Boolean
+    Dim sideSteps As Variant
+    sideCount = DivergingSideCount(n)
+    hasMiddle = DivergingHasMiddle(n)
+    sideSteps = PriorityStepsSorted(sideCount)
 
-    ' Pick first sideCount steps from priority order, then sort ascending (1=lightest)
-    Dim priority(1 To 7) As Integer
-    priority(1) = 5: priority(2) = 2: priority(3) = 3: priority(4) = 6
-    priority(5) = 1: priority(6) = 4: priority(7) = 7
-
-    Dim steps() As Integer
-    ReDim steps(1 To sideCount)
-    Dim i As Integer, j As Integer, tmp As Integer
-
-    For i = 1 To sideCount
-        steps(i) = priority(i)
-    Next i
-
-    ' Bubble sort steps ascending (lightest → darkest)
-    For i = 1 To sideCount - 1
-        For j = 1 To sideCount - i
-            If steps(j) > steps(j + 1) Then
-                tmp = steps(j): steps(j) = steps(j + 1): steps(j + 1) = tmp
-            End If
-        Next j
-    Next i
-
-    ' Left side: descending through sorted steps (dark → light)
+    Dim i As Long
     Dim seriesIdx As Long
     seriesIdx = 1
+
+    ' Left side: descending through the sorted steps (dark → light)
     For i = sideCount To 1 Step -1
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.RGB = leftPalette(steps(i))
+            .ForeColor.RGB = leftPalette(sideSteps(i - 1))
         End With
         seriesIdx = seriesIdx + 1
     Next i
@@ -241,16 +228,92 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
         seriesIdx = seriesIdx + 1
     End If
 
-    ' Right side: ascending through sorted steps (light → dark)
+    ' Right side: ascending through the sorted steps (light → dark)
     For i = 1 To sideCount
         With cht.SeriesCollection(seriesIdx).Format.Fill
             .Visible = msoTrue
             .Solid
-            .ForeColor.RGB = rightPalette(steps(i))
+            .ForeColor.RGB = rightPalette(sideSteps(i - 1))
         End With
         seriesIdx = seriesIdx + 1
     Next i
 End Sub
+
+
+' ============================================================
+'   PURE STEP-ORDERING LOGIC (no chart dependency — unit-testable)
+' ============================================================
+' These functions encode the ramp colour-ordering decisions independently of the
+' Excel object model, so they can be exercised from modTestHarness. The Build*
+' subs above consume their output and only perform the fill writes.
+' All returned arrays are 0-based Variants (from Array()); index with (k - 1) when
+' walking a 1-based series/step counter.
+
+' The fixed step-selection priority [5,2,3,6,1,4,7]: which palette steps to use,
+' and in what preference order, as the series count grows.
+Private Function StepPriority() As Variant
+    StepPriority = Array(5, 2, 3, 6, 1, 4, 7)
+End Function
+
+' Returns the first `count` priority steps, sorted ascending (1 = lightest ..
+' 7 = darkest). Shared by single and diverging ramps. count must be 0..7.
+Private Function PriorityStepsSorted(ByVal count As Long) As Variant
+    Dim pr As Variant
+    pr = StepPriority()
+
+    Dim s() As Integer
+    If count <= 0 Then
+        PriorityStepsSorted = Array()
+        Exit Function
+    End If
+    ReDim s(0 To count - 1)
+
+    Dim i As Long, j As Long, tmp As Integer
+    For i = 0 To count - 1
+        s(i) = pr(i)
+    Next i
+
+    ' Bubble sort ascending
+    For i = 0 To count - 2
+        For j = 0 To count - 2 - i
+            If s(j) > s(j + 1) Then
+                tmp = s(j): s(j) = s(j + 1): s(j + 1) = tmp
+            End If
+        Next j
+    Next i
+
+    PriorityStepsSorted = s
+End Function
+
+' Single-hue ramp: the 1-based palette step for each series, darkest first.
+' Series 1 gets the darkest selected step, series n the lightest. Returns an
+' n-element 0-based array; element (i-1) is the step for series i.
+Public Function OrderedRampSteps(ByVal n As Long) As Variant
+    Dim asc As Variant
+    asc = PriorityStepsSorted(n)        ' ascending: lightest .. darkest
+    If n <= 0 Then
+        OrderedRampSteps = Array()
+        Exit Function
+    End If
+
+    Dim out() As Integer
+    ReDim out(0 To n - 1)
+    Dim i As Long
+    For i = 0 To n - 1
+        out(i) = asc(n - 1 - i)         ' reverse → darkest first
+    Next i
+    OrderedRampSteps = out
+End Function
+
+' Diverging ramp: number of series on each side (floor(n / 2)).
+Public Function DivergingSideCount(ByVal n As Long) As Long
+    DivergingSideCount = n \ 2
+End Function
+
+' Diverging ramp: True when n is odd, so a grey centre series is inserted.
+Public Function DivergingHasMiddle(ByVal n As Long) As Boolean
+    DivergingHasMiddle = (n Mod 2 = 1)
+End Function
 
 
 ' ============================================================

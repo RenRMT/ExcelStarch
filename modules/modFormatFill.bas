@@ -20,7 +20,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
 
     Dim payload As String: payload = UCase$(parts(1))
 
-    If payload = "NONE" Or payload = "NOFILL" Or payload = "OFF" Then
+    If IsRemoveFillPayload(payload) Then
         RemoveFill
         Exit Sub
     End If
@@ -35,15 +35,9 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
         End If
     End If
 
-    Dim subp() As String
-    subp = Split(payload, "|")
-
-    Dim colorName As String: colorName = subp(0)
-    Dim transparency As Double: transparency = 0
-
-    If UBound(subp) >= 1 Then
-        If IsNumeric(subp(1)) Then transparency = CDbl(subp(1))
-    End If
+    ' Pure parse: split "Name|transparency" into its parts.
+    Dim colorName As String, transparency As Double
+    ParseFillPayload payload, colorName, transparency
 
     Dim colorRGB As Long: colorRGB = ColorFromName(colorName)
     If colorRGB = -1 Then
@@ -56,7 +50,40 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
 End Sub
 
 
-Private Function ColorFromName(ByVal name As String) As Long
+' True when a fill payload (the part after "FILL:") means "remove the fill".
+' Pure; accepts the documented NONE/NOFILL/OFF spellings (case-insensitive).
+Public Function IsRemoveFillPayload(ByVal payload As String) As Boolean
+    Select Case UCase$(Trim$(payload))
+        Case "NONE", "NOFILL", "OFF": IsRemoveFillPayload = True
+    End Select
+End Function
+
+' Splits a resolved fill payload "Name" or "Name|transparency" into its colour
+' name and a transparency in [0, 1]. Pure (no chart/UI). A missing, non-numeric,
+' or out-of-range transparency falls back to 0 (opaque). outName/outTransparency
+' are always set.
+Public Sub ParseFillPayload(ByVal payload As String, _
+                            ByRef outName As String, _
+                            ByRef outTransparency As Double)
+    Dim subp() As String
+    subp = Split(payload, "|")
+
+    outName = subp(0)
+    outTransparency = 0
+
+    If UBound(subp) >= 1 Then
+        If IsNumeric(subp(1)) Then
+            Dim t As Double: t = CDbl(subp(1))
+            If t < 0 Then t = 0
+            If t > 1 Then t = 1
+            outTransparency = t
+        End If
+    End If
+End Sub
+
+
+' ColorFromName: Public so modTestHarness can exercise the name -> RGB lookup.
+Public Function ColorFromName(ByVal name As String) As Long
     Select Case UCase$(name)
         Case "DATA1":    ColorFromName = colorData1
         Case "DATA2":    ColorFromName = colorData2
