@@ -360,6 +360,18 @@ Private Function IsPieChartType(ByVal ct As Long) As Boolean
                       ct = xlPieEx Or ct = xlDoughnutExploded)
 End Function
 
+' True for chart types that do not support xlLabelPositionOutsideEnd
+' (stacked variants). Labels on these can only be centered, so the
+' OUTSIDE state is skipped and contrast colouring is always applied.
+Private Function IsCenterOnlyLabelType(ByVal ct As Long) As Boolean
+    Select Case ct
+        Case xlColumnStacked, xlColumnStacked100, _
+             xlBarStacked, xlBarStacked100, _
+             xlAreaStacked, xlAreaStacked100
+            IsCenterOnlyLabelType = True
+    End Select
+End Function
+
 Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     On Error GoTo CleanFail
 
@@ -668,6 +680,10 @@ Public Sub ToggleDataLabels()
     Dim cht As Chart
     Set cht = ActiveChart
 
+    ' Stacked types have no usable "outside end" position; skip the OUTSIDE state.
+    Dim centerOnly As Boolean
+    centerOnly = IsCenterOnlyLabelType(cht.chartType)
+
     ' Resolve target: single selected series, or Nothing for all series.
     ' Intentional: read user's current selection to determine single-series scope.
     Dim targetSrs As Series
@@ -706,11 +722,19 @@ Public Sub ToggleDataLabels()
 
     ' Advance to next state.
     Dim nextState As String
-    Select Case currentState
-        Case "NONE":    nextState = "OUTSIDE"
-        Case "OUTSIDE": nextState = "INSIDE"
-        Case Else:      nextState = "NONE"
-    End Select
+    If centerOnly Then
+        ' Two-state cycle: stacked types have no usable outside position.
+        Select Case currentState
+            Case "NONE": nextState = "INSIDE"
+            Case Else:   nextState = "NONE"
+        End Select
+    Else
+        Select Case currentState
+            Case "NONE":    nextState = "OUTSIDE"
+            Case "OUTSIDE": nextState = "INSIDE"
+            Case Else:      nextState = "NONE"
+        End Select
+    End If
 
     ' Apply to target series or all series.
     Dim i As Long
@@ -819,27 +843,42 @@ End Function
 
 
 ' Returns a label color (white or black) chosen for best contrast against the
-' series fill color, based on WCAG relative luminance. Falls back to white on error.
+' background the label sits on, based on WCAG relative luminance.
+' For fill-based series (bars, columns, area) the background is the series fill.
+' For line/scatter series the label floats against the plot background (white),
+' so dark text is always used. Falls back to white on error.
 Private Function GetLabelContrastColor(srs As Series) As Long
     On Error GoTo UseFallback
+
+    ' Line/scatter: labels float on the plot background, not on a coloured fill.
+    Dim ct As Long
+    ct = srs.chartType
+    Select Case ct
+        Case xlLine, xlLineMarkers, xlLineStacked, xlLineMarkersStacked, _
+             xlLineStacked100, xlLineMarkersStacked100, _
+             xlXYScatter, xlXYScatterLines, xlXYScatterLinesNoMarkers, _
+             xlXYScatterSmooth, xlXYScatterSmoothNoMarkers
+            GetLabelContrastColor = colorBrand3
+            Exit Function
+    End Select
 
     Dim fillRGB As Long
     fillRGB = srs.Format.Fill.ForeColor.RGB
 
-    ' Calculate WCAG relative luminance
+    ' Calculate WCAG relative luminance of the series fill
     Dim lum As Double
     lum = RelativeLuminance(fillRGB)
 
-    ' Use white text if luminance < threshold, black text otherwise
+    ' Use white text on dark fills, dark text on light fills
     If lum < wcagLuminanceThreshold Then
-        GetLabelContrastColor = RGB(255, 255, 255)  ' White
+        GetLabelContrastColor = colorWhite
     Else
-        GetLabelContrastColor = RGB(0, 0, 0)        ' Black
+        GetLabelContrastColor = colorBrand3
     End If
     Exit Function
 
 UseFallback:
-    GetLabelContrastColor = RGB(255, 255, 255)      ' Default to white on error
+    GetLabelContrastColor = colorWhite
 End Function
 
 ' Calculates WCAG relative luminance of an RGB color.
