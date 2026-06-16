@@ -90,7 +90,9 @@ End Sub
 '   SHARED PRIVATE HELPERS
 ' ============================================================
 
-Private Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
+' Public so the chart-type-agnostic styler (modChartTools.ApplyChartStyle) can
+' reuse per-slice colouring instead of duplicating the loop.
+Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
     On Error GoTo CleanFail
 
     Dim i As Long
@@ -121,7 +123,9 @@ CleanFail:
 End Sub
 
 
-Private Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
+' Public so the chart-type-agnostic styler (modChartTools.ApplyChartStyle) can
+' reuse pie/donut square-plot sizing + title instead of the rectangular pipeline.
+Public Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area

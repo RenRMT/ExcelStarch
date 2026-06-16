@@ -476,28 +476,145 @@ End Sub
 
 
 ' ============================================================
-'   APPLY CHART STYLE (generic)
+'   APPLY CHART STYLE (chart-type agnostic)
 ' ============================================================
-' Applies brand formatting to the active chart regardless of type.
-' Operates in-place — no duplication. Steps that require axes are
-' skipped when the chart type does not have them (e.g. pie/donut).
+' Applies the house style to the SELECTED chart, in place (no retype, no
+' duplication), to the extent possible for that chart type.
+'
+' Design principle: "skip what would be wrong", not "swallow exceptions".
+' Every chart gets the universally-safe chrome (font, border, logo, source,
+' title). Type-specific steps (plot geometry, axis formatting, series colour)
+' are gated behind a positive classification so unsupported types degrade
+' gracefully rather than producing wrong output (e.g. a rectangular pie or a
+' uniformly-coloured pie series).
+'
+' Buckets (see ClassifyChart):
+'   PIE          — pie/donut: square-plot sizing + per-slice colours
+'   AXIS_FILL    — bar/column/area: gridlines + axis labels + per-series FILL
+'   LINE_SCATTER — line/scatter: axis labels + per-series LINE colour
+'   OTHER        — radar/3D/surface/stock/treemap/combo/future: chrome only,
+'                  plus a best-guess per-series colour; no geometry/axis steps
 
 Public Sub ApplyChartStyle()
-    If ActiveChart Is Nothing Then
-        MsgNoActiveChart
-        Exit Sub
-    End If
+    On Error GoTo CleanFail
+    AppFast
 
     Dim cht As Chart
-    Set cht = ActiveChart
+    Set cht = ResolveActiveChart()
+    If cht Is Nothing Then
+        MsgNoActiveChart
+        GoTo CleanExit
+    End If
 
-    OuterFormat cht, DefaultChartDefaults()
-    InsertLogo cht
-    InsertSource cht
-    FormatTitle cht
-    If cht.HasAxis(xlValue) Then FormatGridlines cht
-    FormatXAxis cht
-    FormatSeriesColors cht, GetStyleColorMode(cht.chartType)
+    ' A ribbon click deselects the chart, but Chart.Shapes.Add* (logo, title and
+    ' source text boxes) only works reliably on the ACTIVE chart — otherwise
+    ' AddPicture raises 430 and AddTextbox silently fails. Activate it first.
+    ActivateChart cht
+
+    Dim bucket As String
+    bucket = ClassifyChart(cht.chartType, cht)
+
+    ' Geometry/layout must run BEFORE the logo/source/title boxes, because those
+    ' are positioned at coordinates derived from chartWidth/chartHeight and the
+    ' plot-area constants. The order within each bucket mirrors ApplyChartPipeline:
+    ' size/layout -> logo -> source -> title -> axes -> colour.
+    Select Case bucket
+        Case "PIE"
+            ' Pie path: square canvas + centred plot, per-slice colours.
+            ' SetRoundChartSizeAndTitle also creates the title boxes and sizes the
+            ' canvas, so no ApplyChartChrome/FormatTitle here.
+            SetRoundChartSizeAndTitle cht, PieChartDefaults()
+            InsertLogo cht, silent:=True
+            InsertSource cht, silent:=True
+            Dim nPts As Long
+            On Error Resume Next
+            nPts = cht.SeriesCollection(1).Points.Count
+            On Error GoTo CleanFail
+            If nPts > 0 Then ApplySliceColors cht, nPts
+
+        Case "AXIS_FILL"
+            ' OuterFormat sizes the canvas AND positions the plot area (incl.
+            ' legend), so the title/source boxes sit clear of the plot.
+            OuterFormat cht, DefaultChartDefaults()
+            InsertLogo cht, silent:=True
+            InsertSource cht, silent:=True
+            FormatTitle cht
+            FormatGridlines cht
+            FormatXAxis cht
+            FormatSeriesColors cht, "FILL", silent:=True
+
+        Case "LINE_SCATTER"
+            OuterFormat cht, DefaultChartDefaults()
+            InsertLogo cht, silent:=True
+            InsertSource cht, silent:=True
+            FormatTitle cht
+            FormatGridlines cht
+            FormatXAxis cht
+            FormatSeriesColors cht, "LINE", silent:=True
+
+        Case Else   ' OTHER — safe chrome + canvas size, no plot geometry
+            ApplyChartChrome cht
+            InsertLogo cht, silent:=True
+            InsertSource cht, silent:=True
+            FormatTitle cht
+            ' Best-guess colour; silent because some modern types (sunburst,
+            ' treemap, funnel) don't accept standard per-series colouring.
+            FormatSeriesColors cht, GetStyleColorMode(cht.chartType), silent:=True
+    End Select
+
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "ApplyChartStyle"
+End Sub
+
+' Classifies a chart into the routing bucket used by ApplyChartStyle.
+' Defaults to "OTHER" so any unrecognised type degrades gracefully.
+Private Function ClassifyChart(ByVal ct As Long, cht As Chart) As String
+    If IsPieChartType(ct) Then
+        ClassifyChart = "PIE"
+    ElseIf GetStyleColorMode(ct) = "LINE" Then
+        ClassifyChart = "LINE_SCATTER"
+    ElseIf cht.HasAxis(xlValue) Then
+        ClassifyChart = "AXIS_FILL"
+    Else
+        ClassifyChart = "OTHER"
+    End If
+End Function
+
+' The universally-safe + always-required subset of OuterFormat: font, border,
+' and CANVAS SIZE. The title/subtitle/source/logo boxes are positioned at
+' coordinates derived from chartWidth/chartHeight, so the canvas MUST be resized
+' to those dimensions or the elements overlap the plot. Deliberately omits
+' ApplyPlotAreaGeometry (the rectangular plot-area layout), which is applied only
+' for axis-based charts — it would be wrong for pie/donut and other layouts.
+Private Sub ApplyChartChrome(cht As Chart)
+    On Error Resume Next
+    cht.ChartArea.Font.name = fontPrimary
+    cht.ChartArea.Border.LineStyle = xlNone
+    ' Resize canvas to the configured dimensions (embedded charts only; a chart
+    ' sheet has no settable size).
+    If TypeName(cht.Parent) = "ChartObject" Then
+        cht.Parent.Width = chartWidth
+        cht.Parent.Height = chartHeight
+    End If
+    On Error GoTo 0
+End Sub
+
+' Activates a chart so Chart.Shapes.Add* operations work. Mirrors the pattern in
+' modExport: for an embedded chart, activate the parent worksheet then the chart;
+' for a chart sheet (Workbook parent), activate the chart directly. Errors are
+' swallowed — if activation fails, the shape steps simply fall back to skipping.
+Private Sub ActivateChart(cht As Chart)
+    On Error Resume Next
+    If TypeName(cht.Parent) = "ChartObject" Then
+        cht.Parent.Parent.Activate   ' parent worksheet
+        cht.Parent.Select            ' select the ChartObject
+    End If
+    cht.Activate
+    On Error GoTo 0
 End Sub
 
 Private Function GetStyleColorMode(ByVal ct As Long) As String
