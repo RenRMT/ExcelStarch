@@ -305,6 +305,7 @@ Private Sub CreateSubtitleBox(cht As Chart)
 
     With shp
         .name = "SubTitleBox"
+        .TextFrame2.VerticalAnchor = msoAnchorMiddle
         .TextFrame2.TextRange.Text = subtitleDefaultText
         With .TextFrame2.TextRange.Font
             .Size = subTitleFontSize
