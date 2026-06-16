@@ -349,6 +349,13 @@
 						size="normal"
 						supertip="Toggle between chart type variants: stacked ↔ 100% stacked, pie ↔ donut, line ↔ line with markers."
 						onAction="ToggleChartVariantButton_onAction"/>
+					<button
+						id="ApplyChartStyleButton"
+						image="i_magic_wand"
+						label="Apply Chart Style"
+						size="normal"
+						supertip="Apply the house style to the selected chart, whatever its type. Styles what it safely can and leaves the rest unchanged."
+						onAction="ApplyChartStyleButton_onAction"/>
 				</group>
 				<group id="ChartExportButton" label="Export">
 					<button
