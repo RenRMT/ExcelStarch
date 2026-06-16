@@ -1,4 +1,15 @@
 Attribute VB_Name = "modChartLine"
+'==== Module: modChartLine ====
+' Line chart variant.
+'
+' Variant
+' -------
+'   LineChart - xlLine: a line per series across the category axis
+'
+' Uses the full LINE pipeline. AxisBetweenCategories = False so the line starts
+' flush on the first data point (same pattern as area charts). Tick marks are
+' shown outside on both axes. Axis lines are re-formatted to white after the
+' AxisBetweenCategories assignment, which can re-show them.
 Option Explicit
 
 Private Sub BuildLineChart()

@@ -4,14 +4,14 @@ Attribute VB_Name = "modChartPie"
 '
 ' Variants
 ' --------
-'   PieChart     — xlPie:      solid filled circle divided into slices
-'   DonutChart   — xlDoughnut: ring divided into slices (pie with a hollow centre)
-'   TreemapChart — xlTreemap:  hierarchical rectangular tiles
+'   PieChart     - xlPie:      solid filled circle divided into slices
+'   DonutChart   - xlDoughnut: ring divided into slices (pie with a hollow centre)
+'   TreemapChart - xlTreemap:  hierarchical rectangular tiles
 '
 ' Differences
 ' -----------
 '   Pie/Donut: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand
-'              palette. Pie and donut share the same builder (BuildPieChartWithDefaults) —
+'              palette. Pie and donut share the same builder (BuildPieChartWithDefaults) -
 '              the round-chart sizing and slice colouring are identical; only the chart
 '              type differs (xlPie vs xlDoughnut).
 '   Treemap: custom pipeline; no axes or gridlines; tile colours managed by Excel.
@@ -54,7 +54,7 @@ Private Sub BuildDonutChart()
 
     Dim cht As Chart
 
-    ' Donut shares the pie builder — only the chart type differs (xlDoughnut vs xlPie).
+    ' Donut shares the pie builder - only the chart type differs (xlDoughnut vs xlPie).
     Set cht = GetTargetChart(xlDoughnut)
     If cht Is Nothing Then GoTo CleanExit
 
@@ -128,7 +128,7 @@ End Sub
 Public Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
-    ' Shared layout for both pie and donut — chart dimensions, text boxes, plot area
+    ' Shared layout for both pie and donut - chart dimensions, text boxes, plot area
     ' sizing, centering, and legend placement are identical for both variants.
     Dim chtObj As ChartObject
     Dim chtHeight As Double
@@ -204,7 +204,7 @@ End Sub
 Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
-    ' Custom pipeline — treemaps have no axes or gridlines
+    ' Custom pipeline - treemaps have no axes or gridlines
     With cht.Parent
         .Width = chartWidth
         .Height = chartHeight

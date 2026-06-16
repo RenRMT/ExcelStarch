@@ -13,7 +13,7 @@ Public Sub MsgSelectTarget()
     MsgBox "Select a chart element or shape.", vbExclamation, "No Selection"
 End Sub
 
-' Generic error handler — call from a CleanFail label while Err object is populated
+' Generic error handler - call from a CleanFail label while Err object is populated
 Public Sub MsgError(ByVal source As String)
     MsgBox source & ": " & Err.Number & " - " & Err.Description, vbExclamation
 End Sub

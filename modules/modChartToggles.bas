@@ -6,11 +6,11 @@ Attribute VB_Name = "modChartToggles"
 '
 ' Tools
 ' -----
-'   ToggleGridlines   — cycles major gridlines:  None -> Horizontal -> Vertical -> Both
-'   ToggleLegend      — toggles legend visibility and resizes the plot area;
+'   ToggleGridlines   - cycles major gridlines:  None -> Horizontal -> Vertical -> Both
+'   ToggleLegend      - toggles legend visibility and resizes the plot area;
 '                       pie/donut use square plot-area constants
-'   ToggleAxisLabels  — cycles axis tick labels:  None -> X -> Y -> Both
-'   ToggleDataLabels  — cycles data labels:       None -> Outside End -> Inside Centre
+'   ToggleAxisLabels  - cycles axis tick labels:  None -> X -> Y -> Both
+'   ToggleDataLabels  - cycles data labels:       None -> Outside End -> Inside Centre
 '                       (selected series only, or all series if none selected)
 '
 ' IsPieChartType is Public here because it is the one helper shared with
@@ -172,7 +172,7 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
         cht.hasLegend = True
         With cht.Legend
             ' xlLegendPositionBottom lays entries out in a horizontal row and lets Excel
-            ' auto-size the legend to its content width. Do NOT set .Width afterwards — that
+            ' auto-size the legend to its content width. Do NOT set .Width afterwards - that
             ' would override the content fit and (at full width) was forcing items to stack.
             ' Set .Top to place it vertically and .Left to anchor it to the left edge
             ' (Excel centers it horizontally by default); the content-fitted width is preserved.
@@ -378,7 +378,7 @@ Public Sub ToggleDataLabels()
             On Error Resume Next
             pos = firstSrs.DataLabels.Position
             If Err.Number <> 0 Then
-                currentState = "OTHER"   ' can't read position — treat as non-standard
+                currentState = "OTHER"   ' can't read position - treat as non-standard
             Else
                 On Error GoTo 0
                 Select Case pos

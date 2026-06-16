@@ -28,6 +28,9 @@ End Function
 ' Calculates WCAG relative luminance of an RGB color.
 ' Input: clr as Long (Excel RGB format: R + G*256 + B*65536)
 ' Returns: Double in range [0, 1], where 0 is black and 1 is white
+' The thresholds (0.03928), exponent (2.4) and channel weights (0.2126 / 0.7152
+' / 0.0722) below are the standard sRGB-linearization and relative-luminance
+' constants from the WCAG 2.x definition of relative luminance.
 Public Function RelativeLuminance(ByVal clr As Long) As Double
     Dim R As Double, G As Double, B As Double
     Dim Rs As Double, Gs As Double, Bs As Double
@@ -37,7 +40,7 @@ Public Function RelativeLuminance(ByVal clr As Long) As Double
     G = (clr \ 256) Mod 256
     B = (clr \ 65536) Mod 256
 
-    ' Normalize to 0–1
+    ' Normalize to 0-1
     Rs = R / 255#
     Gs = G / 255#
     Bs = B / 255#

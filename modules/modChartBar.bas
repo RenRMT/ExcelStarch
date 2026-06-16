@@ -4,9 +4,9 @@ Attribute VB_Name = "modChartBar"
 '
 ' Variants
 ' --------
-'   BarChart            — xlBarClustered:   discrete side-by-side bars per category
-'   StackedBarChart     — xlBarStacked:     series stacked into a single bar per category
-'   Stacked100BarChart  — xlBarStacked100:  series stacked to fill 100% per category
+'   BarChart            - xlBarClustered:   discrete side-by-side bars per category
+'   StackedBarChart     - xlBarStacked:     series stacked into a single bar per category
+'   Stacked100BarChart  - xlBarStacked100:  series stacked to fill 100% per category
 '
 ' Differences
 ' -----------

@@ -80,7 +80,11 @@ Fail:
 End Function
 
 
-' Core Base64 decoding (binary safe)
+' Core Base64 decoding (binary safe).
+' Uses an MSXML2 DOM element with DataType "bin.base64": assigning the Base64
+' text to .Text and reading back .nodeTypedValue returns the decoded bytes. This
+' is the standard no-dependency decoder available on any Excel install (no
+' external reference or API declaration needed).
 Public Function Base64Decode(base64 As String) As Byte()
     Dim XML As Object, Node As Object
 

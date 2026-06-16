@@ -28,7 +28,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     If payload = "LASTUSED" Then
         Dim lastTag As String: lastTag = GetLastUsedFillTag()
         If lastTag = "" Then
-            ' No prior selection — default to Ocean
+            ' No prior selection - default to Ocean
             payload = "DATA1"
         Else
             payload = lastTag
@@ -83,7 +83,7 @@ Public Sub ApplyFill(ByVal colorRGB As Long, Optional ByVal transparency As Sing
     Set tgt = GetFillTarget()
 
     If tgt Is Nothing Then
-        ' No specific element selected — apply to all series in the active chart.
+        ' No specific element selected - apply to all series in the active chart.
         Dim cht As Chart
         If Not ActiveChart Is Nothing Then
             Set cht = ActiveChart
@@ -156,7 +156,7 @@ Public Sub RemoveFill()
     Set tgt = GetFillTarget()
 
     If tgt Is Nothing Then
-        ' No specific element selected — remove fill from all series in the active chart.
+        ' No specific element selected - remove fill from all series in the active chart.
         Dim cht As Chart
         If Not ActiveChart Is Nothing Then
             Set cht = ActiveChart
@@ -206,7 +206,7 @@ Private Function IsLineTarget(ByVal tgt As Object) As Boolean
     On Error Resume Next
     Set srs = tgt
     On Error GoTo 0
-    If srs Is Nothing Then Exit Function    ' not a series — use FILL
+    If srs Is Nothing Then Exit Function    ' not a series - use FILL
 
     Dim ct As Long
     On Error Resume Next
@@ -225,7 +225,7 @@ End Function
 
 Private Function GetFillTarget() As Object
     ' Resolve a chart even when a ribbon button click deactivated it before
-    ' onAction fired — in that case ActiveChart is Nothing but the ChartObject
+    ' onAction fired - in that case ActiveChart is Nothing but the ChartObject
     ' remains selected at the worksheet level.
     Dim cht As Chart
     If Not ActiveChart Is Nothing Then
@@ -241,7 +241,7 @@ Private Function GetFillTarget() As Object
                 Exit Function
             End If
         End If
-        ' Selection is a chart background element (plot area, chart area, etc.) —
+        ' Selection is a chart background element (plot area, chart area, etc.) -
         ' return Nothing so the caller applies fill to all series instead.
         Exit Function
     End If
@@ -253,7 +253,7 @@ End Function
 
 
 Private Function IsSeriesOrPoint(ByVal o As Object) As Boolean
-    ' Returns True only for Series and Point objects — the elements the user
+    ' Returns True only for Series and Point objects - the elements the user
     ' intends to colour. Chart area, plot area, walls, etc. are deliberately
     ' excluded so clicks on those background elements fall through to the
     ' "apply to all series" branch in ApplyFill.

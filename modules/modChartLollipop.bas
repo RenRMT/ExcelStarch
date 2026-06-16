@@ -7,7 +7,7 @@ Attribute VB_Name = "modChartLollipop"
 '   1. Build a standard horizontal bar chart (full pipeline via BarChart)
 '   2. For each series, add a horizontal error bar: Minus direction, No Cap, 100%
 '      This extends a line from the data value back to zero.
-'   3. Set bar fill to No Fill — the bar becomes invisible; only the error bar line shows.
+'   3. Set bar fill to No Fill - the bar becomes invisible; only the error bar line shows.
 '   4. Format the error bar line with an oval arrowhead at the value end (the "candy").
 '      The line itself becomes the stick.
 Option Explicit
@@ -38,7 +38,7 @@ Private Sub BuildLollipopChart()
         ' Delegate to modFormatSeries so palette toggle is respected
         clr = GetPaletteColor(i)
 
-        ' Hide the bar — fill and border both invisible
+        ' Hide the bar - fill and border both invisible
         With srs.Format.Fill
             .Visible = msoFalse
         End With

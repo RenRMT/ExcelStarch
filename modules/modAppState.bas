@@ -6,9 +6,7 @@ Attribute VB_Name = "modAppState"
 ' -------
 ' Chart builders and tools perform many Excel object-model writes per action
 ' (shapes, textboxes, series colours, logos). Without suppressing screen
-' updating this causes visible flicker and slower runs. CLAUDE.md Core
-' Principle #6 ("Always restore application state") requires that whatever we
-' disable is reliably re-enabled — including on error paths.
+' updating this causes visible flicker and slower runs.
 '
 ' Re-entrancy
 ' -----------
@@ -32,7 +30,7 @@ Attribute VB_Name = "modAppState"
 '   End Sub
 '
 ' Always pair every AppFast with an AppRestore on BOTH the normal exit and the
-' error handler. Calls do not have to balance perfectly — AppReset is available
+' error handler. Calls do not have to balance perfectly. AppReset is available
 ' as a hard reset if a depth leak is ever suspected.
 Option Explicit
 
@@ -56,7 +54,7 @@ Public Sub AppRestore()
     End If
 End Sub
 
-' Hard reset — unconditionally re-enable screen updating and clear the depth
+' Hard reset: unconditionally re-enable screen updating and clear the depth
 ' counter. Use only as a recovery measure (e.g. from the Immediate Window) if
 ' an unbalanced AppFast/AppRestore is ever suspected.
 Public Sub AppReset()

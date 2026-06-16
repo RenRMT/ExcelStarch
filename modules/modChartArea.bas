@@ -4,8 +4,8 @@ Attribute VB_Name = "modChartArea"
 '
 ' Variants
 ' --------
-'   AreaChart    — xlAreaStacked:    series stacked into a single filled area per category
-'   Area100Chart — xlAreaStacked100: series stacked to fill 100% per category
+'   AreaChart    - xlAreaStacked:    series stacked into a single filled area per category
+'   Area100Chart - xlAreaStacked100: series stacked to fill 100% per category
 '
 ' The two variants differ only in chart type, so they share one private worker
 ' (BuildAreaFamily); each public entry point passes its chart type and an
