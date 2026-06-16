@@ -4,8 +4,9 @@ Attribute VB_Name = "modChartBar"
 '
 ' Variants
 ' --------
-'   BarChart        — xlBarClustered: discrete side-by-side bars per category
-'   StackedBarChart — xlBarStacked:   series stacked into a single bar per category
+'   BarChart            — xlBarClustered:   discrete side-by-side bars per category
+'   StackedBarChart     — xlBarStacked:     series stacked into a single bar per category
+'   Stacked100BarChart  — xlBarStacked100:  series stacked to fill 100% per category
 '
 ' Differences
 ' -----------
@@ -79,10 +80,42 @@ CleanFail:
 End Sub
 
 
+Private Sub BuildStacked100BarChart()
+    On Error GoTo CleanFail
+    AppFast
+
+    Dim cht As Chart
+
+    Set cht = GetTargetChart(xlBarStacked100)
+    If cht Is Nothing Then GoTo CleanExit
+
+    ApplyChartPipeline cht, "FILL", BarChartDefaults()
+    Call RemoveShadow(cht)
+
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
+
+    cht.ChartGroups(1).Overlap = 100
+    cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "BuildStacked100BarChart"
+End Sub
+
+
 Sub BarChart()
     BuildBarChart
 End Sub
 
 Sub StackedBarChart()
     BuildStackedBarChart
+End Sub
+
+Sub Stacked100BarChart()
+    BuildStacked100BarChart
 End Sub

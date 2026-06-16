@@ -1,22 +1,24 @@
 Attribute VB_Name = "modChartPie"
 '==== Module: modChartPie ====
-' Pie and treemap chart variants.
+' Pie, donut and treemap chart variants.
 '
 ' Variants
 ' --------
-'   PieChart     — xlPie:     solid filled circle divided into slices
-'   TreemapChart — xlTreemap: hierarchical rectangular tiles
+'   PieChart     — xlPie:      solid filled circle divided into slices
+'   DonutChart   — xlDoughnut: ring divided into slices (pie with a hollow centre)
+'   TreemapChart — xlTreemap:  hierarchical rectangular tiles
 '
 ' Differences
 ' -----------
-'   Pie: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand palette.
+'   Pie/Donut: custom pipeline using SetRoundChartSizeAndTitle; slice colours from brand
+'              palette. Pie and donut share the same builder (BuildPieChartWithDefaults) —
+'              the round-chart sizing and slice colouring are identical; only the chart
+'              type differs (xlPie vs xlDoughnut).
 '   Treemap: custom pipeline; no axes or gridlines; tile colours managed by Excel.
 '
-' Pie uses a custom pipeline (no ApplyChartPipeline) because pie charts have no axes
+' Pie/Donut use a custom pipeline (no ApplyChartPipeline) because they have no axes
 ' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
 ' FormatTitle), InsertLogo, slice colouring.
-'
-' To toggle between pie and donut, use ToggleChartVariant (modChartTools).
 '
 ' Palette: 7 data colours (Ocean, Coral, Sky, Pine, Gold, Rust, Lavender).
 ' Slices beyond 7 use colorNeutral2 (Steel).
@@ -44,6 +46,26 @@ CleanExit:
 CleanFail:
     AppRestore
     MsgError "BuildPieChart"
+End Sub
+
+Private Sub BuildDonutChart()
+    On Error GoTo CleanFail
+    AppFast
+
+    Dim cht As Chart
+
+    ' Donut shares the pie builder — only the chart type differs (xlDoughnut vs xlPie).
+    Set cht = GetTargetChart(xlDoughnut)
+    If cht Is Nothing Then GoTo CleanExit
+
+    Call BuildPieChartWithDefaults(cht, PieChartDefaults())
+
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "BuildDonutChart"
 End Sub
 
 Private Sub BuildPieChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
@@ -209,6 +231,10 @@ End Sub
 
 Sub PieChart()
     BuildPieChart
+End Sub
+
+Sub DonutChart()
+    BuildDonutChart
 End Sub
 
 Sub TreemapChart()

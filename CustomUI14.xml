@@ -7,74 +7,166 @@
 				<group
 					id="ColumnGroup"
 					label="Column">
-					<button
-						id="Column"
-						image="i_chart_vbar"
-						label="Column Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Column_onAction"/>
-					<button
-						id="StackedColumn"
-						image="i_chart_stacked_vbar"
-						label="Stacked Column"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="StackedColumn_onAction"/>
-				</group >
-				<group
-					id="LineGroup"
-					label="Line">
-					<button
-						id="LineChart"
-						image="i_chart_line"
-						label="Line Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="LineChart_onAction"/>
+					<splitButton
+						id="ColumnSplit"
+						size="large">
+						<button
+							id="Column"
+							image="i_chart_vbar"
+							label="Column Chart"
+							supertip="Style a column chart following the COMPANY standards"
+							onAction="Column_onAction"/>
+						<menu id="ColumnMenu">
+							<button
+								id="ColumnMenuPlain"
+								image="i_chart_vbar"
+								label="Column Chart"
+								supertip="Clustered column chart"
+								onAction="Column_onAction"/>
+							<button
+								id="ColumnMenuStacked"
+								image="i_chart_stacked_vbar"
+								label="Stacked Column Chart"
+								supertip="Stacked column chart"
+								onAction="StackedColumn_onAction"/>
+							<button
+								id="ColumnMenu100"
+								image="i_chart_stacked_vbar"
+								label="100% Stacked Column Chart"
+								supertip="100% stacked column chart"
+								onAction="Stacked100Column_onAction"/>
+						</menu>
+					</splitButton>
 				</group >
 				<group
 					id="BarGroup"
 					label="Bar">
-					<button
-						id="Bar"
-						image="i_chart_hbar"
-						label="Bar Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Bar_onAction"/>
-					<button
-						id="Lollipop"
-						image="i_chart_lollipop"
-						label="Lollipop Chart"
-						size="large"
-						supertip="Style a lollipop chart following the COMPANY standards"
-						onAction="Lollipop_onAction"/>
-					<button
-						id="StackedBar"
-						image="i_chart_stacked_hbar"
-						label="Stacked Bar"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="StackedBar_onAction"/>
+					<splitButton
+						id="BarSplit"
+						size="large">
+						<button
+							id="Bar"
+							image="i_chart_hbar"
+							label="Bar Chart"
+							supertip="Style a bar chart following the COMPANY standards"
+							onAction="Bar_onAction"/>
+						<menu id="BarMenu">
+							<button
+								id="BarMenuPlain"
+								image="i_chart_hbar"
+								label="Bar Chart"
+								supertip="Clustered bar chart"
+								onAction="Bar_onAction"/>
+							<button
+								id="BarMenuStacked"
+								image="i_chart_stacked_hbar"
+								label="Stacked Bar Chart"
+								supertip="Stacked bar chart"
+								onAction="StackedBar_onAction"/>
+							<button
+								id="BarMenu100"
+								image="i_chart_stacked_hbar"
+								label="100% Stacked Bar Chart"
+								supertip="100% stacked bar chart"
+								onAction="Stacked100Bar_onAction"/>
+							<button
+								id="BarMenuLollipop"
+								image="i_chart_lollipop"
+								label="Lollipop Chart"
+								supertip="Style a lollipop chart following the COMPANY standards"
+								onAction="Lollipop_onAction"/>
+						</menu>
+					</splitButton>
 				</group >
 				<group
-					id="OtherGraphs"
-					label="Other Graphs">
-					<button
-						id="Pie"
-						image="i_chart_pie"
-						label="Pie Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Pie_onAction"/>
-					<button
-						id="Area"
-						image="i_menu_none"
-						label="Stacked Area Chart"
-						size="large"
-						supertip="Style a chart following the COMPANY standards"
-						onAction="Area_onAction"/>
+					id="LineAreaGroup"
+					label="Line &amp; Area">
+					<splitButton
+						id="LineAreaSplit"
+						size="large">
+						<button
+							id="LineChart"
+							image="i_chart_line"
+							label="Line Chart"
+							supertip="Style a line chart following the COMPANY standards"
+							onAction="LineChart_onAction"/>
+						<menu id="LineAreaMenu">
+							<button
+								id="LineMenuPlain"
+								image="i_chart_line"
+								label="Line Chart"
+								supertip="Line chart"
+								onAction="LineChart_onAction"/>
+							<button
+								id="LineMenuArea"
+								image="i_menu_none"
+								label="Area Chart"
+								supertip="Stacked area chart"
+								onAction="Area_onAction"/>
+							<button
+								id="LineMenuArea100"
+								image="i_menu_none"
+								label="100% Area Chart"
+								supertip="100% stacked area chart"
+								onAction="Area100_onAction"/>
+						</menu>
+					</splitButton>
+				</group >
+				<group
+					id="PieGroup"
+					label="Pie">
+					<splitButton
+						id="PieSplit"
+						size="large">
+						<button
+							id="Pie"
+							image="i_chart_pie"
+							label="Pie Chart"
+							supertip="Style a pie chart following the COMPANY standards"
+							onAction="Pie_onAction"/>
+						<menu id="PieMenu">
+							<button
+								id="PieMenuPie"
+								image="i_chart_pie"
+								label="Pie Chart"
+								supertip="Pie chart"
+								onAction="Pie_onAction"/>
+							<button
+								id="PieMenuDonut"
+								image="i_chart_donut"
+								label="Donut Chart"
+								supertip="Donut chart"
+								onAction="Donut_onAction"/>
+						</menu>
+					</splitButton>
+				</group >
+				<group
+					id="ScatterGroup"
+					label="Scatter">
+					<splitButton
+						id="ScatterSplit"
+						size="large">
+						<button
+							id="Scatter"
+							image="i_menu_none"
+							label="Scatter Plot"
+							supertip="Style a scatter plot following the COMPANY standards"
+							onAction="Scatter_onAction"/>
+						<menu id="ScatterMenu">
+							<button
+								id="ScatterMenuScatter"
+								image="i_menu_none"
+								label="Scatter Plot"
+								supertip="X/Y scatter plot"
+								onAction="Scatter_onAction"/>
+							<button
+								id="ScatterMenuBubble"
+								image="i_menu_none"
+								label="Bubble Plot"
+								supertip="Bubble plot"
+								onAction="Bubble_onAction"/>
+						</menu>
+					</splitButton>
 				</group >
 				<group
 					id="FillColors"
@@ -342,13 +434,6 @@
 						size="normal"
 						supertip="Toggle the chart legend on or off and resize the plot area to match."
 						onAction="ToggleLegendButton_onAction"/>
-					<button
-						id="ToggleChartVariantButton"
-						image="i_menu_none"
-						label="Toggle Variant"
-						size="normal"
-						supertip="Toggle between chart type variants: stacked ↔ 100% stacked, pie ↔ donut, line ↔ line with markers."
-						onAction="ToggleChartVariantButton_onAction"/>
 					<button
 						id="ApplyChartStyleButton"
 						image="i_magic_wand"

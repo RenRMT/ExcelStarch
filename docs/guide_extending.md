@@ -109,15 +109,19 @@ Excel's chart type constants include:
 |---|---|
 | `xlBarClustered` | Horizontal bars, side by side |
 | `xlBarStacked` | Horizontal bars, stacked |
+| `xlBarStacked100` | Horizontal bars, 100% stacked |
 | `xlColumnClustered` | Vertical bars, side by side |
 | `xlColumnStacked` | Vertical bars, stacked |
+| `xlColumnStacked100` | Vertical bars, 100% stacked |
 | `xlLine` | Line chart |
 | `xlLineMarkers` | Line chart with markers |
 | `xlPie` | Pie chart |
 | `xlDoughnut` | Donut chart |
 | `xlXYScatter` | Scatter plot |
+| `xlBubble` | Bubble plot |
 | `xlArea` | Area chart |
 | `xlAreaStacked` | Stacked area chart |
+| `xlAreaStacked100` | 100% stacked area chart |
 
 Use the constant that matches the chart *shape*, not the visual style. The pipeline handles the visual style.
 
@@ -184,44 +188,48 @@ The naming convention is `<ButtonId>_onAction`. The `control As IRibbonControl` 
 
 ---
 
-## Step 4 — Add the ribbon button in `CustomUI14.xml`
+## Step 4 — Add the ribbon control in `CustomUI14.xml`
 
-Find the `<group>` element for the appropriate chart category (Column, Bar, Line, Other Graphs) and add a `<button>` element:
+The chart groups are organised as **split buttons** (Column, Bar, Line & Area, Pie, Scatter). Each group is a `<splitButton size="large">` whose main `<button>` applies the group's default chart, and whose `<menu>` lists each variant.
+
+**To add a variant to an existing group**, add a `<button>` inside that group's `<menu>`:
 
 ```xml
-<button
-    id="Xxx"
-    image="i_chart_xxx"
-    label="Xxx Chart"
-    size="large"
-    supertip="Style a chart following the COMPANY standards"
-    onAction="Xxx_onAction"/>
+<menu id="ColumnMenu">
+    <button id="ColumnMenuPlain"   image="i_chart_vbar"         label="Column Chart"             onAction="Column_onAction"/>
+    <button id="ColumnMenuStacked" image="i_chart_stacked_vbar" label="Stacked Column Chart"     onAction="StackedColumn_onAction"/>
+    <button id="ColumnMenu100"     image="i_chart_stacked_vbar" label="100% Stacked Column Chart" onAction="Stacked100Column_onAction"/>
+    <button id="ColumnMenuXxx"     image="i_chart_xxx"          label="Xxx Column Chart"          onAction="Xxx_onAction"/>   <!-- ← add this -->
+</menu>
 ```
 
 Attributes:
-- **`id`** — unique identifier for this button in the XML. Use the chart type name.
-- **`image`** — the image ID that will be registered in the Custom UI Editor. Must match the filename of the icon (without extension) you add in step 5.
-- **`label`** — text shown below the button icon.
-- **`size`** — `"large"` shows the icon at full size with the label below. `"normal"` shows a smaller icon with the label to the right.
+- **`id`** — unique identifier for this control in the XML (every `id` must be unique across the whole file).
+- **`image`** — the image ID registered in the Custom UI Editor. Must match the icon filename (without extension) you add in step 5.
+- **`label`** — menu-item text.
 - **`onAction`** — the VBA sub name in `modRibbonHandlers.bas`.
 
-### Adding a new ribbon group
+Menu items do **not** take a `size` attribute — only the parent `<splitButton size="large">` sets the size, which controls the large main button. Setting `size` on a `<splitButton>`'s child button or menu is not allowed.
 
-If the new chart type deserves its own group (ribbon section), add a `<group>` element:
+### Adding a new chart group
+
+If the new chart type deserves its own group, add a `<group>` with a large split button, modelled on the existing groups. The main button is the default; the menu holds the variants:
 
 ```xml
-<group id="XxxGroup" label="Xxx Charts">
-    <button
-        id="Xxx"
-        image="i_chart_xxx"
-        label="Xxx Chart"
-        size="large"
-        supertip="Style a chart following the COMPANY standards"
-        onAction="Xxx_onAction"/>
+<group id="XxxGroup" label="Xxx">
+    <splitButton id="XxxSplit" size="large">
+        <button id="Xxx" image="i_chart_xxx" label="Xxx Chart"
+                supertip="Style an Xxx chart following the COMPANY standards"
+                onAction="Xxx_onAction"/>
+        <menu id="XxxMenu">
+            <button id="XxxMenuPlain"   image="i_chart_xxx"  label="Xxx Chart"     onAction="Xxx_onAction"/>
+            <button id="XxxMenuVariant" image="i_chart_yyy"  label="Xxx Variant"   onAction="XxxVariant_onAction"/>
+        </menu>
+    </splitButton>
 </group>
 ```
 
-Groups appear left-to-right in the ribbon in the order they appear in the XML.
+Groups appear left-to-right in the ribbon in the order they appear in the XML. The chart groups sit before the `FillColors` group.
 
 ---
 

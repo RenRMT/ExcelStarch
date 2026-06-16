@@ -4,8 +4,9 @@ Attribute VB_Name = "modChartColumn"
 '
 ' Variants
 ' --------
-'   ColumnChart        — xlColumnClustered: discrete side-by-side columns per category
-'   StackedColumnChart — xlColumnStacked:   series stacked into a single bar per category
+'   ColumnChart            — xlColumnClustered:   discrete side-by-side columns per category
+'   StackedColumnChart     — xlColumnStacked:     series stacked into a single bar per category
+'   Stacked100ColumnChart  — xlColumnStacked100:  series stacked to fill 100% per category
 '
 ' Differences
 ' -----------
@@ -76,10 +77,42 @@ CleanFail:
 End Sub
 
 
+Private Sub BuildStacked100ColumnChart()
+    On Error GoTo CleanFail
+    AppFast
+
+    Dim cht As Chart
+
+    Set cht = GetTargetChart(xlColumnStacked100)
+    If cht Is Nothing Then GoTo CleanExit
+
+    ApplyChartPipeline cht, "FILL", ColumnChartDefaults()
+    Call RemoveShadow(cht)
+
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
+
+    cht.ChartGroups(1).Overlap = 100
+    cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "BuildStacked100ColumnChart"
+End Sub
+
+
 Sub ColumnChart()
     BuildColumnChart
 End Sub
 
 Sub StackedColumnChart()
     BuildStackedColumnChart
+End Sub
+
+Sub Stacked100ColumnChart()
+    BuildStacked100ColumnChart
 End Sub
