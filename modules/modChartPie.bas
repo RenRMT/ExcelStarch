@@ -16,7 +16,9 @@ Attribute VB_Name = "modChartPie"
 '              type differs (xlPie vs xlDoughnut).
 '   Treemap: custom pipeline; no axes or gridlines. Tiles are points of a single
 '              series, so they are coloured per-point from the brand palette via
-'              the same ApplySliceColors helper that pie/donut use.
+'              the same ApplySliceColors helper that pie/donut use. xlTreemap rejects
+'              cht.Shapes.Add*, so its chrome (title/subtitle/logo/source) is built as
+'              grouped WORKSHEET shapes by modTreemapChrome - not inside the chart.
 '
 ' Pie/Donut use a custom pipeline (no ApplyChartPipeline) because they have no axes
 ' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
@@ -210,20 +212,42 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
 
     Dim pointscount As Long
 
-    ' Custom pipeline - treemaps have no axes or gridlines
-    With cht.Parent
-        .Width = chartWidth
-        .Height = chartHeight
-    End With
+    ' Treemap chrome is built on the host worksheet (see modTreemapChrome) because
+    ' xlTreemap rejects cht.Shapes.Add* with error 1004. That requires an embedded
+    ' chart with a host worksheet - chart sheets are unsupported.
+    If TypeName(cht.Parent) <> "ChartObject" Then
+        MsgTreemapNeedsEmbedded
+        Exit Sub
+    End If
+
+    ' Resolve the canvas origin (top-left of the 600x600 layout) BEFORE moving the
+    ' chart or rebuilding chrome - on a re-run it reuses the existing canvas position
+    ' so the layout stays put even if the chart band has been moved.
+    Dim originLeft As Double, originTop As Double
+    TreemapCanvasOrigin cht, originLeft, originTop
+
+    ' Position the chart as a band INSIDE the canvas, leaving room for the title block
+    ' above and the logo/source below (mirrors the classic plot-area geometry). This
+    ' acts on the ChartObject container (not the chartex chart), so it is safe and is
+    ' kept OUT of the defensive block: a positioning failure must surface, not be
+    ' masked into a misplaced layout over a full-size chart.
+    PositionTreemapChart cht, originLeft, originTop
+
+    ' Cosmetic chart-object styling and title/legend removal ARE classic chart
+    ' operations that xlTreemap (a chartex type) can reject with 1004, so apply each
+    ' defensively and skip rather than abort - the worksheet chrome is what matters.
+    ' Make the chart area and plot area transparent with no border so the white canvas
+    ' behind shows through cleanly (the canvas supplies the background, not the chart).
+    On Error Resume Next
     cht.ChartArea.Font.name = fontPrimary
+    cht.ChartArea.Format.Fill.Visible = msoFalse
+    cht.ChartArea.Format.Line.Visible = msoFalse
     cht.ChartArea.Border.LineStyle = xlNone
-
-    ' Tile labels make a legend redundant
-    If cht.hasLegend Then cht.Legend.Delete
-
-    InsertSource cht
-    FormatTitle cht
-    InsertLogo cht  ' must follow size-setting so logo is sized against 600x600
+    cht.PlotArea.Format.Fill.Visible = msoFalse
+    cht.PlotArea.Format.Line.Visible = msoFalse
+    If cht.HasTitle Then cht.ChartTitle.Delete   ' chrome supplies the title; chart has none
+    If cht.hasLegend Then cht.Legend.Delete       ' tile labels make a legend redundant
+    On Error GoTo CleanFail
 
     ' Colour tiles from the brand palette. Treemap tiles are points of a single
     ' series (like pie slices), so the per-point ApplySliceColors loop applies.
@@ -233,7 +257,11 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     On Error Resume Next
     pointscount = cht.SeriesCollection(1).Points.Count
     On Error GoTo CleanFail
-    If pointscount > 0 Then ApplySliceColors cht, pointscount
+    If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True
+
+    ' Title/subtitle/figure/source/logo + white canvas as grouped worksheet shapes,
+    ' laid out from the same canvas origin.
+    BuildTreemapChrome cht, originLeft, originTop
 
     Exit Sub
 CleanFail:

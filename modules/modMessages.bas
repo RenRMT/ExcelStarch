@@ -87,3 +87,17 @@ Public Sub MsgSelectSeries()
     MsgBox "Select a specific data series or data point to apply fill colour.", vbExclamation, "No Series Selected"
 End Sub
 
+' BuildTreemapChrome: treemap chrome (title/logo/source) is placed on the host
+' worksheet, so the chart must be embedded - chart sheets are unsupported.
+Public Sub MsgTreemapNeedsEmbedded()
+    MsgBox "Treemap styling requires an embedded chart on a worksheet, not a chart sheet.", vbExclamation, "Treemap Not Supported Here"
+End Sub
+
+' GroupTreemapChrome: the chrome shapes could not be grouped with the chart;
+' they remain on the sheet but are not bound together for moving/exporting.
+Public Sub MsgTreemapGroupFailed()
+    MsgBox "Could not group the treemap with its title, logo and source boxes." & vbNewLine & _
+           "The shapes were created but are not grouped; select and group them manually before exporting.", _
+           vbExclamation, "Treemap Grouping Failed"
+End Sub
+

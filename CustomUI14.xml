@@ -137,12 +137,6 @@
 								label="Donut Chart"
 								supertip="Donut chart"
 								onAction="Donut_onAction"/>
-							<button
-								id="PieMenuTreemap"
-								image="i_chart_treemap"
-								label="Treemap Chart"
-								supertip="Style a treemap chart following the COMPANY standards"
-								onAction="Treemap_onAction"/>
 						</menu>
 					</splitButton>
 				</group >
@@ -171,6 +165,28 @@
 								label="Bubble Plot"
 								supertip="Bubble plot"
 								onAction="Bubble_onAction"/>
+						</menu>
+					</splitButton>
+				</group >
+				<group
+					id="ComplexGroup"
+					label="Complex">
+					<splitButton
+						id="ComplexSplit"
+						size="large">
+						<button
+							id="Treemap"
+							image="i_chart_treemap"
+							label="Treemap Chart"
+							supertip="Style a treemap chart following the COMPANY standards"
+							onAction="Treemap_onAction"/>
+						<menu id="ComplexMenu">
+							<button
+								id="ComplexMenuTreemap"
+								image="i_chart_treemap"
+								label="Treemap Chart"
+								supertip="Style a treemap chart following the COMPANY standards"
+								onAction="Treemap_onAction"/>
 						</menu>
 					</splitButton>
 				</group >

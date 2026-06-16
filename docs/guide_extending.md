@@ -133,7 +133,7 @@ Pass `"FILL"` for charts where series are represented as filled areas (bars, col
 
 ## Step 2 — Handle charts that cannot use the full pipeline
 
-The 8-step pipeline in `ApplyChartPipeline` assumes the chart has a category axis, a value axis, and gridlines. Some chart types do not, and calling the pipeline on them raises errors.
+The 8-step pipeline in `ApplyChartPipeline` assumes the chart has a category axis, a value axis, and gridlines. Some chart types do not, and calling the pipeline on them raises errors. Three opt-out patterns exist, in increasing distance from the classic pipeline: a **partial pipeline** (pie/donut — same in-chart chrome, fewer steps), **composition** (lollipop — build an existing type then transform it), and a fully **separate pipeline** (chartex types — chrome cannot live in the chart at all).
 
 ### Pie/donut pattern: partial pipeline
 
@@ -170,6 +170,34 @@ End Sub
 
 This pattern is appropriate for chart styles that are visual transforms of an existing type rather than entirely distinct chart types.
 
+### ChartEx pattern: separate worksheet-chrome pipeline
+
+The Excel 2016+ "chartex" chart types — **treemap, sunburst, waterfall, funnel, box & whisker, histogram** — are a different object family from the classic charts above. They are not just axis-less; they are stored in the file under a different schema (`cx:` chartex) that has **no `userShapes` slot**. The practical consequence for this add-in is decisive:
+
+> `cht.Shapes.AddTextbox` and `cht.Shapes.AddPicture` raise **error 1004** on a chartex chart. A treemap (etc.) therefore **cannot own** the title/subtitle/figure/source/logo overlay boxes that every classic chart carries inside `cht.Shapes`.
+
+Because the chrome cannot live inside the chart, it is built as **grouped worksheet shapes** instead. `modTreemapChrome.bas` is the reference implementation. This is a genuinely **separate pipeline** from the classic in-chart one in `modChartBuilder` — not a partial pipeline or a composition. The two do not share code paths (only the geometry constants in `modConfig` and the logo decode in `modEmbeddedImages` are reused).
+
+```vba
+' modChartPie.BuildTreemapChartWithDefaults (abridged)
+If TypeName(cht.Parent) <> "ChartObject" Then MsgTreemapNeedsEmbedded: Exit Sub  ' embedded only
+With cht.Parent: .Width = chartWidth: .Height = chartHeight: End With            ' fix the canvas
+If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True          ' tiles, not series
+BuildTreemapChrome cht   ' worksheet shapes + group (modTreemapChrome) — NOT InsertSource/FormatTitle/InsertLogo
+```
+
+**Implications you must account for when adding another chartex type.** Model the new type on `modTreemapChrome` rather than on the classic builders, and understand that the separate pipeline reaches into several subsystems that assume in-chart chrome:
+
+- **Coordinate model.** Classic chrome uses chart-relative coordinates (origin = chart top-left). Worksheet shapes use absolute sheet coordinates, so every position is offset by `cht.Parent.Left`/`.Top`. The chart is forced to `chartWidth × chartHeight` first so the same `modConfig` geometry constants apply.
+- **Grouping is the contract.** The chrome shapes plus the `ChartObject` are grouped (`ws.Shapes.Range(names).Group`, named `ESTreemapGroup_<chartname>`) so they move and export as one unit. Pass the member-name list as a **`Variant` array**, not `String()` — `Shapes.Range` raises type-mismatch otherwise.
+- **Re-run / re-style.** Re-running must ungroup, delete the prior chrome by name, and rebuild — otherwise chrome duplicates. The classic `SafeDeleteShape` only searches `cht.Shapes` and will **not** find worksheet chrome; use a worksheet-targeted delete (see `RemoveExistingTreemapChrome` / `SafeDeleteSheetShape`).
+- **Export.** `Chart.Export` / `ExportAsFixedFormat` capture only the chart, so they **omit** worksheet chrome. `modExport` detects a chartex group selection and rasterises the whole group to PNG via a temporary chart (`CopyPicture` → temp `ChartObject` → `Chart.Export`). This is **screen-resolution PNG only** — no SVG/PDF, and softer than the classic export.
+- **Toggles / Label Last Point.** These assume chrome is inside the chart (e.g. `MoveYAxisLabelBox` loops `cht.Shapes`; `LabelLastPoint` duplicates the `ChartObject` and relies on chrome riding along). They are **not wired** for chartex chrome. Treemaps sidestep this because they have no axis/legend; another chartex type with axes (waterfall, box & whisker) would need these tools taught about the worksheet group, or excluded from them.
+- **Embedded charts only.** Chart sheets (`cht.Parent` is the `Workbook`) have no host worksheet for the shapes, and are rejected with `MsgTreemapNeedsEmbedded`.
+- **Known prototype limitations.** Moving the chart after creation leaves chrome behind once the group is ungrouped; re-styling requires selecting the chart, not the group. Document these for any new chartex type that inherits the pipeline.
+
+> **Roadmap note.** When a second chartex type is added, generalise this path rather than copying it: rename `modTreemapChrome` → `modChartExChrome`, gate on an `IsChartExType(chartType)` helper, and isolate per-type differences (has-axes? has-legend? tile vs. series colouring) behind small type-specific config — mirroring the `*ChartDefaults()` factory pattern. Keeping classic and chartex as two pipelines is deliberate: the worksheet+group approach is pure upside for chartex (which has no working in-chart path) but would be a regression for classic charts (which export crisply via `Chart.Export`).
+
 ---
 
 ## Step 3 — Register the ribbon handler
@@ -190,7 +218,7 @@ The naming convention is `<ButtonId>_onAction`. The `control As IRibbonControl` 
 
 ## Step 4 — Add the ribbon control in `CustomUI14.xml`
 
-The chart groups are organised as **split buttons** (Column, Bar, Line & Area, Pie, Scatter). Each group is a `<splitButton size="large">` whose main `<button>` applies the group's default chart, and whose `<menu>` lists each variant.
+The chart groups are organised as **split buttons** (Column, Bar, Line & Area, Pie, Scatter, Complex). Each group is a `<splitButton size="large">` whose main `<button>` applies the group's default chart, and whose `<menu>` lists each variant. The **Complex** group holds the chartex types (treemap today); it is kept separate because those charts are not interchangeable with the classic types and use the separate pipeline described in Step 2.
 
 **To add a variant to an existing group**, add a `<button>` inside that group's `<menu>`:
 
