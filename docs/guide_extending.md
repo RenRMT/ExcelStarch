@@ -1,6 +1,6 @@
 # Extending the Add-in with New Chart Types
 
-The add-in is designed so that adding a chart type requires changes in exactly four places: a new `.bas` module, one line in `modRibbonHandlers.bas`, one button in `CustomUI14.xml`, and an icon image. Nothing else needs to change.
+The add-in is designed so that adding a chart type is localised to a few places: a new `.bas` module, a `ChartDefaults` factory in `modConfigCharts.bas`, one line in `modRibbonHandlers.bas`, one button in `CustomUI14.xml`, and an icon image. Nothing else needs to change.
 
 ---
 
@@ -11,18 +11,30 @@ Every chart type module follows the same two-tier pattern:
 ```vba
 ' === Private implementation ===
 Private Sub BuildXxxChart()
+    On Error GoTo CleanFail
+    AppFast                          ' suppress screen updating (modAppState)
+
     Dim cht As Chart
 
-    ' 1. Get a chart to style (duplicate of existing or new from selection)
+    ' 1. Get a chart to style (re-style existing, or new from selection)
     Set cht = GetTargetChart(xlXxxChartType)
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
-    ' 2. Run the shared 8-step formatting pipeline
-    ApplyChartPipeline cht, "FILL"   ' or "LINE" for line/scatter charts
+    ' 2. Run the shared formatting pipeline.
+    '    Signature: ApplyChartPipeline cht, colorMode, defaults
+    '    colorMode: "FILL" for bars/columns/area/pie, "LINE" for line/scatter
+    '    defaults:  a ChartDefaults struct from modConfigCharts
+    ApplyChartPipeline cht, "FILL", XxxChartDefaults()
 
     ' 3. Apply chart-type-specific property overrides
     cht.ChartGroups(1).GapWidth = seriesGapWidth
-    ...
+    ' ...
+CleanExit:
+    AppRestore                       ' always restore screen updating
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "BuildXxxChart"
 End Sub
 
 ' === Public entry point (called by ribbon handler) ===
@@ -32,6 +44,8 @@ End Sub
 ```
 
 The `Private/Public` split is intentional: `BuildXxxChart` holds all logic and is unreachable from outside the module. `XxxChart` is a one-line public stub that the ribbon handler and other modules (such as `modChartLollipop`, which calls `BarChart`) can call by name.
+
+> **Application state:** wrap heavy builders with `AppFast` / `AppRestore` from `modAppState` and restore state on **both** the normal exit and the error handler, so screen updating is never left disabled. These calls are re-entrancy safe (depth-counted), so a builder that calls another builder works correctly.
 
 ---
 
@@ -52,20 +66,31 @@ Option Explicit
 
 
 Private Sub BuildXxxChart()
+    On Error GoTo CleanFail
+    AppFast
+
     Dim cht As Chart
 
     Set cht = GetTargetChart(xlXxxClustered)   ' use the appropriate xlChartType constant
-    If cht Is Nothing Then Exit Sub
+    If cht Is Nothing Then GoTo CleanExit
 
-    ApplyChartPipeline cht, "FILL"
+    ApplyChartPipeline cht, "FILL", XxxChartDefaults()   ' defaults from modConfigCharts
     Call RemoveShadow(cht)
 
     ' Chart-type-specific properties
-    cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
-    cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    If cht.HasAxis(xlCategory) Then
+        cht.Axes(xlCategory).MajorTickMark = xlTickMarkNone
+        cht.Axes(xlCategory).MinorTickMark = xlTickMarkNone
+    End If
 
     cht.ChartGroups(1).Overlap  = seriesOverlap
     cht.ChartGroups(1).GapWidth = seriesGapWidth
+CleanExit:
+    AppRestore
+    Exit Sub
+CleanFail:
+    AppRestore
+    MsgError "BuildXxxChart"
 End Sub
 
 
@@ -73,6 +98,8 @@ Sub XxxChart()
     BuildXxxChart
 End Sub
 ```
+
+You will also need a `XxxChartDefaults()` factory in `modConfigCharts.bas` that returns a `ChartDefaults` struct describing which gridlines, axes, and legend this chart type should get. Copy an existing one (e.g. `ColumnChartDefaults`) as a starting point.
 
 ### Which `xlChartType` constant to use
 
@@ -109,12 +136,12 @@ The 8-step pipeline in `ApplyChartPipeline` assumes the chart has a category axi
 `modChartPie.bas` demonstrates the opt-out pattern. Instead of calling `ApplyChartPipeline`, it calls only the pipeline steps that are safe for a pie chart:
 
 ```vba
-Private Sub BuildPieChart()
-    ' ... sizing and title setup ...
-    Call InsertLogo(cht)
-    Call InsertSource(cht)
-    ' Skips: OuterFormat, FormatGridlines, FormatXAxis, FormatSeriesColors
-    Call ApplySliceColors(cht)
+Private Sub BuildPieChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
+    InsertSource cht
+    SetRoundChartSizeAndTitle cht, defaults     ' pie-specific sizing + title
+    InsertLogo cht                              ' after sizing, so logo scales correctly
+    ' Skips the axis/gridline pipeline steps entirely
+    ApplySliceColors cht, cht.SeriesCollection(1).Points.Count
 End Sub
 ```
 
@@ -127,7 +154,7 @@ Use this approach if your chart type lacks axes, has a non-standard layout, or n
 ```vba
 Private Sub BuildLollipopChart()
     BarChart    ' run the full bar chart pipeline on a new chart
-    Set cht = ActiveChart
+    Set cht = ResolveActiveChart()
     If cht Is Nothing Then Exit Sub
 
     ' Post-process: convert bars to lollipop sticks and dots
