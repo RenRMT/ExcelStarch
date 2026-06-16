@@ -53,20 +53,6 @@ Public Sub MsgUnknownColor(ByVal colorName As String)
     MsgBox "Unknown colour '" & colorName & "'.", vbExclamation, "Unknown Colour"
 End Sub
 
-' GrayOutChart: confirmation prompt before graying out; returns vbOK or vbCancel
-Public Function MsgGrayOutConfirm(ByVal duplicateChart As Boolean) As VbMsgBoxResult
-    MsgGrayOutConfirm = MsgBox( _
-        IIf(duplicateChart, _
-            "This will duplicate your chart and make the duplicate gray.", _
-            "This will make your current chart gray."), _
-        vbExclamation + vbOKCancel)
-End Function
-
-' GrayOutChart: the duplicated chart could not be resolved after Duplicate.Select
-Public Sub MsgCouldNotResolveDuplicate()
-    MsgBox "Could not resolve duplicated chart.", vbExclamation, "Duplicate Error"
-End Sub
-
 ' modExport: export on macOS is not supported
 Public Sub MsgExportMacUnsupported()
     MsgBox "Chart export is not supported on Mac.", vbExclamation, "Unsupported Platform"

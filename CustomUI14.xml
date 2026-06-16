@@ -305,13 +305,6 @@
 						size="normal"
 						supertip="Reverse the fill colour order across all chart series."
 						onAction="InvertRamp_onAction"/>
-					<button
-						id="StartWithGrayButton"
-						image="i_menu_grey"
-						label="Reset to Grey"
-						size="normal"
-						supertip="Reset all chartobjects to grey."
-						onAction="StartWithGrayButton_onAction"/>
 				</group>
 				<group id="Customisation" label="Customisation">
 					<button

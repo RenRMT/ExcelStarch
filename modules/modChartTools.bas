@@ -10,15 +10,12 @@ Attribute VB_Name = "modChartTools"
 '   ToggleGridlines       — cycles major gridlines: None -> Horizontal -> Vertical -> Both
 '   ToggleLegendButton       — toggles legend visibility and resizes the plot area;
 '                           pie/donut use square plot area constants; operates in-place
-'   StartWithGray         — resets all series to neutral grey (colorNeutral1) in-place;
-'                           GrayOutChart is the parameterised core with optional duplication
-'                           and confirmation prompt (also public for potential pipeline use)
 '
 ' Duplication behaviour
 ' ---------------------
 '   LabelLastPoint duplicates the source chart by default so the original is preserved.
-'   StartWithGray, ToggleGridlines, and ToggleLegendButton operate in-place on
-'   the active chart — they are intended for iterative adjustment, not one-shot creation.
+'   ToggleGridlines and ToggleLegendButton operate in-place on the active chart —
+'   they are intended for iterative adjustment, not one-shot creation.
 Option Explicit
 
 
@@ -514,90 +511,6 @@ Private Function GetStyleColorMode(ByVal ct As Long) As String
             GetStyleColorMode = "FILL"
     End Select
 End Function
-
-
-' ============================================================
-'   RESET TO GREY
-' ============================================================
-' Grays out all series on a chart (line + fill).
-' StartWithGray is the ribbon entry point: duplicates the source chart, then
-' applies colorNeutral1. GrayOutChart is parameterised for potential pipeline use.
-
-Public Sub GrayOutChart(Optional ByVal cht As Chart = Nothing, _
-                        Optional ByVal duplicateChart As Boolean = True, _
-                        Optional ByVal grayColor As Long = 0)
-    On Error GoTo CleanFail
-
-    Dim targetChart As Chart
-
-    If cht Is Nothing Then
-        If ActiveChart Is Nothing Then
-            MsgNoActiveChart
-            Exit Sub
-        End If
-        Set targetChart = ActiveChart
-    Else
-        Set targetChart = cht
-    End If
-
-    If grayColor = 0 Then grayColor = colorNeutral2
-
-    If MsgGrayOutConfirm(duplicateChart) <> vbOK Then Exit Sub
-
-    If duplicateChart Then
-        Dim dupShp As Shape
-        Set dupShp = targetChart.Parent.Duplicate
-        If dupShp Is Nothing Then
-            MsgCouldNotResolveDuplicate
-            Exit Sub
-        End If
-        Set targetChart = dupShp.Chart
-    End If
-
-    ApplyGrayToChart targetChart, grayColor
-    Exit Sub
-
-CleanFail:
-    MsgError "GrayOutChart"
-End Sub
-
-Public Sub StartWithGray()
-    On Error GoTo CleanFail
-
-    Dim cht As Chart
-    Set cht = ResolveActiveChart()
-
-    If cht Is Nothing Then
-        MsgSelectTarget
-        Exit Sub
-    End If
-
-    ApplyGrayToChart cht, colorNeutral1
-    Exit Sub
-
-CleanFail:
-    MsgError "StartWithGray"
-End Sub
-
-
-Private Sub ApplyGrayToChart(cht As Chart, ByVal grayColor As Long)
-    ' Applies gray color to all series line and fill in a chart.
-    Dim i As Long, n As Long
-    n = cht.SeriesCollection.Count
-    For i = 1 To n
-        With cht.SeriesCollection(i).Format
-            With .Line
-                .Visible = msoTrue
-                .ForeColor.RGB = grayColor
-            End With
-            With .Fill
-                .Visible = msoTrue
-                .ForeColor.RGB = grayColor
-                .Solid
-            End With
-        End With
-    Next i
-End Sub
 
 
 ' ============================================================
