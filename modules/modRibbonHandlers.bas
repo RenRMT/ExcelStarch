@@ -21,7 +21,6 @@ Public Sub Area_onAction(control As IRibbonControl): AreaChart: End Sub
 Public Sub ToggleLegendButton_onAction(control As IRibbonControl): ToggleLegendButton: End Sub
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub
 Public Sub ToggleGridlinesButton_onAction(control As IRibbonControl): ToggleGridlines: End Sub
-Public Sub ToggleAxesButton_onAction(control As IRibbonControl): ToggleAxes: End Sub
 Public Sub ToggleAxisLabelsButton_onAction(control As IRibbonControl): ToggleAxisLabelsButton: End Sub
 Public Sub ToggleDataLabelsButton_onAction(control As IRibbonControl): ToggleDataLabels: End Sub
 Public Sub ToggleChartVariantButton_onAction(control As IRibbonControl): ToggleChartVariant: End Sub

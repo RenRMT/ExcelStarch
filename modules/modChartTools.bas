@@ -259,73 +259,6 @@ End Sub
 
 
 ' ============================================================
-'   TOGGLE AXES
-' ============================================================
-' Cycles axis visibility through four states in sequence:
-'   None -> Y axis only -> X axis only -> Both -> None
-' Operates in-place on the active chart (no duplication).
-
-Public Sub ToggleAxes()
-    If ActiveChart Is Nothing Then
-        MsgNoActiveChart
-        Exit Sub
-    End If
-
-    Dim cht As Chart
-    Set cht = ActiveChart
-
-    Dim hasY As Boolean     ' value axis (Y)
-    Dim hasX As Boolean     ' category axis (X)
-
-    hasY = cht.HasAxis(xlValue)
-    hasX = cht.HasAxis(xlCategory)
-
-    Dim nextY As Boolean
-    Dim nextX As Boolean
-
-    If Not hasY And Not hasX Then
-        nextY = True:  nextX = False        ' None -> Y only
-    ElseIf hasY And Not hasX Then
-        nextY = False: nextX = True         ' Y only -> X only
-    ElseIf Not hasY And hasX Then
-        nextY = True:  nextX = True         ' X only -> Both
-    Else
-        nextY = False: nextX = False        ' Both -> None
-    End If
-
-    cht.HasAxis(xlValue, xlPrimary) = nextY
-    cht.HasAxis(xlCategory, xlPrimary) = nextX
-
-    If nextY Then ApplyValueAxisStyle cht
-    If nextX Then ApplyCategoryAxisStyle cht
-End Sub
-
-Private Sub ApplyValueAxisStyle(cht As Chart)
-    If Not cht.HasAxis(xlValue) Then Exit Sub
-    With cht.Axes(xlValue)
-        .TickLabels.Font.Size = axisFontSize
-        .TickLabels.Font.Color = colorBrand3
-    End With
-    FormatAxisLineWhite cht.Axes(xlValue)
-End Sub
-
-Private Sub ApplyCategoryAxisStyle(cht As Chart)
-    If Not cht.HasAxis(xlCategory) Then Exit Sub
-
-    Dim ax As Axis
-    Set ax = cht.Axes(xlCategory, xlPrimary)
-
-    'Format tick labels
-    With ax.TickLabels
-        .Font.Size = axisFontSize
-        .Font.Color = colorBrand3
-    End With
-
-    FormatAxisLineWhite ax
-End Sub
-
-
-' ============================================================
 '   TOGGLE LEGEND
 ' ============================================================
 ' Toggles legend visibility and resizes the plot area to match.
@@ -483,8 +416,8 @@ End Sub
 ' Cycles axis tick-label visibility through four states in sequence:
 '   None -> X only -> Y only -> Both -> None
 ' Uses TickLabelPosition to show/hide labels without removing the axis.
-' Axes that do not exist (removed via ToggleAxes) are treated as "not visible"
-' and skipped during assignment. Chart types with no axes (pie, donut) are a no-op.
+' Axes that do not exist on the chart are treated as "not visible" and skipped
+' during assignment. Chart types with no axes (pie, donut) are a no-op.
 ' Operates in-place on the active chart (no duplication).
 
 Public Sub ToggleAxisLabels()
@@ -781,10 +714,17 @@ Public Sub ToggleDataLabels()
                 End If
                 If srs.HasDataLabels Then
                     With srs.DataLabels
-                        .Font.Color = GetLabelContrastColor(srs)
                         .Font.Size = axisFontSize
                         .Font.name = fontPrimary
                     End With
+                    ' Pie/donut slices each have their own fill colour, so contrast
+                    ' must be computed per point. All other types share one series
+                    ' fill, so a single series-level contrast colour is correct.
+                    If IsPieChartType(cht.chartType) Then
+                        ApplyPerPointContrast srs
+                    Else
+                        srs.DataLabels.Font.Color = GetLabelContrastColor(srs)
+                    End If
                 End If
         End Select
     Next i
@@ -866,23 +806,43 @@ Private Function GetLabelContrastColor(srs As Series) As Long
             Exit Function
     End Select
 
-    Dim fillRGB As Long
-    fillRGB = srs.Format.Fill.ForeColor.RGB
-
-    ' Calculate WCAG relative luminance of the series fill
-    Dim lum As Double
-    lum = RelativeLuminance(fillRGB)
-
-    ' Use white text on dark fills, dark text on light fills
-    If lum < wcagLuminanceThreshold Then
-        GetLabelContrastColor = colorWhite
-    Else
-        GetLabelContrastColor = colorBrand3
-    End If
+    GetLabelContrastColor = ContrastColorForFill(srs.Format.Fill.ForeColor.RGB)
     Exit Function
 
 UseFallback:
     GetLabelContrastColor = colorWhite
+End Function
+
+' Colours each point's data label against that point's own fill. Used for
+' pie/donut, where every slice has a distinct colour, so a single series-level
+' contrast colour (as GetLabelContrastColor returns) would be wrong for all but
+' one slice. Per-point errors are skipped so one bad slice can't abort the rest.
+Private Sub ApplyPerPointContrast(srs As Series)
+    Dim p As Long
+    Dim nPts As Long
+
+    On Error Resume Next
+    nPts = srs.Points.Count
+    On Error GoTo 0
+    If nPts = 0 Then Exit Sub
+
+    For p = 1 To nPts
+        On Error Resume Next
+        srs.Points(p).DataLabel.Font.Color = _
+            ContrastColorForFill(srs.Points(p).Format.Fill.ForeColor.RGB)
+        On Error GoTo 0
+    Next p
+End Sub
+
+' Returns white or dark brand text for best contrast against the given fill
+' colour, using WCAG relative luminance: white text on dark fills, dark text
+' on light fills.
+Private Function ContrastColorForFill(ByVal fillRGB As Long) As Long
+    If RelativeLuminance(fillRGB) < wcagLuminanceThreshold Then
+        ContrastColorForFill = colorWhite
+    Else
+        ContrastColorForFill = colorBrand3
+    End If
 End Function
 
 ' Calculates WCAG relative luminance of an RGB color.

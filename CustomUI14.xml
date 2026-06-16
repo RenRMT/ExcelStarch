@@ -336,15 +336,8 @@
 						supertip="Cycle gridlines on the selected chart: none → horizontal → vertical → both."
 						onAction="ToggleGridlinesButton_onAction"/>
 					<button
-						id="ToggleAxisButton"
-						image="i_menu_axislines"
-						label="Toggle Axis Lines"
-						size="normal"
-						supertip="Cycle axis lines on the selected chart: none → x-axis → y-axis → both."
-						onAction="ToggleAxesButton_onAction"/>
-					<button
 						id="ToggleAxisLabelsButton"
-						image="i_menu_none"
+						image="i_menu_axislines"
 						label="Toggle Axis Labels"
 						size="normal"
 						supertip="Cycle axis tick labels on the selected chart: none → x-axis → y-axis → both."
