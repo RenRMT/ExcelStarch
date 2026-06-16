@@ -16,7 +16,9 @@ Attribute VB_Name = "modChartPie"
 '              type differs (xlPie vs xlDoughnut).
 '   Treemap: custom pipeline; no axes or gridlines. Tiles are points of a single
 '              series, so they are coloured per-point from the brand palette via
-'              the same ApplySliceColors helper that pie/donut use.
+'              the same ApplySliceColors helper that pie/donut use. xlTreemap rejects
+'              cht.Shapes.Add*, so its chrome (title/subtitle/logo/source) is built as
+'              grouped WORKSHEET shapes by modTreemapChrome - not inside the chart.
 '
 ' Pie/Donut use a custom pipeline (no ApplyChartPipeline) because they have no axes
 ' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
@@ -210,6 +212,14 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
 
     Dim pointscount As Long
 
+    ' Treemap chrome is built on the host worksheet (see modTreemapChrome) because
+    ' xlTreemap rejects cht.Shapes.Add* with error 1004. That requires an embedded
+    ' chart with a host worksheet - chart sheets are unsupported.
+    If TypeName(cht.Parent) <> "ChartObject" Then
+        MsgTreemapNeedsEmbedded
+        Exit Sub
+    End If
+
     ' Custom pipeline - treemaps have no axes or gridlines
     With cht.Parent
         .Width = chartWidth
@@ -221,10 +231,6 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     ' Tile labels make a legend redundant
     If cht.hasLegend Then cht.Legend.Delete
 
-    InsertSource cht
-    FormatTitle cht
-    InsertLogo cht  ' must follow size-setting so logo is sized against 600x600
-
     ' Colour tiles from the brand palette. Treemap tiles are points of a single
     ' series (like pie slices), so the per-point ApplySliceColors loop applies.
     ' Excel's acceptance of per-point .Fill on xlTreemap is not guaranteed, so
@@ -233,7 +239,10 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     On Error Resume Next
     pointscount = cht.SeriesCollection(1).Points.Count
     On Error GoTo CleanFail
-    If pointscount > 0 Then ApplySliceColors cht, pointscount
+    If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True
+
+    ' Title/subtitle/figure/source/logo as grouped worksheet shapes over the chart.
+    BuildTreemapChrome cht
 
     Exit Sub
 CleanFail:
