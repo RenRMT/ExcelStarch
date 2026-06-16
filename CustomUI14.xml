@@ -99,13 +99,13 @@
 								onAction="LineChart_onAction"/>
 							<button
 								id="LineMenuArea"
-								image="i_menu_none"
+								image="i_chart_area"
 								label="Area Chart"
 								supertip="Stacked area chart"
 								onAction="Area_onAction"/>
 							<button
 								id="LineMenuArea100"
-								image="i_menu_none"
+								image="i_chart_100_area"
 								label="100% Area Chart"
 								supertip="100% stacked area chart"
 								onAction="Area100_onAction"/>
@@ -148,26 +148,35 @@
 						size="large">
 						<button
 							id="Scatter"
-							image="i_menu_none"
+							image="i_chart_scatter"
 							label="Scatter Plot"
 							supertip="Style a scatter plot following the COMPANY standards"
 							onAction="Scatter_onAction"/>
 						<menu id="ScatterMenu">
 							<button
 								id="ScatterMenuScatter"
-								image="i_menu_none"
+								image="i_chart_scatter"
 								label="Scatter Plot"
 								supertip="X/Y scatter plot"
 								onAction="Scatter_onAction"/>
 							<button
 								id="ScatterMenuBubble"
-								image="i_menu_none"
+								image="i_chart_bubble"
 								label="Bubble Plot"
 								supertip="Bubble plot"
 								onAction="Bubble_onAction"/>
 						</menu>
 					</splitButton>
 				</group >
+				<group id="AutoStyle" label="Auto Style">
+					<button
+						id="ApplyChartStyleButton"
+						image="i_magic_wand"
+						label="Apply Chart Style"
+						size="large"
+						supertip="Apply the house style to the selected chart, whatever its type. Styles what it safely can and leaves the rest unchanged."
+						onAction="ApplyChartStyleButton_onAction"/>
+				</group>
 				<group
 					id="FillColors"
 					label="Fill Colors">
@@ -397,8 +406,6 @@
 						size="normal"
 						supertip="Reverse the fill colour order across all chart series."
 						onAction="InvertRamp_onAction"/>
-				</group>
-				<group id="Customisation" label="Customisation">
 					<button
 						id="LabelLastPointButton"
 						image="i_menu_labels"
@@ -406,6 +413,8 @@
 						size="normal"
 						supertip="Add series names to the last point on the graph."
 						onAction="LabelLastPointButton_onAction"/>
+				</group>
+				<group id="Customisation" label="Toggles">
 					<button
 						id="ToggleDataLabelsButton"
 						image="i_menu_labels"
@@ -429,18 +438,11 @@
 						onAction="ToggleAxisLabelsButton_onAction"/>
 					<button
 						id="ToggleLegendButton"
-						image="i_menu_none"
+						image="i_menu_legend"
 						label="Toggle Legend"
 						size="normal"
 						supertip="Toggle the chart legend on or off and resize the plot area to match."
 						onAction="ToggleLegendButton_onAction"/>
-					<button
-						id="ApplyChartStyleButton"
-						image="i_magic_wand"
-						label="Apply Chart Style"
-						size="normal"
-						supertip="Apply the house style to the selected chart, whatever its type. Styles what it safely can and leaves the rest unchanged."
-						onAction="ApplyChartStyleButton_onAction"/>
 				</group>
 				<group id="ChartExportButton" label="Export">
 					<button

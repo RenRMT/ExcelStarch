@@ -19,7 +19,7 @@ Each chart group is a **split button**: clicking the large button body applies t
 | <img src="../icons/i_chart_hbar.png" height="28"> | Bar | Clustered bar | Bar, Stacked Bar, 100% Stacked Bar, Lollipop |
 | <img src="../icons/i_chart_line.png" height="28"> | Line & Area | Line | Line, Area (stacked), 100% Area |
 | <img src="../icons/i_chart_pie.png" height="28"> | Pie | Pie | Pie, Donut |
-| <img src="../icons/i_menu_none.png" height="28"> | Scatter | Scatter plot | Scatter Plot, Bubble Plot |
+| <img src="../icons/i_chart_scatter.png" height="28"> | Scatter | Scatter plot | Scatter Plot, Bubble Plot |
 
 > **Lollipop** is a horizontal bar with error-bar sticks and dot markers. **Scatter** and **Bubble** plots expect X/Y numeric data.
 
@@ -107,20 +107,30 @@ Maximum 15 series for diverging ramps (7 + grey centre + 7).
 |---|---|---|
 | <img src="../icons/i_menu_order.png" height="28"> | Toggle Palette Order | Switch series colour order between the two palette arrangements |
 | <img src="../icons/i_menu_invert.png" height="28"> | Invert Ramp | Reverse the current fill colour order across all series without re-applying a ramp — useful for flipping a ramp direction or a custom arrangement |
+| <img src="../icons/i_menu_labels.png" height="28"> | Label Last Point | Duplicate the chart and add series-name labels to the last data point of each series (line charts); narrows the plot area to make room |
+
+---
+
+## Apply chart style
+
+The *Auto Style* group restyles an existing chart in place. Select or activate the chart first.
+
+| | Button | Effect |
+|---|---|---|
+| <img src="../icons/i_magic_wand.png" height="28"> | Apply Chart Style | Apply the house style to the selected chart, whatever its type. Styles what it safely can and leaves the rest unchanged |
 
 ---
 
 ## Chart tools
 
-The *Customisation* group adjusts an existing chart. Select or activate the chart first.
+The *Toggles* group adjusts an existing chart. Select or activate the chart first.
 
 | | Button | Effect |
 |---|---|---|
-| <img src="../icons/i_menu_labels.png" height="28"> | Label Last Point | Duplicate the chart and add series-name labels to the last data point of each series (line charts); narrows the plot area to make room |
 | <img src="../icons/i_menu_labels.png" height="28"> | Toggle Data Labels | Cycle data labels: none → outside end → inside centre. On pie/donut and stacked charts, inside labels use a contrast colour per slice/segment. Applies to the selected series, or all series if none is selected |
 | <img src="../icons/i_menu_gridlines.png" height="28"> | Toggle Gridlines | Cycle gridlines: none → horizontal → vertical → both |
 | <img src="../icons/i_menu_axislines.png" height="28"> | Toggle Axis Labels | Cycle axis tick labels: none → x-axis → y-axis → both |
-| <img src="../icons/i_menu_none.png" height="28"> | Toggle Legend | Toggle the chart legend on/off and resize the plot area to match |
+| <img src="../icons/i_menu_legend.png" height="28"> | Toggle Legend | Toggle the chart legend on/off and resize the plot area to match |
 
 ---
 
