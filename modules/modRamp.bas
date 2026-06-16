@@ -14,6 +14,9 @@ Attribute VB_Name = "modRamp"
 ' Maximum series: 7 (single), 15 (diverging: 7 + grey + 7).
 Option Explicit
 
+Private Const LASTUSED_RAMP_KEY As String = "LastUsedRampTag"
+Private Const LASTUSED_DIV_KEY  As String = "LastUsedDivergingTag"
+
 ' ============================================================
 '   PUBLIC ENTRY POINTS
 ' ============================================================
@@ -56,17 +59,35 @@ Public Sub ApplyColorRamp(ByVal rampName As String)
         MsgNoActiveChart
         Exit Sub
     End If
-    BuildColorRamp cht, UCase$(Trim$(rampName))
+
+    rampName = UCase$(Trim$(rampName))
+
+    If rampName = "LASTUSED" Then
+        rampName = GetLastUsedRampTag()
+        If rampName = "" Then rampName = "A"   ' default to Ocean
+    End If
+
+    BuildColorRamp cht, rampName
+    SaveLastUsedRampTag rampName
 End Sub
 
 Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
+    tagValue = UCase$(Trim$(tagValue))
+
+    If tagValue = "LASTUSED" Then
+        tagValue = GetLastUsedDivergingTag()
+        If tagValue = "" Then tagValue = "A|B"  ' default to Ocean — Coral
+    End If
+
     Dim parts() As String
-    parts = Split(UCase$(Trim$(tagValue)), "|")
+    parts = Split(tagValue, "|")
     If UBound(parts) < 1 Then
         MsgInvalidDivergingTag
         Exit Sub
     End If
+
     ApplyDivergingRamp parts(0), parts(1)
+    SaveLastUsedDivergingTag tagValue
 End Sub
 
 Public Sub ApplyDivergingRamp(ByVal leftRamp As String, ByVal rightRamp As String)
@@ -219,6 +240,53 @@ Public Function ResolveActiveChart() As Chart
         Set ResolveActiveChart = Selection.Chart
     End If
 End Function
+
+' ============================================================
+'   LAST USED TRACKING
+' ============================================================
+
+Private Sub SaveLastUsedRampTag(ByVal rampName As String)
+    On Error Resume Next
+    ThisWorkbook.CustomDocumentProperties(LASTUSED_RAMP_KEY).Value = rampName
+    If Err.Number <> 0 Then
+        Err.Clear
+        ThisWorkbook.CustomDocumentProperties.Add LASTUSED_RAMP_KEY, , msoPropertyTypeString, rampName
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Function GetLastUsedRampTag() As String
+    On Error Resume Next
+    Dim val As String
+    val = ThisWorkbook.CustomDocumentProperties(LASTUSED_RAMP_KEY).Value
+    If Err.Number = 0 Then GetLastUsedRampTag = val
+    Err.Clear
+    On Error GoTo 0
+End Function
+
+Private Sub SaveLastUsedDivergingTag(ByVal tagValue As String)
+    On Error Resume Next
+    ThisWorkbook.CustomDocumentProperties(LASTUSED_DIV_KEY).Value = tagValue
+    If Err.Number <> 0 Then
+        Err.Clear
+        ThisWorkbook.CustomDocumentProperties.Add LASTUSED_DIV_KEY, , msoPropertyTypeString, tagValue
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Function GetLastUsedDivergingTag() As String
+    On Error Resume Next
+    Dim val As String
+    val = ThisWorkbook.CustomDocumentProperties(LASTUSED_DIV_KEY).Value
+    If Err.Number = 0 Then GetLastUsedDivergingTag = val
+    Err.Clear
+    On Error GoTo 0
+End Function
+
+
+' ============================================================
+'   SHARED HELPERS
+' ============================================================
 
 ' Fills a 1-to-7 Long array with the ramp constants for rampName.
 ' Returns False and shows an error if the name is unrecognised.
