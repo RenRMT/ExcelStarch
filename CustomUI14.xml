@@ -137,6 +137,12 @@
 								label="Donut Chart"
 								supertip="Donut chart"
 								onAction="Donut_onAction"/>
+							<button
+								id="PieMenuTreemap"
+								image="i_chart_treemap"
+								label="Treemap Chart"
+								supertip="Style a treemap chart following the COMPANY standards"
+								onAction="Treemap_onAction"/>
 						</menu>
 					</splitButton>
 				</group >

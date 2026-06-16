@@ -18,10 +18,10 @@ Each chart group is a **split button**: clicking the large button body applies t
 | <img src="../icons/i_chart_vbar.png" height="28"> | Column | Clustered column | Column, Stacked Column, 100% Stacked Column |
 | <img src="../icons/i_chart_hbar.png" height="28"> | Bar | Clustered bar | Bar, Stacked Bar, 100% Stacked Bar, Lollipop |
 | <img src="../icons/i_chart_line.png" height="28"> | Line & Area | Line | Line, Area (stacked), 100% Area |
-| <img src="../icons/i_chart_pie.png" height="28"> | Pie | Pie | Pie, Donut |
+| <img src="../icons/i_chart_pie.png" height="28"> | Pie | Pie | Pie, Donut, Treemap |
 | <img src="../icons/i_chart_scatter.png" height="28"> | Scatter | Scatter plot | Scatter Plot, Bubble Plot |
 
-> **Lollipop** is a horizontal bar with error-bar sticks and dot markers. **Scatter** and **Bubble** plots expect X/Y numeric data.
+> **Lollipop** is a horizontal bar with error-bar sticks and dot markers. **Scatter** and **Bubble** plots expect X/Y numeric data. **Treemap** (Excel 2016+) shows hierarchical rectangular tiles coloured from the brand palette; tile labels replace the legend.
 
 The pipeline applies automatically: chart size, font, axis styling, gridlines, series colours, title/subtitle text boxes, figure and y-axis labels, logo, and a source/notes placeholder.
 

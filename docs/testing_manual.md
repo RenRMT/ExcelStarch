@@ -26,6 +26,7 @@ Each is a split button: the body applies the default; the dropdown lists variant
 | Line | A | Line per series; axis starts flush on first point; outside tick marks |
 | Area / 100% Area (Line & Area menu) | A | Stacked filled areas flush to edges; axis lines white |
 | Pie / Donut (Pie menu) | A (1 series) | Square canvas, centred plot; per-slice palette colours |
+| Treemap (Pie menu, Excel 2016+) | A (1 series) | Hierarchical tiles; per-tile palette colours; no legend. If Excel rejects per-point colouring, tiles keep default colours and **no error dialog** appears |
 | Scatter / Bubble (Scatter menu) | S | X/Y markers (bubble: third column sizes the bubbles) |
 
 Spot-check that re-running a builder while a chart is **selected/active** re-styles it rather than creating a duplicate.

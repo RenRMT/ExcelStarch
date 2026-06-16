@@ -14,7 +14,9 @@ Attribute VB_Name = "modChartPie"
 '              palette. Pie and donut share the same builder (BuildPieChartWithDefaults) -
 '              the round-chart sizing and slice colouring are identical; only the chart
 '              type differs (xlPie vs xlDoughnut).
-'   Treemap: custom pipeline; no axes or gridlines; tile colours managed by Excel.
+'   Treemap: custom pipeline; no axes or gridlines. Tiles are points of a single
+'              series, so they are coloured per-point from the brand palette via
+'              the same ApplySliceColors helper that pie/donut use.
 '
 ' Pie/Donut use a custom pipeline (no ApplyChartPipeline) because they have no axes
 ' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
@@ -92,7 +94,9 @@ End Sub
 
 ' Public so the chart-type-agnostic styler (modChartStyle.ApplyChartStyle) can
 ' reuse per-slice colouring instead of duplicating the loop.
-Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
+' silent: see InsertLogo - suppresses the failure message for the agnostic
+' styler, where a chart type (e.g. treemap) may reject per-point colouring.
+Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long, Optional ByVal silent As Boolean = False)
     On Error GoTo CleanFail
 
     Dim i As Long
@@ -119,7 +123,7 @@ Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long)
 
     Exit Sub
 CleanFail:
-    MsgError "ApplySliceColors"
+    If Not silent Then MsgError "ApplySliceColors"
 End Sub
 
 
@@ -204,6 +208,8 @@ End Sub
 Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
+    Dim pointscount As Long
+
     ' Custom pipeline - treemaps have no axes or gridlines
     With cht.Parent
         .Width = chartWidth
@@ -218,6 +224,16 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     InsertSource cht
     FormatTitle cht
     InsertLogo cht  ' must follow size-setting so logo is sized against 600x600
+
+    ' Colour tiles from the brand palette. Treemap tiles are points of a single
+    ' series (like pie slices), so the per-point ApplySliceColors loop applies.
+    ' Excel's acceptance of per-point .Fill on xlTreemap is not guaranteed, so
+    ' read the point count defensively and skip colouring rather than raising a
+    ' misleading error if the type rejects it.
+    On Error Resume Next
+    pointscount = cht.SeriesCollection(1).Points.Count
+    On Error GoTo CleanFail
+    If pointscount > 0 Then ApplySliceColors cht, pointscount
 
     Exit Sub
 CleanFail:
