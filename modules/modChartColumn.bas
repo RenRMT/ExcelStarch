@@ -4,9 +4,9 @@ Attribute VB_Name = "modChartColumn"
 '
 ' Variants
 ' --------
-'   ColumnChart            — xlColumnClustered:   discrete side-by-side columns per category
-'   StackedColumnChart     — xlColumnStacked:     series stacked into a single bar per category
-'   Stacked100ColumnChart  — xlColumnStacked100:  series stacked to fill 100% per category
+'   ColumnChart            - xlColumnClustered:   discrete side-by-side columns per category
+'   StackedColumnChart     - xlColumnStacked:     series stacked into a single bar per category
+'   Stacked100ColumnChart  - xlColumnStacked100:  series stacked to fill 100% per category
 '
 ' Differences
 ' -----------

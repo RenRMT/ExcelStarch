@@ -2,9 +2,9 @@ Attribute VB_Name = "modRamp"
 '==== Module: modRamp ====
 ' Applies colour ramps to the data series of the active chart.
 '
-' ApplyColorRamp      — single-hue ramp, steps assigned in spread order 5,2,3,6,1,4,7.
-' InvertColorRamp     — reverses the current fill colour assignment across all series.
-' ApplyDivergingRamp  — two-hue diverging ramp: dark→light on the left, light→dark on
+' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 5,2,3,6,1,4,7.
+' InvertColorRamp     - reverses the current fill colour assignment across all series.
+' ApplyDivergingRamp  - two-hue diverging ramp: dark→light on the left, light→dark on
 '                       the right, with an optional grey centre for odd series counts.
 '
 ' Step selection for both single and diverging ramps follows the same priority sequence
@@ -94,7 +94,7 @@ Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
 
     If tagValue = "LASTUSED" Then
         tagValue = GetLastUsedDivergingTag()
-        If tagValue = "" Then tagValue = "A|B"  ' default to Ocean — Coral
+        If tagValue = "" Then tagValue = "A|B"  ' default to Ocean - Coral
     End If
 
     Dim parts() As String

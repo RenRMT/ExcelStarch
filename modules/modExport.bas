@@ -3,6 +3,8 @@ Attribute VB_Name = "modExport"
 Option Explicit
 
 Public Sub RunChartExport()
+    ' Mac Excel lacks GetSaveAsFilename and Chart.Export in the form used below,
+    ' so export is Windows-only; bail out with an explanatory message on Mac.
 #If Mac Then
     MsgExportMacUnsupported
     Exit Sub
@@ -42,6 +44,9 @@ Public Sub RunChartExport()
     Dim FileExtArray As Variant
     FileExtArray = Array("*", "png", "gif", "jpg", "bmp", "svg", "pdf")
 
+    ' Match raises an error (rather than returning an error value) when the saved
+    ' FileExt is not in the list; suppress it so an unrecognised setting falls
+    ' through to the default below instead of aborting the export.
     Dim FilterIndex As Long
     On Error Resume Next
     FilterIndex = WorksheetFunction.Match(FileExt, FileExtArray, 0) - 1

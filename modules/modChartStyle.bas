@@ -6,10 +6,10 @@ Attribute VB_Name = "modChartStyle"
 '
 ' Tools
 ' -----
-'   LabelLastPointButton  — duplicates the chart and adds series-name labels to
+'   LabelLastPointButton  - duplicates the chart and adds series-name labels to
 '                           the final data point of each series (line charts get
 '                           a narrowed plot area); preserves the original
-'   ApplyChartStyle       — chart-type-agnostic styler: applies the house style
+'   ApplyChartStyle       - chart-type-agnostic styler: applies the house style
 '                           in place, to the extent each chart type allows
 '
 ' IsPieChartType is shared with modChartToggles, where it lives as a Public
@@ -161,10 +161,10 @@ End Sub
 ' uniformly-coloured pie series).
 '
 ' Buckets (see ClassifyChart):
-'   PIE          — pie/donut: square-plot sizing + per-slice colours
-'   AXIS_FILL    — bar/column/area: gridlines + axis labels + per-series FILL
-'   LINE_SCATTER — line/scatter: axis labels + per-series LINE colour
-'   OTHER        — radar/3D/surface/stock/treemap/combo/future: chrome only,
+'   PIE          - pie/donut: square-plot sizing + per-slice colours
+'   AXIS_FILL    - bar/column/area: gridlines + axis labels + per-series FILL
+'   LINE_SCATTER - line/scatter: axis labels + per-series LINE colour
+'   OTHER        - radar/3D/surface/stock/treemap/combo/future: chrome only,
 '                  plus a best-guess per-series colour; no geometry/axis steps
 
 Public Sub ApplyChartStyle()
@@ -179,7 +179,7 @@ Public Sub ApplyChartStyle()
     End If
 
     ' A ribbon click deselects the chart, but Chart.Shapes.Add* (logo, title and
-    ' source text boxes) only works reliably on the ACTIVE chart — otherwise
+    ' source text boxes) only works reliably on the ACTIVE chart - otherwise
     ' AddPicture raises 430 and AddTextbox silently fails. Activate it first.
     ActivateChart cht
 
@@ -224,7 +224,7 @@ Public Sub ApplyChartStyle()
             FormatXAxis cht
             FormatSeriesColors cht, "LINE", silent:=True
 
-        Case Else   ' OTHER — safe chrome + canvas size, no plot geometry
+        Case Else   ' OTHER - safe chrome + canvas size, no plot geometry
             ApplyChartChrome cht
             InsertLogo cht, silent:=True
             InsertSource cht, silent:=True
@@ -261,7 +261,7 @@ End Function
 ' coordinates derived from chartWidth/chartHeight, so the canvas MUST be resized
 ' to those dimensions or the elements overlap the plot. Deliberately omits
 ' ApplyPlotAreaGeometry (the rectangular plot-area layout), which is applied only
-' for axis-based charts — it would be wrong for pie/donut and other layouts.
+' for axis-based charts - it would be wrong for pie/donut and other layouts.
 Private Sub ApplyChartChrome(cht As Chart)
     On Error Resume Next
     cht.ChartArea.Font.name = fontPrimary
@@ -278,7 +278,7 @@ End Sub
 ' Activates a chart so Chart.Shapes.Add* operations work. Mirrors the pattern in
 ' modExport: for an embedded chart, activate the parent worksheet then the chart;
 ' for a chart sheet (Workbook parent), activate the chart directly. Errors are
-' swallowed — if activation fails, the shape steps simply fall back to skipping.
+' swallowed - if activation fails, the shape steps simply fall back to skipping.
 Private Sub ActivateChart(cht As Chart)
     On Error Resume Next
     If TypeName(cht.Parent) = "ChartObject" Then

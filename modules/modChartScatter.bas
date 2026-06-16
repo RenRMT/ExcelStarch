@@ -4,8 +4,8 @@ Attribute VB_Name = "modChartScatter"
 '
 ' Variants
 ' --------
-'   ScatterChart — xlXYScatter: X/Y scatter plot with markers only (no connecting lines)
-'   BubbleChart  — xlBubble:    scatter with bubble size as a third data dimension
+'   ScatterChart - xlXYScatter: X/Y scatter plot with markers only (no connecting lines)
+'   BubbleChart  - xlBubble:    scatter with bubble size as a third data dimension
 '
 ' Both variants use the full FILL pipeline so marker and bubble fills are coloured
 ' by the brand palette via Format.Fill.ForeColor.rgb. Tick marks are applied outside

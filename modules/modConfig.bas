@@ -216,7 +216,7 @@ Public Const sourceBoxWidth As Double = chartWidth * sourceBoxWidthProportion
 Public Const sourceBoxLeftNudge As Double = chartWidth * sourceBoxNudgeProportion
 Public Const sourceBoxHeight As Double = chartHeight * sourceBoxHeightProportion
 
-'=== Remove legend resize — mirrors noLegend-multi plot area ===
+'=== Remove legend resize - mirrors noLegend-multi plot area ===
 Public Const removelegendHeight As Double = plotAreaHeight_noLegend
 Public Const removelegendTop As Double = plotAreaTop_noLegend
 Public Const removeLegend_Width As Double = plotAreaWidth

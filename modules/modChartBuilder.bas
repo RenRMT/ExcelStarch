@@ -6,13 +6,13 @@ Option Explicit
 ' defaults: ChartDefaults UDT containing all five formatting options.
 '
 ' Step order matters:
-'   1. OuterFormat    — sets chart size and plot area geometry first; everything else depends on it
-'   2. InsertLogo     — anchored to chart bottom-right; independent of plot area
-'   3. InsertSource   — anchored to chart bottom-left; must exist before FormatTitle so boxes don't overlap
-'   4. FormatTitle    — adds title/subtitle/y-axis label text boxes at top-left
-'   5. FormatGridlines — applies major gridline style to value axis
-'   6. FormatXAxis    — sizes and colors axis tick labels; runs after gridlines to avoid selection conflicts
-'   7. FormatSeriesColors — applied last so series exist and pipeline hasn't altered their format
+'   1. OuterFormat    - sets chart size and plot area geometry first; everything else depends on it
+'   2. InsertLogo     - anchored to chart bottom-right; independent of plot area
+'   3. InsertSource   - anchored to chart bottom-left; must exist before FormatTitle so boxes don't overlap
+'   4. FormatTitle    - adds title/subtitle/y-axis label text boxes at top-left
+'   5. FormatGridlines - applies major gridline style to value axis
+'   6. FormatXAxis    - sizes and colors axis tick labels; runs after gridlines to avoid selection conflicts
+'   7. FormatSeriesColors - applied last so series exist and pipeline hasn't altered their format
 '
 ' Chart types that skip steps (slope, dot plot, scatter) call individual functions directly.
 Public Sub ApplyChartPipeline(cht As Chart, ByVal colorMode As String, ByRef defaults As ChartDefaults)
@@ -169,7 +169,7 @@ Public Function InsertLogo(cht As Chart, Optional ByVal silent As Boolean = Fals
     logoShape.name = "LogoImage"
 
     'Scale to target dimensions. cht.Parent is a ChartObject for embedded charts
-    '(has .Width/.Height) but the Workbook for a chart sheet — fall back to the
+    '(has .Width/.Height) but the Workbook for a chart sheet - fall back to the
     'canvas constants so chart sheets still get a correctly-sized logo.
     Dim ChartWidth As Single, ChartHeight As Single
     If TypeName(cht.Parent) = "ChartObject" Then
@@ -206,14 +206,14 @@ Fail:
 End Function
 
 
-' silent: see InsertLogo — suppresses the failure message for the agnostic styler.
+' silent: see InsertLogo - suppresses the failure message for the agnostic styler.
 Function InsertSource(cht As Chart, Optional ByVal silent As Boolean = False) As Boolean
     On Error GoTo Fail
 
     SafeDeleteShape cht, "SourceBox"
 
     'Add textbox at bottom-left. cht.Parent is a ChartObject for embedded charts
-    'but the Workbook for a chart sheet — fall back to the canvas constant so the
+    'but the Workbook for a chart sheet - fall back to the canvas constant so the
     'source box still positions on a chart sheet.
     Dim SourceBox As Shape
     Dim ChartHeight As Long
