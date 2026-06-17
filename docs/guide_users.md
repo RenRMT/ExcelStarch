@@ -42,23 +42,24 @@ After creating a chart, click into the text boxes to replace the placeholder tex
 
 ## Colour palette
 
-Seven data colours are used for multi-series charts, applied in palette order:
+Eight data colours are used for multi-series charts, applied in palette order:
 
 | | Name | Description |
 |---|---|---|
-| <img src="../icons/i_fill_ocean.png" height="28"> | Ocean | Primary blue |
-| <img src="../icons/i_fill_coral.png" height="28"> | Coral | Warm orange-red |
+| <img src="../icons/i_fill_teal.png" height="28"> | Teal | Primary teal-green |
+| <img src="../icons/i_fill_jasmine.png" height="28"> | Jasmine | Warm yellow |
+| <img src="../icons/i_fill_navy.png" height="28"> | Navy | Deep blue |
+| <img src="../icons/i_fill_coral.png" height="28"> | Coral | Warm orange |
 | <img src="../icons/i_fill_sky.png" height="28"> | Sky | Light blue |
-| <img src="../icons/i_fill_pine.png" height="28"> | Pine | Teal-green |
-| <img src="../icons/i_fill_gold.png" height="28"> | Gold | Yellow |
-| <img src="../icons/i_fill_rust.png" height="28"> | Rust | Dark burnt orange |
-| <img src="../icons/i_fill_lavender.png" height="28"> | Lavender | Soft purple |
+| <img src="../icons/i_fill_cherry.png" height="28"> | Cherry | Deep red |
+| <img src="../icons/i_fill_blush.png" height="28"> | Blush | Soft pink |
+| <img src="../icons/i_fill_indigo.png" height="28"> | Indigo | Rich purple |
 
-Steel and White are available as neutral fills. Any series beyond seven falls back to Steel.
+Steel and White are available as neutral fills. Any series beyond eight falls back to Steel.
 
 ### Palette order
 
-The *Toggle Palette Order* button switches the series colour assignment between two arrangements (Contrasting and Complementary). Toggle before applying a chart type, or re-apply the chart type after toggling.
+The *Toggle Palette Order* button switches the series colour assignment between two arrangements (Contrasting and Rainbow). Toggle before applying a chart type, or re-apply the chart type after toggling.
 
 ---
 
@@ -66,10 +67,10 @@ The *Toggle Palette Order* button switches the series colour assignment between 
 
 The *Fill Colors* group applies a solid colour fill to the selected chart element or shape. Select a series, a plot area, a text box, or any shape, then pick a colour from the **Data Colors** split-button menu. The main button re-applies the last colour you used.
 
-| | | | | | | | | |
-|---|---|---|---|---|---|---|---|---|
-| <img src="../icons/i_fill_ocean.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_pine.png" height="28"> | <img src="../icons/i_fill_gold.png" height="28"> | <img src="../icons/i_fill_rust.png" height="28"> | <img src="../icons/i_fill_lavender.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> |
-| Ocean | Coral | Sky | Pine | Gold | Rust | Lavender | Steel | White |
+| | | | | | | | | | |
+|---|---|---|---|---|---|---|---|---|---|
+| <img src="../icons/i_fill_teal.png" height="28"> | <img src="../icons/i_fill_jasmine.png" height="28"> | <img src="../icons/i_fill_navy.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_cherry.png" height="28"> | <img src="../icons/i_fill_blush.png" height="28"> | <img src="../icons/i_fill_indigo.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> |
+| Teal | Jasmine | Navy | Coral | Sky | Cherry | Blush | Indigo | Steel | White |
 
 ---
 
@@ -77,16 +78,16 @@ The *Fill Colors* group applies a solid colour fill to the selected chart elemen
 
 A colour ramp applies a single-hue sequential palette to all series of the active chart, ranging from light to dark. Select or activate a chart, then pick a ramp from the **Colour Ramps** split-button menu (the main button re-applies the last ramp used).
 
-Steps are assigned in spread order (5, 2, 3, 6, 1, 4, 7) so that charts with fewer series still achieve maximum contrast.
+Steps are assigned in spread order (6, 4, 8, 3, 9, 7, 2, 1, 10, 5) so that charts with fewer series still achieve maximum contrast.
 
 | | Ramp | | Ramp |
 |---|---|---|---|
-| <img src="../icons/i_ramp_ocean.png" height="28"> | Ocean | <img src="../icons/i_ramp_gold.png" height="28"> | Gold |
-| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_rust.png" height="28"> | Rust |
-| <img src="../icons/i_ramp_sky.png" height="28"> | Sky | <img src="../icons/i_ramp_lavender.png" height="28"> | Lavender |
-| <img src="../icons/i_ramp_pine.png" height="28"> | Pine | | |
+| <img src="../icons/i_ramp_teal.png" height="28"> | Teal | <img src="../icons/i_ramp_sky.png" height="28"> | Sky |
+| <img src="../icons/i_ramp_jasmine.png" height="28"> | Jasmine | <img src="../icons/i_ramp_cherry.png" height="28"> | Cherry |
+| <img src="../icons/i_ramp_navy.png" height="28"> | Navy | <img src="../icons/i_ramp_blush.png" height="28"> | Blush |
+| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_indigo.png" height="28"> | Indigo |
 
-Maximum 7 series for single-hue ramps.
+Maximum 10 series for single-hue ramps.
 
 ### Diverging ramps
 
@@ -94,13 +95,13 @@ A diverging ramp uses two hues: dark-to-light on the left side of the chart, lig
 
 | | Diverging ramp | | Diverging ramp |
 |---|---|---|---|
-| <img src="../icons/i_div_ocean_coral.png" height="28"> | Ocean — Coral | <img src="../icons/i_div_pine_rust.png" height="28"> | Pine — Rust |
-| <img src="../icons/i_div_ocean_pine.png" height="28"> | Ocean — Pine | <img src="../icons/i_div_pine_lavender.png" height="28"> | Pine — Lavender |
-| <img src="../icons/i_div_ocean_gold.png" height="28"> | Ocean — Gold | <img src="../icons/i_div_pine_gold.png" height="28"> | Pine — Gold |
-| <img src="../icons/i_div_ocean_lavender.png" height="28"> | Ocean — Lavender | <img src="../icons/i_div_gold_rust.png" height="28"> | Gold — Rust |
-| <img src="../icons/i_div_coral_sky.png" height="28"> | Sky — Coral | | |
+| <img src="../icons/i_div_teal_jasmine.png" height="28"> | Teal — Jasmine | <img src="../icons/i_div_coral_cherry.png" height="28"> | Coral — Cherry |
+| <img src="../icons/i_div_teal_coral.png" height="28"> | Teal — Coral | <img src="../icons/i_div_coral_blush.png" height="28"> | Coral — Blush |
+| <img src="../icons/i_div_teal_sky.png" height="28"> | Teal — Sky | <img src="../icons/i_div_coral_sky.png" height="28"> | Coral — Sky |
+| <img src="../icons/i_div_teal_blush.png" height="28"> | Teal — Blush | <img src="../icons/i_div_sky_cherry.png" height="28"> | Sky — Cherry |
+| <img src="../icons/i_div_jasmine_navy.png" height="28"> | Navy — Jasmine | | |
 
-Maximum 15 series for diverging ramps (7 + grey centre + 7).
+Maximum 21 series for diverging ramps (10 + grey centre + 10).
 
 ---
 

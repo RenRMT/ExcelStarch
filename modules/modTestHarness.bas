@@ -51,7 +51,7 @@ Private Sub TestRelativeLuminance()
 
     ' A mid colour must land strictly between the endpoints.
     Dim mid As Double
-    mid = RelativeLuminance(RGB(0, 119, 187))   ' Ocean
+    mid = RelativeLuminance(RGB(0, 119, 187))   ' arbitrary mid-tone blue
     Debug.Assert mid > 0# And mid < 1#
 
     ' Green is weighted far more heavily than blue (0.7152 vs 0.0722).
@@ -74,14 +74,17 @@ End Sub
 ' ------------------------------------------------------------
 
 Private Sub TestOrderedRampSteps()
+    ' Priority is [6,4,8,3,9,7,2,1,10,5]; OrderedRampSteps takes the first n,
+    ' sorts ascending, then reverses so the darkest step comes first.
+
     ' n=1: the single darkest priority step.
-    AssertArrayEqual OrderedRampSteps(1), Array(5), "OrderedRampSteps(1)"
+    AssertArrayEqual OrderedRampSteps(1), Array(6), "OrderedRampSteps(1)"
 
-    ' n=3: priority [5,2,3] -> sort asc [2,3,5] -> reverse (darkest first) [5,3,2].
-    AssertArrayEqual OrderedRampSteps(3), Array(5, 3, 2), "OrderedRampSteps(3)"
+    ' n=3: priority [6,4,8] -> sort asc [4,6,8] -> reverse (darkest first) [8,6,4].
+    AssertArrayEqual OrderedRampSteps(3), Array(8, 6, 4), "OrderedRampSteps(3)"
 
-    ' n=7: full set, darkest (7) to lightest (1).
-    AssertArrayEqual OrderedRampSteps(7), Array(7, 6, 5, 4, 3, 2, 1), "OrderedRampSteps(7)"
+    ' n=10: full set, darkest (10) to lightest (1).
+    AssertArrayEqual OrderedRampSteps(10), Array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), "OrderedRampSteps(10)"
 
     Debug.Print "  PASS: TestOrderedRampSteps"
 End Sub
@@ -157,6 +160,7 @@ Private Sub TestColorFromName()
     ' Known names resolve to their palette constants.
     Debug.Assert ColorFromName("DATA1") = colorData1
     Debug.Assert ColorFromName("data1") = colorData1     ' case-insensitive
+    Debug.Assert ColorFromName("DATA8") = colorData8
     Debug.Assert ColorFromName("NEUTRAL4") = colorNeutral4
 
     ' Unknown name returns the -1 sentinel.

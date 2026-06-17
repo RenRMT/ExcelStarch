@@ -72,18 +72,18 @@ A find-and-replace of `COMPANY` across the XML handles both.
 
 This module holds three colour families, all stored as VBA `Long` values:
 
-- **Brand colours** (`colorBrand1`–`colorBrand4`) — used for chart text (title, subtitle, figure/axis labels). The defaults are a green/black/grey set.
-- **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — silver/steel/ash/white, used for fallback fills and axis/border styling.
-- **Data colours** (`colorData1`–`colorData7`) — the seven categorical hues for multi-series charts (Ocean, Coral, Sky, Pine, Gold, Rust, Lavender).
+- **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
+- **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — platinum/steel/ash/white, used for fallback fills and axis/border styling.
+- **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo).
 
 ```vba
 ' Data colours (example — see modConfigColors.bas for the full set)
-Public Const colorData1 As Long = 12285696     'Ocean    RGB(0, 119, 187)
-Public Const colorData2 As Long = 6719743      'Coral    RGB(255, 136, 102)
-Public Const colorData3 As Long = 16764023     'Sky      RGB(119, 204, 255)
+Public Const colorData1 As Long = 7833651      'Teal     RGB(51, 136, 119)
+Public Const colorData2 As Long = 7855615      'Jasmine  RGB(255, 221, 119)
+Public Const colorData3 As Long = 7811874      'Navy     RGB(34, 51, 119)
 ```
 
-> Some brand/neutral constants (`colorBrand1`, `colorBrand2`, `colorBrand4`, `colorNeutral3`) are defined for completeness but not all are referenced in code — see the comments in the module. **Do not rename any constant**; they are referenced by name across other modules. Change the *values* only.
+> Some brand/neutral constants (`colorBrand1`, `colorBrand2`, `colorBrandLightGrey`, `colorNeutral3`) are defined for completeness but not all are referenced in code — see the comments in the module. Note `colorBrand4` (#F9F9F9) is the diverging-ramp neutral centre and is intentionally lighter than the brand Light Grey (`colorBrandLightGrey`, #F3F3F3). **Do not rename any constant**; they are referenced by name across other modules. Change the *values* only.
 
 ### Converting an RGB value to a VBA Long
 
@@ -103,14 +103,14 @@ The easiest way is Excel's built-in `RGB()` function in the Immediate Window (Ct
 Paste that number as the value and keep the human-readable RGB as a comment:
 
 ```vba
-Public Const colorData1 As Long = 12285696  'Ocean RGB(0, 119, 187)
+Public Const colorData1 As Long = 7833651  'Teal RGB(51, 136, 119)
 ```
 
 The comment is documentation only and does not affect the value.
 
 ### Colour ramps
 
-Each of the seven hues has a 7-step sequential ramp (`rampA1`–`rampA7` through `rampG1`–`rampG7`, where 1 = lightest and 7 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales. As with all colour constants, **change values but not names** — they are referenced directly by `modRamp.bas`.
+Each of the eight hues has a 10-step sequential ramp (`rampA1`–`rampA10` through `rampH1`–`rampH10`, where 1 = lightest and 10 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales. As with all colour constants, **change values but not names** — they are referenced directly by `modRamp.bas`.
 
 ---
 

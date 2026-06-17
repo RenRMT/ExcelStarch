@@ -24,8 +24,8 @@ Attribute VB_Name = "modChartPie"
 ' or gridlines. Steps applied: InsertSource, SetRoundChartSizeAndTitle (which calls
 ' FormatTitle), InsertLogo, slice colouring.
 '
-' Palette: 7 data colours (Ocean, Coral, Sky, Pine, Gold, Rust, Lavender).
-' Slices beyond 7 use colorNeutral2 (Steel).
+' Palette: 8 data colours (Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo).
+' Slices beyond 8 use colorNeutral2 (Steel).
 Option Explicit
 
 
@@ -105,9 +105,9 @@ Public Sub ApplySliceColors(cht As Chart, ByVal pointscount As Long, Optional By
     Dim sliceColor As Long
 
     For i = 1 To pointscount
-        ' GetPaletteColor returns the brand palette color for i <= 7.
-        ' For slices beyond 7, use colorNeutral2 (Steel) instead of the default colorNeutral1.
-        If i <= 7 Then
+        ' GetPaletteColor returns the brand palette color for i <= 8.
+        ' For slices beyond 8, use colorNeutral2 (Steel) instead of the default colorNeutral1.
+        If i <= 8 Then
             sliceColor = GetPaletteColor(i)
         Else
             sliceColor = colorNeutral2
