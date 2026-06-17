@@ -170,6 +170,14 @@ End Sub
 Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
     On Error GoTo CleanFail
 
+    ' Recompute the plot area for the chart's ACTUAL title state. The axis-title
+    ' toggle may have removed the y-title or added an x-title, so we must not assume
+    ' showY=True / showX=False here (doing so left a phantom y-title gap and pushed
+    ' the plot area down onto an existing x-title).
+    Dim showY As Boolean, showX As Boolean
+    showY = ShapeExists(cht, "YAxisLabelBox")
+    showX = ShapeExists(cht, "XAxisLabelBox")
+
     If addLegend Then
         cht.hasLegend = True
         With cht.Legend
@@ -184,21 +192,21 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
             .Top = legendTop
             .Left = legendLeftPad
         End With
-        ' Shift the y-axis title box down to sit below the legend (with-legend layout)
-        MoveYAxisLabelBox cht, yAxisLabelTop
+        ' Shift the y-axis title box below the legend - only if it exists.
+        If showY Then MoveYAxisLabelBox cht, yAxisLabelTop
         With cht.PlotArea
-            .Top = PlotAreaTopFor(True, True)
-            .Height = PlotAreaHeightFor(True, False, True)
+            .Top = PlotAreaTopFor(showY, True)
+            .Height = PlotAreaHeightFor(showY, showX, True)
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
     Else
         cht.Legend.Delete
-        ' Restore the y-axis title box to its no-legend position
-        MoveYAxisLabelBox cht, yAxisLabelTop_noLegend
+        ' Restore the y-axis title box to its no-legend position - only if it exists.
+        If showY Then MoveYAxisLabelBox cht, yAxisLabelTop_noLegend
         With cht.PlotArea
-            .Top = PlotAreaTopFor(True, False)
-            .Height = PlotAreaHeightFor(True, False, False)
+            .Top = PlotAreaTopFor(showY, False)
+            .Height = PlotAreaHeightFor(showY, showX, False)
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
