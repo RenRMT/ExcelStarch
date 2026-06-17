@@ -473,6 +473,13 @@
 						supertip="Cycle axis tick labels on the selected chart: none → x-axis → y-axis → both."
 						onAction="ToggleAxisLabelsButton_onAction"/>
 					<button
+						id="ToggleAxisTitlesButton"
+						image="i_menu_titles"
+						label="Toggle Axis Titles"
+						size="normal"
+						supertip="Cycle axis titles on the selected chart: both → y-axis → x-axis → none. Resizes the plot area to match."
+						onAction="ToggleAxisTitlesButton_onAction"/>
+					<button
 						id="ToggleLegendButton"
 						image="i_menu_legend"
 						label="Toggle Legend"

@@ -31,6 +31,7 @@ Public Sub ToggleLegendButton_onAction(control As IRibbonControl): ToggleLegendB
 Public Sub LabelLastPointButton_onAction(control As IRibbonControl): LabelLastPointButton: End Sub
 Public Sub ToggleGridlinesButton_onAction(control As IRibbonControl): ToggleGridlines: End Sub
 Public Sub ToggleAxisLabelsButton_onAction(control As IRibbonControl): ToggleAxisLabelsButton: End Sub
+Public Sub ToggleAxisTitlesButton_onAction(control As IRibbonControl): ToggleAxisTitlesButton: End Sub
 Public Sub ToggleDataLabelsButton_onAction(control As IRibbonControl): ToggleDataLabels: End Sub
 Public Sub ApplyChartStyleButton_onAction(control As IRibbonControl): ApplyChartStyle: End Sub
 

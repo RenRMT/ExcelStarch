@@ -44,7 +44,7 @@ The layout is **responsive**: almost every other position and size is expressed 
 
 `modConfig.bas` is organised into two sections, and understanding the split is the key to safe customisation:
 
-**Section 1 — User settings.** Values you are meant to edit: canvas size, fonts and font sizes, font colours, placeholder text, margins, series gaps, logo settings, and the per-element **proportions**. Layout proportions are expressed as a fraction of a chart dimension — e.g. `titleBoxHeightProportion = 0.07` means the title box is 7% of `chartHeight`; `chartMarginLeftProp = 0.01` is a 1% left margin. Because everything is proportional, the layout adapts when you change the canvas size.
+**Section 1 — User settings.** Values you are meant to edit: canvas size, fonts and font sizes, font colours, placeholder text, series gaps, logo settings, and the per-element **proportions**. Layout proportions are expressed as a fraction of a chart dimension — e.g. `titleBoxHeightProportion = 0.07` means the title box is 7% of `chartHeight`; `logoHeightScale = 0.1` makes the logo 10% of `chartHeight`. Because everything is proportional, the layout adapts when you change the canvas size.
 
 **Section 2 — Derived constants.** Computed *from* Section 1 (e.g. `titleBoxHeight = chartHeight * titleBoxHeightProportion`, `logoTop = chartHeight - logoHeight - logoMarginBottom`). These exist so every absolute position stays consistent when a Section 1 value changes. **Do not edit these directly** — change the Section 1 input they derive from instead.
 

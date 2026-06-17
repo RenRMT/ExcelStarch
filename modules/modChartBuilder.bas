@@ -121,20 +121,42 @@ Private Sub ApplyPlotAreaGeometry(cht As Chart, ByVal SeriesCount As Long, ByVal
         End With
 
         With pa
-            .Height = plotAreaHeight
-            .Top = plotAreaTop
+            ' Built charts carry a y-title but no x-title (showY=True, showX=False).
+            ' Same source of truth as the axis-title toggle, so the two never disagree.
+            .Top = PlotAreaTopFor(True, True)
+            .Height = PlotAreaHeightFor(True, False, True)
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
     Else
         With pa
-            .Height = plotAreaHeight_noLegend
-            .Top = plotAreaTop_noLegend
+            .Top = PlotAreaTopFor(True, False)
+            .Height = PlotAreaHeightFor(True, False, False)
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
     End If
 End Sub
+
+
+' Pure geometry helpers used by the axis-title toggle to recompute the plot area
+' for any combination of (y-title present, x-title present, legend present).
+' Kept pure (no chart access) so they can be checked from the Immediate window:
+'   ? PlotAreaTopFor(True, True)   ? PlotAreaHeightFor(True, True, False)
+' The plot-area top depends only on the top bands (legend + y-title strip).
+Public Function PlotAreaTopFor(ByVal showY As Boolean, ByVal HasLegend As Boolean) As Double
+    PlotAreaTopFor = calcTitlesHeight _
+                   + IIf(HasLegend, LegendHeight, 0) _
+                   + IIf(showY, yAxisLabelHeight + yAxisLabelPad, 0)
+End Function
+
+' Plot-area height is the canvas below the top bands, less the bottom bands
+' (x-title strip when present, plus the always-reserved logo + bottom margin).
+Public Function PlotAreaHeightFor(ByVal showY As Boolean, ByVal showX As Boolean, ByVal HasLegend As Boolean) As Double
+    PlotAreaHeightFor = chartHeight - PlotAreaTopFor(showY, HasLegend) _
+                      - IIf(showX, xAxisLabelHeight, 0) _
+                      - plotAreaBottomMargin - logoHeight
+End Function
 
 
 ' silent: when True, a failure returns False without showing a message. Used by
@@ -337,7 +359,7 @@ Private Sub CreateSubtitleBox(cht As Chart)
 End Sub
 
 
-Private Sub CreateYAxisLabelBox(cht As Chart, ByVal HasLegend As Boolean)
+Public Sub CreateYAxisLabelBox(cht As Chart, ByVal HasLegend As Boolean)
     If Not cht.HasAxis(xlValue) Then Exit Sub
 
     Dim shp As Shape
@@ -352,6 +374,33 @@ Private Sub CreateYAxisLabelBox(cht As Chart, ByVal HasLegend As Boolean)
     With shp
         .name = "YAxisLabelBox"
         .TextFrame2.TextRange.Text = yAxisDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = axisFontSize
+            .name = fontPrimaryItalic
+            .Bold = msoFalse
+            .Italic = msoTrue
+        End With
+        .Left = .Left - titleBoxNudge
+    End With
+End Sub
+
+
+' Creates the x-axis title box ("XAxisLabelBox") in the band below the plot area,
+' mirroring CreateYAxisLabelBox styling. Unlike the y-axis box this is NOT created by
+' the pipeline; only the axis-title toggle adds it. Idempotent via SafeDeleteShape.
+Public Sub CreateXAxisLabelBox(cht As Chart)
+    If Not cht.HasAxis(xlCategory) Then Exit Sub
+
+    SafeDeleteShape cht, "XAxisLabelBox"
+
+    Dim shp As Shape
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=0, Top:=xAxisLabelTop, Width:=titleBoxWidth, Height:=xAxisLabelHeight)
+
+    With shp
+        .name = "XAxisLabelBox"
+        .TextFrame2.TextRange.Text = xAxisDefaultText
         With .TextFrame2.TextRange.Font
             .Size = axisFontSize
             .name = fontPrimaryItalic

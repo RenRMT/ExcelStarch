@@ -29,15 +29,6 @@ Public Const orgName As String = "COMPANY"
 Public Const chartWidth As Double = 600         ' 20cm canvas width
 Public Const chartHeight As Double = 600        ' 20cm canvas height
 
-' Canvas margins
-' expressed as a proportion of the relevant chart dimension E.g.:
-' - ChartMarginLeftProp 0.01 will set a left margin of 1% of the canvas width
-' - ChartMarginTopProp 0.05 will set a top margin of 5% of canvas height
-Public Const chartMarginLeftProp As Double = 0.01
-Public Const chartMarginRightProp As Double = 0.01
-Public Const chartMarginTopProp As Double = 0.01
-Public Const chartMarginBottomProp As Double = 0.01
-
 '=== Placeholder text settings ===
 ' Chart text boxes
 ' all chart text elements come pre-filled with placeholder text.
@@ -47,6 +38,7 @@ Public Const figureBoxDefaultText As String = "Figure XX (optional)"
 Public Const titleDefaultText    As String = "Title in 28pt sentence case"
 Public Const subtitleDefaultText As String = "Subtitle in 22pt sentence case"
 Public Const yAxisDefaultText    As String = "Y axis title (unit)"
+Public Const xAxisDefaultText    As String = "X axis title (unit)"
 Public Const sourceDefaultText   As String = "Source: Source text goes here."
 Public Const notesDefaultText    As String = "Notes: Notes text goes here."
 
@@ -165,12 +157,6 @@ Public Const plotAreaBottomMarginProp As Double = 0.03 ' clearance between x-axi
 ' |  DERIVED CONSTANTS                                      |
 ' |  Computed from Section 1. Do not edit directly.         |
 ' +---------------------------------------------------------+
-'=== Chart Margins ===
-Public Const chartMarginLeft As Double = chartWidth * chartMarginLeftProp
-Public Const chartMarginRight As Double = chartWidth * chartMarginRightProp
-Public Const chartMarginTop As Double = chartHeight * chartMarginTopProp
-Public Const chartMarginBottom As Double = chartHeight * chartMarginBottomProp
-
 '=== Logo geometry ===
 Public Const logoHeight As Double = chartHeight * logoHeightScale
 Public Const logoMarginBottom As Double = chartHeight * logoMarginBottomProp
@@ -182,7 +168,8 @@ Public Const plotAreaBottomMargin As Double = chartHeight * plotAreaBottomMargin
 
 
 '=== Title area ===
-Public Const figureBoxTop As Double = chartMarginTop
+' Figure number box aligns with the top of the chart area (no canvas margin).
+Public Const figureBoxTop As Double = 0
 Public Const figureBoxHeight As Double = chartHeight * FigureBoxHeightProportion
 Public Const titleBoxTop As Double = figureBoxHeight
 Public Const titleBoxHeight As Double = chartHeight * titleBoxHeightProportion
@@ -203,24 +190,21 @@ Public Const LegendHeight As Double = chartHeight * legendHeightProportion
 Public Const yAxisLabelTop As Double = calcTitlesHeight + LegendHeight
 Public Const yAxisLabelHeight As Double = chartHeight * yAxisLabelHeightProportion
 Public Const yAxisLabelTop_noLegend As Double = calcTitlesHeight
+'X axis title (mirrors the Y strip; sits in a band just above the logo/source band)
+Public Const xAxisLabelHeight As Double = yAxisLabelHeight
+Public Const xAxisLabelTop As Double = chartHeight - logoHeight - plotAreaBottomMargin - xAxisLabelHeight
 'Plot area
+' Plot-area Top/Height are no longer fixed constants: they depend on which title
+' bands (y-title strip, x-title strip) and the legend are present, so they are
+' computed at runtime by PlotAreaTopFor / PlotAreaHeightFor in modChartBuilder.
+' Width/Left are still fixed.
 Public Const plotAreaWidth As Double = chartWidth
 Public Const plotAreaLeft As Double = chartWidth * plotAreaLeftProportion
-Public Const plotAreaTop As Double = yAxisLabelTop + yAxisLabelHeight + yAxisLabelPad
-Public Const plotAreaTop_noLegend As Double = yAxisLabelTop_noLegend + yAxisLabelHeight + yAxisLabelPad
-Public Const plotAreaHeight_noLegend As Double = chartHeight - calcTitlesHeight - yAxisLabelHeight - logoHeight - plotAreaBottomMargin
-Public Const plotAreaHeight As Double = plotAreaHeight_noLegend - LegendHeight
 
 '=== Source box ===
 Public Const sourceBoxWidth As Double = chartWidth * sourceBoxWidthProportion
 Public Const sourceBoxLeftNudge As Double = chartWidth * sourceBoxNudgeProportion
 Public Const sourceBoxHeight As Double = chartHeight * sourceBoxHeightProportion
-
-'=== Remove legend resize - mirrors noLegend-multi plot area ===
-Public Const removelegendHeight As Double = plotAreaHeight_noLegend
-Public Const removelegendTop As Double = plotAreaTop_noLegend
-Public Const removeLegend_Width As Double = plotAreaWidth
-Public Const removeLegend_Left As Double = plotAreaLeft
 
 '=== Export ===
 Public Const exportAppName As String = orgName & " Chart Styles"
