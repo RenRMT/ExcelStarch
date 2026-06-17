@@ -401,6 +401,9 @@ Public Sub CreateXAxisLabelBox(cht As Chart)
     With shp
         .name = "XAxisLabelBox"
         .TextFrame2.TextRange.Text = xAxisDefaultText
+        ' Centre the title within the full-width box (the box spans the chart width,
+        ' so centred text sits over the middle of the plot rather than hugging the left).
+        .TextFrame2.TextRange.ParagraphFormat.Alignment = msoAlignCenter
         With .TextFrame2.TextRange.Font
             .Size = axisFontSize
             .name = fontPrimaryItalic
