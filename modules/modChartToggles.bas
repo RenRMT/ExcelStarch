@@ -10,6 +10,8 @@ Attribute VB_Name = "modChartToggles"
 '   ToggleLegend      - toggles legend visibility and resizes the plot area;
 '                       pie/donut use square plot-area constants
 '   ToggleAxisLabels  - cycles axis tick labels:  None -> X -> Y -> Both
+'   ToggleAxisTitles  - cycles axis title boxes:  Both -> Y -> X -> None;
+'                       resizes the plot area and follows legend presence
 '   ToggleDataLabels  - cycles data labels:       None -> Outside End -> Inside Centre
 '                       (selected series only, or all series if none selected)
 '
@@ -185,8 +187,8 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
         ' Shift the y-axis title box down to sit below the legend (with-legend layout)
         MoveYAxisLabelBox cht, yAxisLabelTop
         With cht.PlotArea
-            .Height = plotAreaHeight
-            .Top = plotAreaTop
+            .Top = PlotAreaTopFor(True, True)
+            .Height = PlotAreaHeightFor(True, False, True)
             .Width = plotAreaWidth
             .Left = plotAreaLeft
         End With
@@ -195,10 +197,10 @@ Private Sub ToggleLegendStandard(cht As Chart, ByVal addLegend As Boolean)
         ' Restore the y-axis title box to its no-legend position
         MoveYAxisLabelBox cht, yAxisLabelTop_noLegend
         With cht.PlotArea
-            .Height = removelegendHeight
-            .Top = removelegendTop
-            .Width = removeLegend_Width
-            .Left = removeLegend_Left
+            .Top = PlotAreaTopFor(True, False)
+            .Height = PlotAreaHeightFor(True, False, False)
+            .Width = plotAreaWidth
+            .Left = plotAreaLeft
         End With
     End If
 
@@ -331,6 +333,105 @@ End Sub
 
 Sub ToggleAxisLabelsButton()
     ToggleAxisLabels
+End Sub
+
+
+' ============================================================
+'   TOGGLE AXIS TITLES
+' ============================================================
+' Cycles the axis-title text boxes through four states in sequence:
+'   Both -> Y only -> X only -> None -> Both
+' The y-axis title ("YAxisLabelBox") is the box created by the pipeline; the
+' x-axis title ("XAxisLabelBox") is created on demand here. State is read from
+' which boxes currently exist. Each step recreates the required boxes (delete/
+' recreate - any custom text is reset to the placeholder) and resizes the plot
+' area to reclaim/yield the freed strip. The y-title position and plot-area top
+' both depend on legend presence. Charts with no value/category axis (pie, donut)
+' are a no-op. Operates in-place on the active chart (no duplication).
+
+Public Sub ToggleAxisTitles()
+    If ActiveChart Is Nothing Then
+        MsgNoActiveChart
+        Exit Sub
+    End If
+
+    Dim cht As Chart
+    Set cht = ActiveChart
+
+    ' No axes to title (pie/donut): nothing to do.
+    If Not cht.HasAxis(xlValue) And Not cht.HasAxis(xlCategory) Then Exit Sub
+
+    Dim hasY As Boolean   ' y-axis title box present
+    Dim hasX As Boolean   ' x-axis title box present
+
+    hasY = ShapeExists(cht, "YAxisLabelBox")
+    hasX = ShapeExists(cht, "XAxisLabelBox")
+
+    Dim nextY As Boolean
+    Dim nextX As Boolean
+
+    If hasY And hasX Then
+        nextY = True:  nextX = False        ' Both -> Y only
+    ElseIf hasY And Not hasX Then
+        nextY = False: nextX = True         ' Y only -> X only
+    ElseIf Not hasY And hasX Then
+        nextY = False: nextX = False        ' X only -> None
+    Else
+        nextY = True:  nextX = True         ' None -> Both
+    End If
+
+    ' A title for an absent axis can't be shown - clamp so a single-axis chart
+    ' doesn't get stuck on a state where clicking appears to do nothing.
+    If Not cht.HasAxis(xlValue) Then nextY = False
+    If Not cht.HasAxis(xlCategory) Then nextX = False
+
+    ApplyAxisTitleLayout cht, nextY, nextX
+End Sub
+
+' Creates/removes the axis-title boxes for the requested state and resizes the
+' plot area to match. Geometry comes from the pure helpers in modChartBuilder so
+' all combinations of (showY, showX, legend) resolve from one place.
+Private Sub ApplyAxisTitleLayout(cht As Chart, ByVal showY As Boolean, ByVal showX As Boolean)
+    On Error GoTo CleanFail
+
+    Dim HasLegend As Boolean
+    HasLegend = cht.hasLegend
+
+    ' Y-axis title: delete then recreate. CreateYAxisLabelBox positions it at the
+    ' legend-aware top (yAxisLabelTop / yAxisLabelTop_noLegend) from the flag.
+    SafeDeleteShape cht, "YAxisLabelBox"
+    If showY Then CreateYAxisLabelBox cht, HasLegend
+
+    ' X-axis title: delete then recreate in the bottom band when shown.
+    SafeDeleteShape cht, "XAxisLabelBox"
+    If showX Then CreateXAxisLabelBox cht
+
+    ' Resize the plot area to occupy the space freed/yielded by the title bands.
+    With cht.PlotArea
+        .Top = PlotAreaTopFor(showY, HasLegend)
+        .Height = PlotAreaHeightFor(showY, showX, HasLegend)
+        .Width = plotAreaWidth
+        .Left = plotAreaLeft
+    End With
+
+    Exit Sub
+CleanFail:
+    MsgError "ApplyAxisTitleLayout"
+End Sub
+
+' Returns True if a shape with the given name exists on the chart.
+Private Function ShapeExists(cht As Chart, ByVal nm As String) As Boolean
+    Dim shp As Shape
+    For Each shp In cht.Shapes
+        If shp.name = nm Then
+            ShapeExists = True
+            Exit Function
+        End If
+    Next shp
+End Function
+
+Sub ToggleAxisTitlesButton()
+    ToggleAxisTitles
 End Sub
 
 

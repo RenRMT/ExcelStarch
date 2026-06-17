@@ -62,6 +62,12 @@ End Function
 ' name and a transparency in [0, 1]. Pure (no chart/UI). A missing, non-numeric,
 ' or out-of-range transparency falls back to 0 (opaque). outName/outTransparency
 ' are always set.
+'
+' The transparency is parsed with Val, NOT CDbl/IsNumeric: the payload is always
+' a fixed period-decimal string (e.g. "DATA1|0.5") from ribbon Tag attributes,
+' whereas CDbl/IsNumeric honour the regional decimal separator. On a comma-decimal
+' locale (e.g. nl-NL) CDbl("0.5") reads the "." as a group separator and returns 5.
+' Val always treats "." as the decimal point, so parsing is locale-invariant.
 Public Sub ParseFillPayload(ByVal payload As String, _
                             ByRef outName As String, _
                             ByRef outTransparency As Double)
@@ -72,12 +78,10 @@ Public Sub ParseFillPayload(ByVal payload As String, _
     outTransparency = 0
 
     If UBound(subp) >= 1 Then
-        If IsNumeric(subp(1)) Then
-            Dim t As Double: t = CDbl(subp(1))
-            If t < 0 Then t = 0
-            If t > 1 Then t = 1
-            outTransparency = t
-        End If
+        Dim t As Double: t = Val(subp(1))   ' non-numeric -> 0; "." is always the decimal point
+        If t < 0 Then t = 0
+        If t > 1 Then t = 1
+        outTransparency = t
     End If
 End Sub
 

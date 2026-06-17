@@ -134,6 +134,7 @@ The *Toggles* group adjusts an existing chart. Select or activate the chart firs
 | <img src="../icons/i_menu_labels.png" height="28"> | Toggle Data Labels | Cycle data labels: none → outside end → inside centre. On pie/donut and stacked charts, inside labels use a contrast colour per slice/segment. Applies to the selected series, or all series if none is selected |
 | <img src="../icons/i_menu_gridlines.png" height="28"> | Toggle Gridlines | Cycle gridlines: none → horizontal → vertical → both |
 | <img src="../icons/i_menu_axislines.png" height="28"> | Toggle Axis Labels | Cycle axis tick labels: none → x-axis → y-axis → both |
+| <img src="../icons/i_menu_titles.png" height="28"> | Toggle Axis Titles | Cycle axis titles: both → y-axis → x-axis → none. Resizes the plot area to match; the y-axis title position follows the legend |
 | <img src="../icons/i_menu_legend.png" height="28"> | Toggle Legend | Toggle the chart legend on/off and resize the plot area to match |
 
 ---

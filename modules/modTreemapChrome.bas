@@ -395,15 +395,16 @@ End Sub
 
 
 ' Positions the treemap ChartObject as a band inside the canvas, leaving the title
-' block above and the logo/source below. Mirrors the classic no-legend plot-area
-' geometry (modConfig): inset left/right by plotAreaLeft, top at plotAreaTop_noLegend,
-' height plotAreaHeight_noLegend - all relative to the canvas origin.
+' block above and the logo/source below. Mirrors the standard no-legend plot-area
+' geometry via the shared helpers (showY=True, showX=False, no legend): inset
+' left/right by plotAreaLeft, top/height from PlotAreaTopFor/PlotAreaHeightFor -
+' all relative to the canvas origin.
 Public Sub PositionTreemapChart(cht As Chart, ByVal baseLeft As Double, ByVal baseTop As Double)
     With cht.Parent
         .Left = baseLeft + plotAreaLeft
-        .Top = baseTop + plotAreaTop_noLegend
+        .Top = baseTop + PlotAreaTopFor(True, False)
         .Width = chartWidth - 2 * plotAreaLeft
-        .Height = plotAreaHeight_noLegend
+        .Height = PlotAreaHeightFor(True, False, False)
     End With
 End Sub
 
