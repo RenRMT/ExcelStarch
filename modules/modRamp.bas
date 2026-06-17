@@ -2,16 +2,16 @@ Attribute VB_Name = "modRamp"
 '==== Module: modRamp ====
 ' Applies colour ramps to the data series of the active chart.
 '
-' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 5,2,3,6,1,4,7.
+' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 6,4,8,3,9,7,2,1,10,5.
 ' InvertColorRamp     - reverses the current fill colour assignment across all series.
 ' ApplyDivergingRamp  - two-hue diverging ramp: dark→light on the left, light→dark on
 '                       the right, with an optional grey centre for odd series counts.
 '
 ' Step selection for both single and diverging ramps follows the same priority sequence
-' [5,2,3,6,1,4,7]. For diverging ramps the selected steps are then sorted numerically
-' (1 = lightest, 7 = darkest) before being assigned as a gradient.
+' [6,4,8,3,9,7,2,1,10,5]. For diverging ramps the selected steps are then sorted
+' numerically (1 = lightest, 10 = darkest) before being assigned as a gradient.
 '
-' Maximum series: 7 (single), 15 (diverging: 7 + grey + 7).
+' Maximum series: 10 (single), 21 (diverging: 10 + grey + 10).
 '
 ' The step-ordering decisions (OrderedRampSteps, DivergingSideCount/HasMiddle) and
 ' the tag parser (ParseDivergingTag) are pure functions with no chart dependency,
@@ -81,7 +81,7 @@ Public Sub ApplyColorRamp(ByVal rampName As String)
 
     If rampName = "LASTUSED" Then
         rampName = GetLastUsedRampTag()
-        If rampName = "" Then rampName = "A"   ' default to Ocean
+        If rampName = "" Then rampName = "A"   ' default to Teal
     End If
 
     BuildColorRamp cht, rampName
@@ -99,7 +99,7 @@ Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
 
     If tagValue = "LASTUSED" Then
         tagValue = GetLastUsedDivergingTag()
-        If tagValue = "" Then tagValue = "A|B"  ' default to Ocean - Coral
+        If tagValue = "" Then tagValue = "A|B"  ' default to Teal - Jasmine
     End If
 
     Dim leftRamp As String, rightRamp As String
@@ -158,12 +158,12 @@ Private Sub BuildColorRamp(cht As Chart, ByVal rampName As String)
     n = cht.SeriesCollection.Count
     If n = 0 Then Exit Sub
 
-    If n > 7 Then
+    If n > 10 Then
         MsgRampTooManySeries
         Exit Sub
     End If
 
-    Dim palette(1 To 7) As Long
+    Dim palette(1 To 10) As Long
     If Not LoadPalette(rampName, palette) Then Exit Sub
 
     ' Pure decision: the 1-based step index to give each series, darkest first.
@@ -186,18 +186,18 @@ Private Sub BuildDivergingRamp(cht As Chart, ByVal leftRamp As String, ByVal rig
     n = cht.SeriesCollection.Count
     If n = 0 Then Exit Sub
 
-    If n > 15 Then
+    If n > 21 Then
         MsgDivergingTooManySeries
         Exit Sub
     End If
 
-    Dim leftPalette(1 To 7) As Long
-    Dim rightPalette(1 To 7) As Long
+    Dim leftPalette(1 To 10) As Long
+    Dim rightPalette(1 To 10) As Long
     If Not LoadPalette(leftRamp, leftPalette) Then Exit Sub
     If Not LoadPalette(rightRamp, rightPalette) Then Exit Sub
 
     ' Pure decision: side size, odd-series middle flag, and the side step indices
-    ' sorted ascending (1 = lightest .. 7 = darkest).
+    ' sorted ascending (1 = lightest .. 10 = darkest).
     Dim sideCount As Long, hasMiddle As Boolean
     Dim sideSteps As Variant
     sideCount = DivergingSideCount(n)
@@ -249,14 +249,14 @@ End Sub
 ' All returned arrays are 0-based Variants (from Array()); index with (k - 1) when
 ' walking a 1-based series/step counter.
 
-' The fixed step-selection priority [5,2,3,6,1,4,7]: which palette steps to use,
+' The fixed step-selection priority [6,4,8,3,9,7,2,1,10,5]: which palette steps to use,
 ' and in what preference order, as the series count grows.
 Private Function StepPriority() As Variant
-    StepPriority = Array(5, 2, 3, 6, 1, 4, 7)
+    StepPriority = Array(6, 4, 8, 3, 9, 7, 2, 1, 10, 5)
 End Function
 
 ' Returns the first `count` priority steps, sorted ascending (1 = lightest ..
-' 7 = darkest). Shared by single and diverging ramps. count must be 0..7.
+' 10 = darkest). Shared by single and diverging ramps. count must be 0..10.
 Private Function PriorityStepsSorted(ByVal count As Long) As Variant
     Dim pr As Variant
     pr = StepPriority()
@@ -378,38 +378,50 @@ End Function
 '   SHARED HELPERS
 ' ============================================================
 
-' Fills a 1-to-7 Long array with the ramp constants for rampName.
+' Fills a 1-to-10 Long array with the ramp constants for rampName.
 ' Returns False and shows an error if the name is unrecognised.
 Private Function LoadPalette(ByVal rampName As String, palette() As Long) As Boolean
     Select Case rampName
         Case "A"
             palette(1) = rampA1: palette(2) = rampA2: palette(3) = rampA3
             palette(4) = rampA4: palette(5) = rampA5: palette(6) = rampA6
-            palette(7) = rampA7
+            palette(7) = rampA7: palette(8) = rampA8: palette(9) = rampA9
+            palette(10) = rampA10
         Case "B"
             palette(1) = rampB1: palette(2) = rampB2: palette(3) = rampB3
             palette(4) = rampB4: palette(5) = rampB5: palette(6) = rampB6
-            palette(7) = rampB7
+            palette(7) = rampB7: palette(8) = rampB8: palette(9) = rampB9
+            palette(10) = rampB10
         Case "C"
             palette(1) = rampC1: palette(2) = rampC2: palette(3) = rampC3
             palette(4) = rampC4: palette(5) = rampC5: palette(6) = rampC6
-            palette(7) = rampC7
+            palette(7) = rampC7: palette(8) = rampC8: palette(9) = rampC9
+            palette(10) = rampC10
         Case "D"
             palette(1) = rampD1: palette(2) = rampD2: palette(3) = rampD3
             palette(4) = rampD4: palette(5) = rampD5: palette(6) = rampD6
-            palette(7) = rampD7
+            palette(7) = rampD7: palette(8) = rampD8: palette(9) = rampD9
+            palette(10) = rampD10
         Case "E"
             palette(1) = rampE1: palette(2) = rampE2: palette(3) = rampE3
             palette(4) = rampE4: palette(5) = rampE5: palette(6) = rampE6
-            palette(7) = rampE7
+            palette(7) = rampE7: palette(8) = rampE8: palette(9) = rampE9
+            palette(10) = rampE10
         Case "F"
             palette(1) = rampF1: palette(2) = rampF2: palette(3) = rampF3
             palette(4) = rampF4: palette(5) = rampF5: palette(6) = rampF6
-            palette(7) = rampF7
+            palette(7) = rampF7: palette(8) = rampF8: palette(9) = rampF9
+            palette(10) = rampF10
         Case "G"
             palette(1) = rampG1: palette(2) = rampG2: palette(3) = rampG3
             palette(4) = rampG4: palette(5) = rampG5: palette(6) = rampG6
-            palette(7) = rampG7
+            palette(7) = rampG7: palette(8) = rampG8: palette(9) = rampG9
+            palette(10) = rampG10
+        Case "H"
+            palette(1) = rampH1: palette(2) = rampH2: palette(3) = rampH3
+            palette(4) = rampH4: palette(5) = rampH5: palette(6) = rampH6
+            palette(7) = rampH7: palette(8) = rampH8: palette(9) = rampH9
+            palette(10) = rampH10
         Case Else
             MsgUnknownRamp rampName
             LoadPalette = False

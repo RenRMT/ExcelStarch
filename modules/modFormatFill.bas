@@ -28,7 +28,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     If payload = "LASTUSED" Then
         Dim lastTag As String: lastTag = GetLastUsedFillTag()
         If lastTag = "" Then
-            ' No prior selection - default to Ocean
+            ' No prior selection - default to Teal
             payload = "DATA1"
         Else
             payload = lastTag
@@ -92,6 +92,7 @@ Public Function ColorFromName(ByVal name As String) As Long
         Case "DATA5":    ColorFromName = colorData5
         Case "DATA6":    ColorFromName = colorData6
         Case "DATA7":    ColorFromName = colorData7
+        Case "DATA8":    ColorFromName = colorData8
         Case "NEUTRAL2": ColorFromName = colorNeutral2
         Case "NEUTRAL4": ColorFromName = colorNeutral4
         Case Else:       ColorFromName = -1

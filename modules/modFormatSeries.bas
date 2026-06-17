@@ -1,25 +1,27 @@
 Attribute VB_Name = "modFormatSeries"
 Option Explicit
 
-' Palette order toggle. False = default, True = alternative.
-' Default:     colorData1, colorData2, colorData3, colorData4, colorData5, colorData6, colorData7
-' Alternative: colorData1, colorData7, colorData3, colorData4, colorData5, colorData2, colorData6
+' Palette order toggle. False = Contrasting (default), True = Rainbow.
+' Contrasting: Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo
+'              = colorData1, colorData2, colorData3, colorData4, colorData5, colorData6, colorData7, colorData8
+' Rainbow:     Indigo, Navy, Sky, Teal, Jasmine, Blush, Coral, Cherry
+'              = colorData8, colorData3, colorData5, colorData1, colorData2, colorData7, colorData4, colorData6
 Private m_useAltOrder As Boolean
 
 Public Function GetPaletteColor(ByVal i As Long) As Long
     ' Returns the brand colour for series index i, respecting the current palette order.
-    ' Falls back to colorNeutral2 for i > 7.
-    Dim palette(1 To 7) As Long
+    ' Falls back to colorNeutral2 for i > 8.
+    Dim palette(1 To 8) As Long
     If m_useAltOrder Then
-        palette(1) = colorData1:    palette(2) = colorData7:    palette(3) = colorData3
-        palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData2
-        palette(7) = colorData6
+        palette(1) = colorData8:    palette(2) = colorData3:    palette(3) = colorData5
+        palette(4) = colorData1:    palette(5) = colorData2:    palette(6) = colorData7
+        palette(7) = colorData4:    palette(8) = colorData6
     Else
         palette(1) = colorData1:    palette(2) = colorData2:    palette(3) = colorData3
         palette(4) = colorData4:    palette(5) = colorData5:    palette(6) = colorData6
-        palette(7) = colorData7
+        palette(7) = colorData7:    palette(8) = colorData8
     End If
-    If i >= 1 And i <= 7 Then
+    If i >= 1 And i <= 8 Then
         GetPaletteColor = palette(i)
     Else
         GetPaletteColor = colorNeutral2

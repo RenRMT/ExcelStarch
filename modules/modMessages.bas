@@ -18,14 +18,14 @@ Public Sub MsgError(ByVal source As String)
     MsgBox source & ": " & Err.Number & " - " & Err.Description, vbExclamation
 End Sub
 
-' Guard: too many series for a colour ramp (max 7)
+' Guard: too many series for a colour ramp (max 10)
 Public Sub MsgRampTooManySeries()
-    MsgBox "Colour ramps support a maximum of 7 data series.", vbExclamation, "Too Many Series"
+    MsgBox "Colour ramps support a maximum of 10 data series.", vbExclamation, "Too Many Series"
 End Sub
 
-' Guard: too many series for a diverging colour ramp (max 15: 7 + grey + 7)
+' Guard: too many series for a diverging colour ramp (max 21: 10 + grey + 10)
 Public Sub MsgDivergingTooManySeries()
-    MsgBox "Diverging colour ramps support a maximum of 15 data series.", vbExclamation, "Too Many Series"
+    MsgBox "Diverging colour ramps support a maximum of 21 data series.", vbExclamation, "Too Many Series"
 End Sub
 
 ' Guard: invalid colour mode argument passed to FormatSeriesColors
@@ -76,9 +76,9 @@ End Sub
 ' TogglePaletteOrder: confirms new palette state after toggle
 Public Sub MsgPaletteOrderToggled(ByVal altOrder As Boolean)
     If altOrder Then
-        MsgBox "Palette order: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust", vbInformation, "Palette Order"
+        MsgBox "Palette order: Indigo, Navy, Sky, Teal, Jasmine, Blush, Coral, Cherry (Rainbow)", vbInformation, "Palette Order"
     Else
-        MsgBox "Palette order: Ocean, Coral, Sky, Pine, Gold, Rust, Lavender (default)", vbInformation, "Palette Order"
+        MsgBox "Palette order: Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo (Contrasting, default)", vbInformation, "Palette Order"
     End If
 End Sub
 

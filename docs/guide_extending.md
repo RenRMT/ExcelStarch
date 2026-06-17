@@ -225,8 +225,8 @@ The chart groups are organised as **split buttons** (Column, Bar, Line & Area, P
 ```xml
 <menu id="ColumnMenu">
     <button id="ColumnMenuPlain"   image="i_chart_vbar"         label="Column Chart"             onAction="Column_onAction"/>
-    <button id="ColumnMenuStacked" image="i_chart_stacked_vbar" label="Stacked Column Chart"     onAction="StackedColumn_onAction"/>
-    <button id="ColumnMenu100"     image="i_chart_stacked_vbar" label="100% Stacked Column Chart" onAction="Stacked100Column_onAction"/>
+    <button id="ColumnMenuStacked" image="i_chart_v_stacked" label="Stacked Column Chart"     onAction="StackedColumn_onAction"/>
+    <button id="ColumnMenu100"     image="i_chart_v_stacked" label="100% Stacked Column Chart" onAction="Stacked100Column_onAction"/>
     <button id="ColumnMenuXxx"     image="i_chart_xxx"          label="Xxx Column Chart"          onAction="Xxx_onAction"/>   <!-- ← add this -->
 </menu>
 ```

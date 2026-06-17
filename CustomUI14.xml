@@ -25,13 +25,13 @@
 								onAction="Column_onAction"/>
 							<button
 								id="ColumnMenuStacked"
-								image="i_chart_stacked_vbar"
+								image="i_chart_v_stacked"
 								label="Stacked Column Chart"
 								supertip="Stacked column chart"
 								onAction="StackedColumn_onAction"/>
 							<button
 								id="ColumnMenu100"
-								image="i_chart_stacked_vbar"
+								image="i_chart_v_stacked"
 								label="100% Stacked Column Chart"
 								supertip="100% stacked column chart"
 								onAction="Stacked100Column_onAction"/>
@@ -59,13 +59,13 @@
 								onAction="Bar_onAction"/>
 							<button
 								id="BarMenuStacked"
-								image="i_chart_stacked_hbar"
+								image="i_chart_h_stacked"
 								label="Stacked Bar Chart"
 								supertip="Stacked bar chart"
 								onAction="StackedBar_onAction"/>
 							<button
 								id="BarMenu100"
-								image="i_chart_stacked_hbar"
+								image="i_chart_h_stacked"
 								label="100% Stacked Bar Chart"
 								supertip="100% stacked bar chart"
 								onAction="Stacked100Bar_onAction"/>
@@ -205,61 +205,68 @@
 					<splitButton id="FillColorsSplit">
 						<button
 							id="FillColorsMainButton"
-							image="i_fill_ocean"
+							image="i_fill_teal"
 							label="Data Colors"
 							supertip="Fill Colors (applies last used color)"
 							onAction="Format_onAction"
 							tag="Fill:LASTUSED"/>
 						<menu id="FillColorsMenu">
 							<button
-								id="OceanFill"
-								image="i_fill_ocean"
-								label="Ocean"
-								supertip="Ocean fill color"
+								id="TealFill"
+								image="i_fill_teal"
+								label="Teal"
+								supertip="Teal fill color"
 								onAction="Format_onAction"
 								tag="Fill:DATA1"/>
+							<button
+								id="JasmineFill"
+								image="i_fill_jasmine"
+								label="Jasmine"
+								supertip="Jasmine fill color"
+								onAction="Format_onAction"
+								tag="Fill:DATA2"/>
+							<button
+								id="NavyFill"
+								image="i_fill_navy"
+								label="Navy"
+								supertip="Navy fill color"
+								onAction="Format_onAction"
+								tag="Fill:DATA3"/>
 							<button
 								id="CoralFill"
 								image="i_fill_coral"
 								label="Coral"
 								supertip="Coral fill color"
 								onAction="Format_onAction"
-								tag="Fill:DATA2"/>
+								tag="Fill:DATA4"/>
 							<button
 								id="SkyFill"
 								image="i_fill_sky"
 								label="Sky"
 								supertip="Sky fill color"
 								onAction="Format_onAction"
-								tag="Fill:DATA3"/>
-							<button
-								id="PineFill"
-								image="i_fill_pine"
-								label="Pine"
-								supertip="Pine fill color"
-								onAction="Format_onAction"
-								tag="Fill:DATA4"/>
-							<button
-								id="GoldFill"
-								image="i_fill_gold"
-								label="Gold"
-								supertip="Gold fill color"
-								onAction="Format_onAction"
 								tag="Fill:DATA5"/>
 							<button
-								id="RustFill"
-								image="i_fill_rust"
-								label="Rust"
-								supertip="Rust fill color"
+								id="CherryFill"
+								image="i_fill_cherry"
+								label="Cherry"
+								supertip="Cherry fill color"
 								onAction="Format_onAction"
 								tag="Fill:DATA6"/>
 							<button
-								id="LavenderFill"
-								image="i_fill_lavender"
-								label="Lavender"
-								supertip="Lavender fill color"
+								id="BlushFill"
+								image="i_fill_blush"
+								label="Blush"
+								supertip="Blush fill color"
 								onAction="Format_onAction"
 								tag="Fill:DATA7"/>
+							<button
+								id="IndigoFill"
+								image="i_fill_indigo"
+								label="Indigo"
+								supertip="Indigo fill color"
+								onAction="Format_onAction"
+								tag="Fill:DATA8"/>
 							<button
 								id="SteelFill"
 								image="i_neutral_steel"
@@ -279,133 +286,140 @@
 					<splitButton id="ColorRampsSplit">
 						<button
 							id="ColorRampsMainButton"
-							image="i_ramp_ocean"
+							image="i_ramp_teal"
 							label="Colour Ramps"
 							supertip="Colour Ramps (applies last used ramp)"
 							onAction="ApplyRamp_onAction"
 							tag="LASTUSED"/>
 						<menu id="ColorRampsMenu">
 							<button
-								id="OceanRamp"
-								image="i_ramp_ocean"
-								label="Ocean"
-								supertip="Apply Ocean colour ramp to chart series."
+								id="TealRamp"
+								image="i_ramp_teal"
+								label="Teal"
+								supertip="Apply Teal colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
 								tag="A"/>
+							<button
+								id="JasmineRamp"
+								image="i_ramp_jasmine"
+								label="Jasmine"
+								supertip="Apply Jasmine colour ramp to chart series."
+								onAction="ApplyRamp_onAction"
+								tag="B"/>
+							<button
+								id="NavyRamp"
+								image="i_ramp_navy"
+								label="Navy"
+								supertip="Apply Navy colour ramp to chart series."
+								onAction="ApplyRamp_onAction"
+								tag="C"/>
 							<button
 								id="CoralRamp"
 								image="i_ramp_coral"
 								label="Coral"
 								supertip="Apply Coral colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
-								tag="B"/>
+								tag="D"/>
 							<button
 								id="SkyRamp"
 								image="i_ramp_sky"
 								label="Sky"
 								supertip="Apply Sky colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
-								tag="C"/>
-							<button
-								id="PineRamp"
-								image="i_ramp_pine"
-								label="Pine"
-								supertip="Apply Pine colour ramp to chart series."
-								onAction="ApplyRamp_onAction"
-								tag="D"/>
-							<button
-								id="GoldRamp"
-								image="i_ramp_gold"
-								label="Gold"
-								supertip="Apply Gold colour ramp to chart series."
-								onAction="ApplyRamp_onAction"
 								tag="E"/>
 							<button
-								id="RustRamp"
-								image="i_ramp_rust"
-								label="Rust"
-								supertip="Apply Rust colour ramp to chart series."
+								id="CherryRamp"
+								image="i_ramp_cherry"
+								label="Cherry"
+								supertip="Apply Cherry colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
 								tag="F"/>
 							<button
-								id="LavenderRamp"
-								image="i_ramp_lavender"
-								label="Lavender"
-								supertip="Apply Lavender colour ramp to chart series."
+								id="BlushRamp"
+								image="i_ramp_blush"
+								label="Blush"
+								supertip="Apply Blush colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
 								tag="G"/>
+							<button
+								id="IndigoRamp"
+								image="i_ramp_indigo"
+								label="Indigo"
+								supertip="Apply Indigo colour ramp to chart series."
+								onAction="ApplyRamp_onAction"
+								tag="H"/>
 						</menu>
 					</splitButton>
 					<splitButton id="DivergingRampsSplit">
 						<button
 							id="DivergingRampsMainButton"
-							image="i_div_ocean_coral"
+							image="i_div_teal_jasmine"
 							label="Diverging Ramps"
 							supertip="Diverging Ramps (applies last used ramp)"
 							onAction="ApplyDivergingRamp_onAction"
 							tag="LASTUSED"/>
 						<menu id="DivergingRampsMenu">
 							<button
-								id="DivRamp_OceanCoral"
-								image="i_div_ocean_coral"
-								label="Ocean — Coral"
-								supertip="Diverging ramp: Ocean (dark to light) — Coral (light to dark)."
+								id="DivRamp_TealJasmine"
+								image="i_div_teal_jasmine"
+								label="Teal — Jasmine"
+								supertip="Diverging ramp: Teal (dark to light) — Jasmine (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="A|B"/>
 							<button
-								id="DivRamp_OceanPine"
-								image="i_div_ocean_pine"
-								label="Ocean — Pine"
-								supertip="Diverging ramp: Ocean (dark to light) — Pine (light to dark)."
+								id="DivRamp_TealCoral"
+								image="i_div_teal_coral"
+								label="Teal — Coral"
+								supertip="Diverging ramp: Teal (dark to light) — Coral (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="A|D"/>
 							<button
-								id="DivRamp_OceanGold"
-								image="i_div_ocean_gold"
-								label="Ocean — Gold"
-								supertip="Diverging ramp: Ocean (dark to light) — Gold (light to dark)."
+								id="DivRamp_TealSky"
+								image="i_div_teal_sky"
+								label="Teal — Sky"
+								supertip="Diverging ramp: Teal (dark to light) — Sky (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="A|E"/>
 							<button
-								id="DivRamp_OceanLavender"
-								image="i_div_ocean_lavender"
-								label="Ocean — Lavender"
-								supertip="Diverging ramp: Ocean (dark to light) — Lavender (light to dark)."
+								id="DivRamp_TealBlush"
+								image="i_div_teal_blush"
+								label="Teal — Blush"
+								supertip="Diverging ramp: Teal (dark to light) — Blush (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="A|G"/>
 							<button
-								id="DivRamp_SkyCoral"
-								image="i_div_coral_sky"
-								label="Sky — Coral"
-								supertip="Diverging ramp: Sky (dark to light) — Coral (light to dark)."
+								id="DivRamp_NavyJasmine"
+								image="i_div_jasmine_navy"
+								label="Navy — Jasmine"
+								supertip="Diverging ramp: Navy (dark to light) — Jasmine (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="C|B"/>
 							<button
-								id="DivRamp_PineRust"
-								image="i_div_pine_rust"
-								label="Pine — Rust"
-								supertip="Diverging ramp: Pine (dark to light) — Rust (light to dark)."
+								id="DivRamp_CoralCherry"
+								image="i_div_coral_cherry"
+								label="Coral — Cherry"
+								supertip="Diverging ramp: Coral (dark to light) — Cherry (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="D|F"/>
 							<button
-								id="DivRamp_PineLavender"
-								image="i_div_pine_lavender"
-								label="Pine — Lavender"
-								supertip="Diverging ramp: Pine (dark to light) — Lavender (light to dark)."
+								id="DivRamp_CoralBlush"
+								image="i_div_coral_blush"
+								label="Coral — Blush"
+								supertip="Diverging ramp: Coral (dark to light) — Blush (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="D|G"/>
 							<button
-								id="DivRamp_PineGold"
-								image="i_div_pine_gold"
-								label="Pine — Gold"
-								supertip="Diverging ramp: Pine (dark to light) — Gold (light to dark)."
+								id="DivRamp_CoralSky"
+								image="i_div_coral_sky"
+								label="Coral — Sky"
+								supertip="Diverging ramp: Coral (dark to light) — Sky (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="D|E"/>
 							<button
-								id="DivRamp_GoldRust"
-								image="i_div_gold_rust"
-								label="Gold — Rust"
-								supertip="Diverging ramp: Gold (dark to light) — Rust (light to dark)."
+								id="DivRamp_SkyCherry"
+								image="i_div_sky_cherry"
+								label="Sky — Cherry"
+								supertip="Diverging ramp: Sky (dark to light) — Cherry (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="E|F"/>
 						</menu>
@@ -419,7 +433,7 @@
 						image="i_menu_order"
 						size="normal"
 						label="Toggle Palette Order"
-						supertip="Switch the series colour order between Contrasting and Complementary."
+						supertip="Switch the series colour order between Contrasting and Rainbow."
 						onAction="TogglePaletteOrder_onAction"/>
 					<button
 						id="InvertRampButton"
