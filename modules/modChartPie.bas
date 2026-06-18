@@ -245,6 +245,15 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     cht.ChartArea.Border.LineStyle = xlNone
     cht.PlotArea.Format.Fill.Visible = msoFalse
     cht.PlotArea.Format.Line.Visible = msoFalse
+    ' The white box + border the user sees is the ChartObject CONTAINER's own
+    ' ShapeRange, not the cx chart area: on a chartex chart the ChartArea/PlotArea
+    ' paths above silently no-op, so the container fill/line must be cleared too.
+    ' (If a build refuses transparency here, swap to a white solid fill + no line so
+    '  the container blends into the white Canvas behind it instead.)
+    With cht.Parent.ShapeRange
+        .Fill.Visible = msoFalse
+        .Line.Visible = msoFalse
+    End With
     If cht.HasTitle Then cht.ChartTitle.Delete   ' chrome supplies the title; chart has none
     If cht.hasLegend Then cht.Legend.Delete       ' tile labels make a legend redundant
     On Error GoTo CleanFail
@@ -258,6 +267,30 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     pointscount = cht.SeriesCollection(1).Points.Count
     On Error GoTo CleanFail
     If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True
+
+    ' Bring tile data labels onto the house font (Calibri 18pt, brand-3) - they are
+    ' not styled by ApplySliceColors. Try the whole series in one call; if the chartex
+    ' type rejects series-level DataLabels, fall back to styling each tile's label.
+    If pointscount > 0 Then
+        On Error Resume Next
+        With cht.SeriesCollection(1).DataLabels.Font
+            .name = fontPrimary
+            .Size = axisFontSize
+            .Color = colorBrand3
+        End With
+        If Err.Number <> 0 Then
+            Err.Clear
+            Dim p As Long
+            For p = 1 To pointscount
+                With cht.SeriesCollection(1).Points(p).DataLabel.Font
+                    .name = fontPrimary
+                    .Size = axisFontSize
+                    .Color = colorBrand3
+                End With
+            Next p
+        End If
+        On Error GoTo CleanFail
+    End If
 
     ' Title/subtitle/figure/source/logo + white canvas as grouped worksheet shapes,
     ' laid out from the same canvas origin.
