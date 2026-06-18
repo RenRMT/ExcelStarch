@@ -15,8 +15,8 @@ Attribute VB_Name = "modChartToggles"
 '   ToggleDataLabels  - cycles data labels:       None -> Outside End -> Inside Centre
 '                       (selected series only, or all series if none selected)
 '
-' IsPieChartType is Public here because it is the one helper shared with
-' modChartStyle (ClassifyChart) as well as the toggles below.
+' IsPieChartType and IsChartExType are Public here because they are the chart-type
+' predicates shared with modChartStyle (ClassifyChart) and the chartex builders.
 Option Explicit
 
 
@@ -24,6 +24,17 @@ Option Explicit
 Public Function IsPieChartType(ByVal ct As Long) As Boolean
     IsPieChartType = (ct = xlPie Or ct = xlDoughnut Or _
                       ct = xlPieEx Or ct = xlDoughnutExploded)
+End Function
+
+
+' Shared chart-type predicate for the Excel 2016+ "chartex" family (treemap,
+' sunburst, waterfall, funnel, box & whisker, histogram). These store under a cx:
+' schema with no userShapes slot, so they cannot own in-chart chrome and use the
+' separate worksheet-chrome pipeline (modChartExChrome) instead. Public so the
+' chartex builders and modChartStyle can route by it.
+Public Function IsChartExType(ByVal ct As Long) As Boolean
+    IsChartExType = (ct = xlTreemap Or ct = xlSunburst Or ct = xlWaterfall _
+                  Or ct = xlFunnel Or ct = xlBoxwhisker Or ct = xlHistogram)
 End Function
 
 
@@ -151,8 +162,14 @@ Public Sub ToggleLegend()
     Dim cht As Chart
     Set cht = ActiveChart
 
-    ' Single-series: legend is redundant. Treemap uses tile labels instead.
-    If cht.SeriesCollection.Count <= 1 Or cht.chartType = xlTreemap Then
+    ' Single-series: legend is redundant. The chartex types that are a single series
+    ' of points or otherwise have no meaningful legend (treemap/sunburst use their own
+    ' labels; funnel/histogram have one series) are excluded explicitly. Waterfall and
+    ' box & whisker DO have real multi-series legends, so they are NOT excluded here -
+    ' do not collapse this to IsChartExType.
+    If cht.SeriesCollection.Count <= 1 _
+       Or cht.chartType = xlTreemap Or cht.chartType = xlSunburst _
+       Or cht.chartType = xlFunnel Or cht.chartType = xlHistogram Then
         MsgLegendNotApplicable
         Exit Sub
     End If

@@ -1,22 +1,28 @@
-Attribute VB_Name = "modTreemapChrome"
-'==== Module: modTreemapChrome ====
-' Worksheet-shape chrome for treemap charts.
+Attribute VB_Name = "modChartExChrome"
+'==== Module: modChartExChrome ====
+' Worksheet-shape chrome for "chartex" charts (the Excel 2016+ family: treemap,
+' sunburst, waterfall, funnel, box & whisker, histogram).
 '
 ' Why this exists
 ' ---------------
-' xlTreemap (a "chartex" type, like sunburst/waterfall/funnel/box-whisker) rejects
-' cht.Shapes.AddTextbox / AddPicture with error 1004 - the chartex file schema has no
-' userShapes slot, so a treemap cannot own the title/subtitle/logo/source overlay
-' boxes that classic charts carry inside cht.Shapes. The chrome is therefore created
-' on the HOST WORKSHEET (cht.Parent.Parent.Shapes), positioned over the chart, and
-' grouped with the ChartObject so the group exports as one image.
+' A chartex chart rejects cht.Shapes.AddTextbox / AddPicture with error 1004 - the
+' chartex file schema has no userShapes slot, so it cannot own the title/subtitle/
+' logo/source overlay boxes that classic charts carry inside cht.Shapes. The chrome
+' is therefore created on the HOST WORKSHEET (cht.Parent.Parent.Shapes), positioned
+' over the chart, and grouped with the ChartObject so the group exports as one image.
 '
 ' This is deliberately a separate pipeline from the classic in-chart chrome in
-' modChartBuilder (which is left untouched). Treemaps have no value axis and no
-' legend, so the chrome is six static shapes: a white 600x600 Canvas behind
-' everything, then FigureBox, TitleBox, SubTitleBox, SourceBox and LogoImage on top
-' of it - there is no YAxisLabelBox and no legend-toggle repositioning. The text
-' boxes are transparent with no border; the Canvas supplies the white background.
+' modChartBuilder (which is left untouched). The chrome is built from a white 600x600
+' Canvas behind everything, then FigureBox, TitleBox, SubTitleBox, SourceBox and
+' LogoImage on top of it. An optional YAxisTitle box is added for chartex types that
+' have a value axis (e.g. box & whisker) via defaults.ShowYAxisTitle; types with no
+' value axis (treemap, sunburst, funnel) leave it off. The text boxes are transparent
+' with no border; the Canvas supplies the white background.
+'
+' Per-type differences (has value-axis title? plot-band geometry?) are passed in via
+' the ChartDefaults struct and the Position* arguments, so each chartex builder
+' (modChartTreemap, modChartBoxWhisker, ...) configures the shared chrome rather than
+' forking it.
 '
 ' Coordinate model
 ' ----------------
@@ -29,8 +35,10 @@ Attribute VB_Name = "modTreemapChrome"
 ' Naming
 ' ------
 ' Shape members are named "<ChartObjectName><suffix>" (e.g. "Chart 1_TitleBox") so
-' that several treemaps on one sheet do not collide. The group is named
-' "ESTreemapGroup_<ChartObjectName>" so it can be found again on re-run/export.
+' that several chartex charts on one sheet do not collide. The group is named
+' "ESTreemapGroup_<ChartObjectName>" so it can be found again on re-run/export. (The
+' prefix literal is kept as "ESTreemapGroup_" for backward-compat with groups exported
+' by earlier versions; see chartExGroupPrefix.)
 '
 ' Known limitations (prototype)
 ' -----------------------------
@@ -48,12 +56,13 @@ Attribute VB_Name = "modTreemapChrome"
 ' the white Canvas (added here) lands in front of it and is pushed behind with
 ' ZOrder msoSendToBack. A cleaner design would create the Canvas FIRST and add the
 ' chart + chrome on top, making the z-order correct by construction - but that needs a
-' treemap-specific creation flow rather than the shared GetTargetChart. Deferred to
-' the eventual chartex pipeline generalisation.
+' chartex-specific creation flow rather than the shared GetTargetChart.
 Option Explicit
 
-' Public so modExport can recognise treemap groups by name (single source of truth).
-Public Const treemapGroupPrefix As String = "ESTreemapGroup_"
+' Public so modExport can recognise chartex groups by name (single source of truth).
+' The literal stays "ESTreemapGroup_" so groups exported by earlier versions still
+' resolve; only the constant name is generalised.
+Public Const chartExGroupPrefix As String = "ESTreemapGroup_"
 
 
 ' ============================================================
@@ -63,49 +72,60 @@ Public Const treemapGroupPrefix As String = "ESTreemapGroup_"
 ' Builds the chrome shapes on the host worksheet at the given canvas origin, and
 ' groups them with the ChartObject. Removes any prior chrome/group first so re-runs
 ' don't duplicate. baseLeft/baseTop are the canvas top-left (resolved by
-' TreemapCanvasOrigin before the chart was repositioned). Caller has already shrunk
-' the chart into the plot band and coloured the tiles.
-Public Sub BuildTreemapChrome(cht As Chart, ByVal baseLeft As Double, ByVal baseTop As Double)
+' ChartExCanvasOrigin before the chart was repositioned). defaults.ShowYAxisTitle adds
+' the optional worksheet Y-axis title box. Caller has already shrunk the chart into the
+' plot band and coloured the series/tiles.
+Public Sub BuildChartExChrome(cht As Chart, ByVal baseLeft As Double, ByVal baseTop As Double, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
     Dim ws As Worksheet
     Set ws = HostSheet(cht)
     If ws Is Nothing Then
-        MsgTreemapNeedsEmbedded
+        MsgChartExNeedsEmbedded
         Exit Sub
     End If
 
     ' Clear any chrome from a previous run before rebuilding.
-    RemoveExistingTreemapChrome cht
+    RemoveExistingChartExChrome cht
 
     Dim baseName As String
     baseName = cht.Parent.name
 
-    Dim chromeNames(1 To 6) As String
+    ' Up to 7 chrome shapes: Canvas + Figure/Title/SubTitle/Source/Logo + optional
+    ' YAxisTitle. Members that are not built stay vbNullString and are skipped at group
+    ' time, so a chart without a Y-axis title (e.g. treemap) groups exactly 6.
+    Dim chromeNames(1 To 7) As String
     Dim shp As Shape
 
     ' White canvas first so it sits at the back of the z-order; everything else
-    ' (chart tiles + chrome) renders on top of it.
-    Set shp = AddTreemapCanvas(ws, baseName, baseLeft, baseTop): chromeNames(1) = shp.name
+    ' (chart series + chrome) renders on top of it.
+    Set shp = AddChartExCanvas(ws, baseName, baseLeft, baseTop): chromeNames(1) = shp.name
 
-    Set shp = AddTreemapFigureBox(ws, baseName, baseLeft, baseTop): chromeNames(2) = shp.name
-    Set shp = AddTreemapTitleBox(ws, baseName, baseLeft, baseTop): chromeNames(3) = shp.name
-    Set shp = AddTreemapSubtitleBox(ws, baseName, baseLeft, baseTop): chromeNames(4) = shp.name
-    Set shp = AddTreemapSourceBox(ws, baseName, baseLeft, baseTop): chromeNames(5) = shp.name
+    Set shp = AddChartExFigureBox(ws, baseName, baseLeft, baseTop): chromeNames(2) = shp.name
+    Set shp = AddChartExTitleBox(ws, baseName, baseLeft, baseTop): chromeNames(3) = shp.name
+    Set shp = AddChartExSubtitleBox(ws, baseName, baseLeft, baseTop): chromeNames(4) = shp.name
+    Set shp = AddChartExSourceBox(ws, baseName, baseLeft, baseTop): chromeNames(5) = shp.name
 
     ' Logo may fail to decode; build the other shapes regardless.
-    Set shp = AddTreemapLogo(ws, baseName, baseLeft, baseTop)
+    Set shp = AddChartExLogo(ws, baseName, baseLeft, baseTop)
     If shp Is Nothing Then
         chromeNames(6) = vbNullString
     Else
         chromeNames(6) = shp.name
     End If
 
-    GroupTreemapChrome ws, cht, chromeNames
+    ' Optional value-axis title for chartex types that have one (box & whisker).
+    If defaults.ShowYAxisTitle Then
+        Set shp = AddChartExYAxisTitle(ws, baseName, baseLeft, baseTop): chromeNames(7) = shp.name
+    Else
+        chromeNames(7) = vbNullString
+    End If
+
+    GroupChartExChrome ws, cht, chromeNames
 
     Exit Sub
 CleanFail:
-    MsgError "BuildTreemapChrome"
+    MsgError "BuildChartExChrome"
 End Sub
 
 
@@ -118,7 +138,7 @@ End Sub
 
 ' A borderless white 600x600 rectangle behind the chart and chrome, so the whole
 ' group exports on a solid white canvas.
-Private Function AddTreemapCanvas(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExCanvas(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     Dim shp As Shape
     Set shp = ws.Shapes.AddShape( _
                     Type:=msoShapeRectangle, _
@@ -132,16 +152,16 @@ Private Function AddTreemapCanvas(ws As Worksheet, ByVal baseName As String, ByV
         .Fill.ForeColor.RGB = colorWhite
         .Line.Visible = msoFalse
         ' The ChartObject already exists (created before chrome), so a just-added
-        ' shape sits in front of it. Send the canvas to the back so the chart tiles
+        ' shape sits in front of it. Send the canvas to the back so the chart series
         ' and chrome render on top of the white background, not behind it.
         .ZOrder msoSendToBack
     End With
 
-    Set AddTreemapCanvas = shp
+    Set AddChartExCanvas = shp
 End Function
 
 
-Private Function AddTreemapFigureBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExFigureBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     Dim shp As Shape
     Set shp = ws.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
@@ -161,11 +181,11 @@ Private Function AddTreemapFigureBox(ws As Worksheet, ByVal baseName As String, 
         End With
     End With
 
-    Set AddTreemapFigureBox = shp
+    Set AddChartExFigureBox = shp
 End Function
 
 
-Private Function AddTreemapTitleBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExTitleBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     Dim shp As Shape
     Set shp = ws.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
@@ -186,11 +206,11 @@ Private Function AddTreemapTitleBox(ws As Worksheet, ByVal baseName As String, B
         End With
     End With
 
-    Set AddTreemapTitleBox = shp
+    Set AddChartExTitleBox = shp
 End Function
 
 
-Private Function AddTreemapSubtitleBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExSubtitleBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     Dim shp As Shape
     Set shp = ws.Shapes.AddTextbox( _
                     Orientation:=msoTextOrientationHorizontal, _
@@ -211,11 +231,11 @@ Private Function AddTreemapSubtitleBox(ws As Worksheet, ByVal baseName As String
         End With
     End With
 
-    Set AddTreemapSubtitleBox = shp
+    Set AddChartExSubtitleBox = shp
 End Function
 
 
-Private Function AddTreemapSourceBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExSourceBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     ' Sit the source box INSIDE the canvas: its bottom aligns with the canvas bottom
     ' edge (baseTop + chartHeight - sourceBoxHeight) and its left with the canvas left.
     ' The source box and the bottom-right logo share the bottom band: they clear each
@@ -238,13 +258,13 @@ Private Function AddTreemapSourceBox(ws As Worksheet, ByVal baseName As String, 
         .IncrementLeft -sourceBoxLeftNudge
     End With
 
-    Set AddTreemapSourceBox = shp
+    Set AddChartExSourceBox = shp
 End Function
 
 
 ' Returns Nothing (and shows MsgLogoDecodeFailed) if the embedded logo can't be
 ' decoded - the rest of the chrome is still built.
-Private Function AddTreemapLogo(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+Private Function AddChartExLogo(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
     On Error GoTo Fail
 
     Dim tmpPath As String
@@ -252,7 +272,7 @@ Private Function AddTreemapLogo(ws As Worksheet, ByVal baseName As String, ByVal
 
     If Not Base64ToFile(LogoPNG_Base64, tmpPath) Then
         MsgLogoDecodeFailed
-        Set AddTreemapLogo = Nothing
+        Set AddChartExLogo = Nothing
         Exit Function
     End If
 
@@ -283,12 +303,41 @@ Private Function AddTreemapLogo(ws As Worksheet, ByVal baseName As String, ByVal
     Kill tmpPath
     On Error GoTo 0
 
-    Set AddTreemapLogo = logoShape
+    Set AddChartExLogo = logoShape
     Exit Function
 
 Fail:
     MsgLogoDecodeFailed
-    Set AddTreemapLogo = Nothing
+    Set AddChartExLogo = Nothing
+End Function
+
+
+' Worksheet equivalent of modChartBuilder.CreateYAxisLabelBox: a horizontal title box
+' over the value axis. Only added for chartex types with a value axis (box & whisker)
+' via defaults.ShowYAxisTitle. Mirrors the no-legend top position and italic styling
+' of the classic box, offset to the canvas origin.
+Private Function AddChartExYAxisTitle(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
+    Dim shp As Shape
+    Set shp = ws.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=baseLeft, Top:=baseTop + yAxisLabelTop_noLegend, _
+                    Width:=titleBoxWidth, Height:=yAxisLabelHeight)
+
+    With shp
+        .name = baseName & "_YAxisTitle"
+        .Fill.Visible = msoFalse
+        .Line.Visible = msoFalse
+        .TextFrame2.TextRange.Text = yAxisDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = axisFontSize
+            .name = fontPrimaryItalic
+            .Bold = msoFalse
+            .Italic = msoTrue
+        End With
+        .IncrementLeft -titleBoxNudge
+    End With
+
+    Set AddChartExYAxisTitle = shp
 End Function
 
 
@@ -298,17 +347,17 @@ End Function
 
 ' Groups the chrome shapes + the ChartObject into one named group. On failure the
 ' shapes are left in place (ungrouped) and the user is told.
-Private Function GroupTreemapChrome(ws As Worksheet, cht As Chart, ByRef chromeNames() As String) As Shape
+Private Function GroupChartExChrome(ws As Worksheet, cht As Chart, ByRef chromeNames() As String) As Shape
     On Error GoTo Fail
 
-    ' Build the member-name list: the ChartObject's own shape + each chrome shape
-    ' that was actually created (logo may be absent). Upper bound 7 = ChartObject +
-    ' canvas + 4 text boxes + logo. Typed as Variant because Shapes.Range expects its
-    ' index packaged in a Variant - a typed String() array can raise type-mismatch
-    ' (error 13) on some Excel builds.
+    ' Build the member-name list: the ChartObject's own shape + each chrome shape that
+    ' was actually created (logo and the optional Y-axis title may be absent). Upper
+    ' bound 8 = ChartObject + canvas + 4 text boxes + logo + optional Y-axis title.
+    ' Typed as Variant because Shapes.Range expects its index packaged in a Variant - a
+    ' typed String() array can raise type-mismatch (error 13) on some Excel builds.
     Dim names() As Variant
     Dim n As Long
-    ReDim names(1 To 7)
+    ReDim names(1 To 8)
 
     n = n + 1: names(n) = cht.Parent.name
 
@@ -323,21 +372,21 @@ Private Function GroupTreemapChrome(ws As Worksheet, cht As Chart, ByRef chromeN
 
     Dim grp As Shape
     Set grp = ws.Shapes.Range(names).Group
-    grp.name = TreemapGroupName(cht)
+    grp.name = ChartExGroupName(cht)
 
-    Set GroupTreemapChrome = grp
+    Set GroupChartExChrome = grp
     Exit Function
 
 Fail:
-    MsgTreemapGroupFailed
-    Set GroupTreemapChrome = Nothing
+    MsgChartExGroupFailed
+    Set GroupChartExChrome = Nothing
 End Function
 
 
-' Removes a prior treemap group and its chrome members so a re-run doesn't duplicate.
+' Removes a prior chartex group and its chrome members so a re-run doesn't duplicate.
 ' Ungrouping leaves the ChartObject intact (the freshly-retyped chart reference stays
 ' valid); only the chrome members are deleted.
-Private Sub RemoveExistingTreemapChrome(cht As Chart)
+Private Sub RemoveExistingChartExChrome(cht As Chart)
     On Error Resume Next
 
     Dim ws As Worksheet
@@ -349,7 +398,7 @@ Private Sub RemoveExistingTreemapChrome(cht As Chart)
 
     ' Ungroup the prior group if present (ChartObject survives the ungroup).
     Dim grp As Shape
-    Set grp = ws.Shapes(TreemapGroupName(cht))
+    Set grp = ws.Shapes(ChartExGroupName(cht))
     If Not grp Is Nothing Then
         If grp.Type = msoGroup Then grp.Ungroup
     End If
@@ -362,6 +411,7 @@ Private Sub RemoveExistingTreemapChrome(cht As Chart)
     SafeDeleteSheetShape ws, baseName & "_SubTitleBox"
     SafeDeleteSheetShape ws, baseName & "_SourceBox"
     SafeDeleteSheetShape ws, baseName & "_LogoImage"
+    SafeDeleteSheetShape ws, baseName & "_YAxisTitle"
 
     On Error GoTo 0
 End Sub
@@ -375,7 +425,7 @@ End Sub
 ' out from). On a re-run an existing "<chart>_Canvas" shape exists, so reuse its
 ' position - this keeps the layout stable even if the group was moved. On first run
 ' there is no canvas yet, so fall back to the chart's current position.
-Public Sub TreemapCanvasOrigin(cht As Chart, ByRef outLeft As Double, ByRef outTop As Double)
+Public Sub ChartExCanvasOrigin(cht As Chart, ByRef outLeft As Double, ByRef outTop As Double)
     outLeft = cht.Parent.Left
     outTop = cht.Parent.Top
 
@@ -394,17 +444,19 @@ Public Sub TreemapCanvasOrigin(cht As Chart, ByRef outLeft As Double, ByRef outT
 End Sub
 
 
-' Positions the treemap ChartObject as a band inside the canvas, leaving the title
-' block above and the logo/source below. Mirrors the standard no-legend plot-area
-' geometry via the shared helpers (showY=True, showX=False, no legend): inset
-' left/right by plotAreaLeft, top/height from PlotAreaTopFor/PlotAreaHeightFor -
-' all relative to the canvas origin.
-Public Sub PositionTreemapChart(cht As Chart, ByVal baseLeft As Double, ByVal baseTop As Double)
+' Positions the chartex ChartObject as a band inside the canvas, leaving the title
+' block above and the logo/source below. Mirrors the standard plot-area geometry via
+' the shared helpers: inset left/right by plotAreaLeft, top/height from
+' PlotAreaTopFor/PlotAreaHeightFor - all relative to the canvas origin. showY/showX/
+' hasLegend let each chartex type reserve the right bands (treemap: True/False/False -
+' value-axis-title band above, no category strip below; box & whisker adds showX).
+Public Sub PositionChartExChart(cht As Chart, ByVal baseLeft As Double, ByVal baseTop As Double, _
+                                ByVal showY As Boolean, ByVal showX As Boolean, ByVal hasLegend As Boolean)
     With cht.Parent
         .Left = baseLeft + plotAreaLeft
-        .Top = baseTop + PlotAreaTopFor(True, False)
+        .Top = baseTop + PlotAreaTopFor(showY, hasLegend)
         .Width = chartWidth - 2 * plotAreaLeft
-        .Height = PlotAreaHeightFor(True, False, False)
+        .Height = PlotAreaHeightFor(showY, showX, hasLegend)
     End With
 End Sub
 
@@ -426,9 +478,9 @@ End Function
 
 ' Deterministic group name for a given chart.
 ' Precondition: cht.Parent is a ChartObject (embedded chart). All callers reach this
-' only after BuildTreemapChrome's HostSheet guard has passed.
-Private Function TreemapGroupName(cht As Chart) As String
-    TreemapGroupName = treemapGroupPrefix & cht.Parent.name
+' only after BuildChartExChrome's HostSheet guard has passed.
+Private Function ChartExGroupName(cht As Chart) As String
+    ChartExGroupName = chartExGroupPrefix & cht.Parent.name
 End Function
 
 
