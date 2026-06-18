@@ -6,9 +6,11 @@ This add-in was inspired by the [Urban Institute Data Visualisation Style Guide 
 
 ## Features
 
-Select a data range and click a chart type button. The add-in creates a formatted chart with correct fonts, colours, sizing, and branding applied automatically. Eight chart types are supported: column, stacked column, bar, stacked bar, lollipop, line, pie, and donut.
+Select a data range and click a chart type button. The add-in creates a formatted chart with correct fonts, colours, sizing, and branding applied automatically. 
 
-Post-creation tools cover colour ramps (single-hue and diverging), per-element fill colours, palette order toggle, ramp inversion, gridline cycling, legend removal, last-point labelling, and PNG/PDF export.
+**Standard charts** include column (clustered, stacked, 100% stacked), bar (clustered, stacked, 100% stacked, lollipop), line, area (stacked, 100% stacked), scatter plot, bubble plot, pie, and donut. **Complex charts** include treemap (Excel 2016+), which uses a separate rendering pipeline with worksheet-based chrome.
+
+Post-creation tools cover colour ramps (single-hue and diverging), per-element fill colours, palette order toggle, ramp inversion, gridline cycling, axis title toggling, legend removal, last-point labelling, and PNG/PDF export.
 
 See [docs/guide_users.md](docs/guide_users.md) for full button reference and usage instructions.
 

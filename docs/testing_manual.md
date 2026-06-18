@@ -77,6 +77,7 @@ Each cycles state in place on the selected chart. Click repeatedly and confirm t
 | Toggle Data Labels | none → outside end → inside centre → none (stacked types skip "outside"; pie/donut inside labels use per-slice contrast colour) |
 | Toggle Gridlines | none → horizontal → vertical → both → none |
 | Toggle Axis Labels | none → x-axis → y-axis → both → none |
+| Toggle Axis Titles | both → y-axis only → x-axis only → none → both. Plot area resizes; y-axis title position follows the legend |
 | Toggle Legend | on ↔ off, plot area resizes to match; single-series / treemap → informational message, no change |
 
 ---

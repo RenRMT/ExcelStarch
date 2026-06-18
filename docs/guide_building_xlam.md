@@ -35,7 +35,7 @@ The **Office RibbonX Editor** is a standalone and open-source tool available at 
 4. Navigate to the `modules/` folder of this repository.
 5. Import the modules via File → Import File (or right-click → Import File in the Project Explorer).
 
-6. After importing, verify the Project Explorer shows all 20 modules under **Modules**.
+6. After importing, verify the Project Explorer shows all 24 modules under **Modules**.
 
 ---
 
