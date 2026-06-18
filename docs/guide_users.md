@@ -20,11 +20,11 @@ Each chart group is a **split button**: clicking the large button body applies t
 | <img src="../icons/i_chart_line.png" height="28"> | Line & Area | Line | Line, Area (stacked), 100% Area |
 | <img src="../icons/i_chart_pie.png" height="28"> | Pie | Pie | Pie, Donut |
 | <img src="../icons/i_chart_scatter.png" height="28"> | Scatter | Scatter plot | Scatter Plot, Bubble Plot |
-| <img src="../icons/i_chart_treemap.png" height="28"> | Complex | Treemap | Treemap |
+| <img src="../icons/i_chart_treemap.png" height="28"> | Complex | Treemap | Treemap, Box &amp; Whisker |
 
 > **Lollipop** is a horizontal bar with error-bar sticks and dot markers. **Scatter** and **Bubble** plots expect X/Y numeric data.
 >
-> **Complex** charts (currently **Treemap**, Excel 2016+) are a different kind of chart and are **not interchangeable** with the standard types — you cannot switch a column or pie into a treemap and back the way you can swap between the other families. A treemap shows hierarchical rectangular tiles coloured from the brand palette, with tile labels instead of a legend. Because Excel will not place text or images inside a treemap, its title, subtitle, logo and source line sit alongside it as a **grouped** set of shapes. In practice that means: to re-style it, click the chart itself (not the surrounding group); to export it, select the group and use **Chart Export** (saves a PNG). Treemaps must be embedded charts on a worksheet, not full chart sheets.
+> **Complex** charts (**Treemap** and **Box &amp; Whisker**, Excel 2016+) are a different kind of chart and are **not interchangeable** with the standard types — you cannot switch a column or pie into one and back the way you can swap between the other families. A treemap shows hierarchical rectangular tiles coloured from the brand palette, with tile labels instead of a legend; a box &amp; whisker shows a coloured box and whiskers per category with a value axis. Because Excel will not place text or images inside these charts, their title, subtitle, logo and source line (and, for box &amp; whisker, the y-axis title) sit alongside the chart as a **grouped** set of shapes. In practice that means: to re-style one, click the chart itself (not the surrounding group); to export it, select the group and use **Chart Export** (saves a PNG). They must be embedded charts on a worksheet, not full chart sheets.
 
 The pipeline applies automatically: chart size, font, axis styling, gridlines, series colours, title/subtitle text boxes, figure and y-axis labels, logo, and a source/notes placeholder.
 

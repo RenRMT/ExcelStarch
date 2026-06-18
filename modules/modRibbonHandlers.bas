@@ -22,6 +22,7 @@ Public Sub Area100_onAction(control As IRibbonControl): Area100Chart: End Sub
 Public Sub Pie_onAction(control As IRibbonControl): PieChart: End Sub
 Public Sub Donut_onAction(control As IRibbonControl): DonutChart: End Sub
 Public Sub Treemap_onAction(control As IRibbonControl): TreemapChart: End Sub
+Public Sub BoxWhisker_onAction(control As IRibbonControl): BoxWhiskerChart: End Sub
 
 Public Sub Scatter_onAction(control As IRibbonControl): ScatterChart: End Sub
 Public Sub Bubble_onAction(control As IRibbonControl): BubbleChart: End Sub

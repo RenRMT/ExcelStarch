@@ -46,6 +46,7 @@ Public Function DefaultChartDefaults() As ChartDefaults
         .Gridlines = defaultGridlines
         .AxisDisplay = defaultAxisDisplay
         .Legend = defaultLegend
+        .ShowYAxisTitle = False     ' chartex-only; classic charts ignore it
     End With
 End Function
 
@@ -104,5 +105,14 @@ Public Function TreemapChartDefaults() As ChartDefaults
         .AxisDisplay = axisNone     ' No axes for treemaps
         .Legend = defaultLegend     ' Use global default (tile labels usually suffice)
         .ShowYAxisTitle = False     ' Treemap has no value axis - no Y-axis title box
+    End With
+End Function
+
+Public Function BoxWhiskerChartDefaults() As ChartDefaults
+    With BoxWhiskerChartDefaults
+        .Gridlines = axisY          ' Y-gridlines (horizontal value scale)
+        .AxisDisplay = axisBoth     ' Box & whisker has a value axis and a category axis
+        .Legend = defaultLegend     ' Use global default
+        .ShowYAxisTitle = True      ' Has a value axis - add the worksheet Y-axis title box
     End With
 End Function
