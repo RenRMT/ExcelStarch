@@ -179,7 +179,7 @@ The Excel 2016+ "chartex" chart types — **treemap, sunburst, waterfall, funnel
 Because the chrome cannot live inside the chart, it is built as **grouped worksheet shapes** instead. `modTreemapChrome.bas` is the reference implementation. This is a genuinely **separate pipeline** from the classic in-chart one in `modChartBuilder` — not a partial pipeline or a composition. The two do not share code paths (only the geometry constants in `modConfig` and the logo decode in `modEmbeddedImages` are reused).
 
 ```vba
-' modChartPie.BuildTreemapChartWithDefaults (abridged)
+' modChartTreemap.BuildTreemapChartWithDefaults (abridged)
 If TypeName(cht.Parent) <> "ChartObject" Then MsgTreemapNeedsEmbedded: Exit Sub  ' embedded only
 With cht.Parent: .Width = chartWidth: .Height = chartHeight: End With            ' fix the canvas
 If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True          ' tiles, not series
