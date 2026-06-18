@@ -8,14 +8,14 @@ Attribute VB_Name = "modChartTreemap"
 ' classic charts in modChartBuilder. It does NOT use ApplyChartPipeline: xlTreemap
 ' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/figure/
 ' source/logo) cannot live inside the chart and is built as grouped WORKSHEET shapes
-' by modTreemapChrome instead. It has no axes or gridlines.
+' by modChartExChrome instead. It has no axes or gridlines.
 '
 ' Tiles are points of a single series (like pie slices), so they are coloured
 ' per-point from the brand palette via the shared ApplySliceColors helper (Public in
 ' modChartPie - reused here cross-module, exactly as modChartStyle does).
 '
 ' This module owns only the treemap BUILD pipeline; the worksheet chrome, grouping
-' and export live in modTreemapChrome and modExport.
+' and export live in modChartExChrome and modExport.
 Option Explicit
 
 
@@ -48,11 +48,11 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
 
     Dim pointscount As Long
 
-    ' Treemap chrome is built on the host worksheet (see modTreemapChrome) because
+    ' Treemap chrome is built on the host worksheet (see modChartExChrome) because
     ' xlTreemap rejects cht.Shapes.Add* with error 1004. That requires an embedded
     ' chart with a host worksheet - chart sheets are unsupported.
     If TypeName(cht.Parent) <> "ChartObject" Then
-        MsgTreemapNeedsEmbedded
+        MsgChartExNeedsEmbedded
         Exit Sub
     End If
 
@@ -60,14 +60,15 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     ' chart or rebuilding chrome - on a re-run it reuses the existing canvas position
     ' so the layout stays put even if the chart band has been moved.
     Dim originLeft As Double, originTop As Double
-    TreemapCanvasOrigin cht, originLeft, originTop
+    ChartExCanvasOrigin cht, originLeft, originTop
 
     ' Position the chart as a band INSIDE the canvas, leaving room for the title block
-    ' above and the logo/source below (mirrors the classic plot-area geometry). This
-    ' acts on the ChartObject container (not the chartex chart), so it is safe and is
-    ' kept OUT of the defensive block: a positioning failure must surface, not be
-    ' masked into a misplaced layout over a full-size chart.
-    PositionTreemapChart cht, originLeft, originTop
+    ' above and the logo/source below (mirrors the classic plot-area geometry). Treemap
+    ' has a value-axis-title band above (showY) but no category strip below (showX) and
+    ' no legend. This acts on the ChartObject container (not the chartex chart), so it
+    ' is safe and is kept OUT of the defensive block: a positioning failure must
+    ' surface, not be masked into a misplaced layout over a full-size chart.
+    PositionChartExChart cht, originLeft, originTop, showY:=True, showX:=False, hasLegend:=False
 
     ' Cosmetic chart-object styling and title/legend removal ARE classic chart
     ' operations that xlTreemap (a chartex type) can reject with 1004, so apply each
@@ -129,8 +130,9 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
     End If
 
     ' Title/subtitle/figure/source/logo + white canvas as grouped worksheet shapes,
-    ' laid out from the same canvas origin.
-    BuildTreemapChrome cht, originLeft, originTop
+    ' laid out from the same canvas origin. defaults.ShowYAxisTitle is False for treemap
+    ' (no value axis), so no Y-axis title box is added.
+    BuildChartExChrome cht, originLeft, originTop, defaults
 
     Exit Sub
 CleanFail:

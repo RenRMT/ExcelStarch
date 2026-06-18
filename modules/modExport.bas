@@ -12,10 +12,10 @@ Public Sub RunChartExport()
 
     On Error GoTo CleanFail
 
-    'Treemap chrome lives in a worksheet group (not inside the chart), so Chart.Export
-    'would omit it. If a treemap group is selected, rasterise the whole group instead.
-    'Returns False when there is no treemap group, falling through to the classic path.
-    If TrySaveTreemapGroupAsPicture() Then Exit Sub
+    'Chartex chrome lives in a worksheet group (not inside the chart), so Chart.Export
+    'would omit it. If a chartex group is selected, rasterise the whole group instead.
+    'Returns False when there is no chartex group, falling through to the classic path.
+    If TrySaveChartExGroupAsPicture() Then Exit Sub
 
     'Ensure a chart is active
     If ActiveChart Is Nothing Then
@@ -142,36 +142,36 @@ Sub ExportChart()
 End Sub
 
 
-' Treemap chrome (title/logo/source) is built as worksheet shapes grouped with the
-' chart (see modTreemapChrome), so the chart-only Chart.Export omits it. This exports
+' Chartex chrome (title/logo/source) is built as worksheet shapes grouped with the
+' chart (see modChartExChrome), so the chart-only Chart.Export omits it. This exports
 ' the whole group as a PNG by rasterising it through a temporary chart.
 '
-' Returns True if a treemap group was found and handled (or the user cancelled the
-' dialog); returns False when no treemap group is selected, so RunChartExport falls
+' Returns True if a chartex group was found and handled (or the user cancelled the
+' dialog); returns False when no chartex group is selected, so RunChartExport falls
 ' through to the classic Chart.Export path.
 '
 ' Note: the group is rasterised at ~screen resolution (CopyPicture xlScreen) - softer
 ' than Chart.Export. PNG only, by design (see plan).
-Private Function TrySaveTreemapGroupAsPicture() As Boolean
+Private Function TrySaveChartExGroupAsPicture() As Boolean
 #If Mac Then
     'Export is Windows-only (see RunChartExport); leave the classic path to message.
-    TrySaveTreemapGroupAsPicture = False
+    TrySaveChartExGroupAsPicture = False
     Exit Function
 #End If
 
     On Error GoTo CleanFail
 
     Dim grp As Shape
-    Set grp = ResolveTreemapGroup()
+    Set grp = ResolveChartExGroup()
     If grp Is Nothing Then
-        TrySaveTreemapGroupAsPicture = False
+        TrySaveChartExGroupAsPicture = False
         Exit Function
     End If
 
     'From here we own the request: always return True so the classic path is skipped.
-    TrySaveTreemapGroupAsPicture = True
+    TrySaveChartExGroupAsPicture = True
 
-    'File dialog (PNG only for the treemap group path).
+    'File dialog (PNG only for the chartex group path).
     Dim PathName As String: PathName = ActiveWorkbook.Path
     If InStr(PathName, "/") > 0 Or Len(PathName) = 0 Then PathName = CurDir
 
@@ -187,20 +187,20 @@ Private Function TrySaveTreemapGroupAsPicture() As Boolean
     If VarType(dialogResult) = vbBoolean Then Exit Function 'User cancelled
     FileName = dialogResult
 
-    SaveTreemapGroupPng grp, FileName
+    SaveChartExGroupPng grp, FileName
 
     Exit Function
 
 CleanFail:
     'Already flagged True if we owned the request; report and stop.
-    MsgError "TrySaveTreemapGroupAsPicture"
+    MsgError "TrySaveChartExGroupAsPicture"
 End Function
 
 
-' Resolves the treemap group from the current selection: the selected shape may be
-' the group itself, or a member whose parent group is a treemap group. Returns
-' Nothing if the selection is not (part of) a treemap group.
-Private Function ResolveTreemapGroup() As Shape
+' Resolves the chartex group from the current selection: the selected shape may be
+' the group itself, or a member whose parent group is a chartex group. Returns
+' Nothing if the selection is not (part of) a chartex group.
+Private Function ResolveChartExGroup() As Shape
     Dim shp As Shape
 
     'ShapeRange(1) raises when the selection is a cell range, not a shape - probe it
@@ -211,7 +211,7 @@ Private Function ResolveTreemapGroup() As Shape
     If shp Is Nothing Then Exit Function
 
     If shp.Type = msoGroup Then
-        If IsTreemapGroupName(shp.name) Then Set ResolveTreemapGroup = shp
+        If IsChartExGroupName(shp.name) Then Set ResolveChartExGroup = shp
         Exit Function
     End If
 
@@ -222,20 +222,20 @@ Private Function ResolveTreemapGroup() As Shape
     Set parent = shp.ParentGroup
     On Error GoTo 0
     If Not parent Is Nothing Then
-        If IsTreemapGroupName(parent.name) Then Set ResolveTreemapGroup = parent
+        If IsChartExGroupName(parent.name) Then Set ResolveChartExGroup = parent
     End If
 End Function
 
 
-Private Function IsTreemapGroupName(ByVal nm As String) As Boolean
-    'treemapGroupPrefix is the single source of truth, defined in modTreemapChrome.
-    IsTreemapGroupName = (InStr(1, nm, treemapGroupPrefix, vbTextCompare) = 1)
+Private Function IsChartExGroupName(ByVal nm As String) As Boolean
+    'chartExGroupPrefix is the single source of truth, defined in modChartExChrome.
+    IsChartExGroupName = (InStr(1, nm, chartExGroupPrefix, vbTextCompare) = 1)
 End Function
 
 
 ' Rasterises a shape group to PNG via a temporary chart canvas (Excel has no
 ' Shape.Export). The temp chart is always removed.
-Private Sub SaveTreemapGroupPng(grp As Shape, ByVal FileName As String)
+Private Sub SaveChartExGroupPng(grp As Shape, ByVal FileName As String)
     On Error GoTo CleanFail
     AppFast   'suppress the flash of the temporary ChartObject
 
@@ -262,5 +262,5 @@ CleanFail:
     If Not chtObj Is Nothing Then chtObj.Delete
     On Error GoTo 0
     AppRestore
-    MsgError "SaveTreemapGroupPng"
+    MsgError "SaveChartExGroupPng"
 End Sub

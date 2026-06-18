@@ -229,16 +229,18 @@ Public Sub ApplyChartStyle()
             InsertLogo cht, silent:=True
             InsertSource cht, silent:=True
             FormatTitle cht
-            If cht.chartType = xlTreemap Then
-                ' Treemap tiles are points of a single series, so colour them
+            If cht.chartType = xlTreemap Or cht.chartType = xlSunburst Then
+                ' Treemap/sunburst are a single series of points, so colour them
                 ' per-point from the palette (matching the dedicated builder)
-                ' rather than the per-series best-guess below. Point-count read
-                ' is guarded in case Excel rejects per-point colouring.
+                ' rather than the per-series best-guess below. Other chartex types
+                ' (waterfall, funnel, box & whisker, histogram) have real series and
+                ' fall through to the per-series branch. Point-count read is guarded
+                ' in case Excel rejects per-point colouring.
                 Dim nTiles As Long
                 On Error Resume Next
                 nTiles = cht.SeriesCollection(1).Points.Count
                 On Error GoTo CleanFail
-                ' silent: this bucket degrades gracefully, so a treemap that
+                ' silent: this bucket degrades gracefully, so a chart that
                 ' rejects per-point colouring must not surface a message.
                 If nTiles > 0 Then ApplySliceColors cht, nTiles, silent:=True
             Else

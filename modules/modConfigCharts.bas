@@ -29,11 +29,15 @@ Public Const defaultLegend As Boolean = False           ' False = no legend
 '=== ChartDefaults User-Defined Type ===
 'Bundles formatting options into a single parameter for chart pipeline.
 'Only Gridlines, AxisDisplay, and Legend are currently consumed by ApplyDefaultFormatting.
+'ShowYAxisTitle is consumed only by the chartex chrome (modChartExChrome) - it adds the
+'optional worksheet Y-axis title box for chartex types with a value axis (box & whisker);
+'classic factories leave it False and ignore it.
 'AxisLines and AxisLabels are reserved for future use (phase 6+).
 Public Type ChartDefaults
     Gridlines As Long       ' axisNone, axisX, axisY, axisBoth (controls gridline visibility)
     AxisDisplay As Long     ' axisNone, axisX, axisY, axisBoth (controls axis visibility)
     Legend As Boolean       ' True = show legend, False = hide
+    ShowYAxisTitle As Boolean  ' chartex only: add a worksheet Y-axis title box
 End Type
 
 '=== Factory function for global defaults ===
@@ -99,5 +103,6 @@ Public Function TreemapChartDefaults() As ChartDefaults
         .Gridlines = axisNone       ' No gridlines (treemap has no axes)
         .AxisDisplay = axisNone     ' No axes for treemaps
         .Legend = defaultLegend     ' Use global default (tile labels usually suffice)
+        .ShowYAxisTitle = False     ' Treemap has no value axis - no Y-axis title box
     End With
 End Function
