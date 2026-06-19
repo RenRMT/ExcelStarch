@@ -23,6 +23,10 @@ See [docs/guide_users.md](docs/guide_users.md) for full button reference and usa
 
 The repository stores source as `.bas` modules and `CustomUI14.xml`. The `.xlam` binary is not tracked. See [docs/guide_building_xlam.md](docs/guide_building_xlam.md) for the full build procedure.
 
+## Deployment
+
+To distribute this add-in safely within your organization, see [docs/guide_deployment.md](docs/guide_deployment.md). This covers digital signing, Trust Center configuration, deployment methods, and access control for specific user groups.
+
 ## Customisation
 
 All brand-specific settings are isolated in `modConfig.bas` and `modConfigColors.bas` with an optional embedded logo om `modEmbeddedImages.bas`. The ribbon tab label is hardcoded in `CustomUI14.xml` — find-and-replace `COMPANY` to update it. See [docs/guide_branding.md](docs/guide_branding.md) for the step-by-step procedure and full constant reference.
