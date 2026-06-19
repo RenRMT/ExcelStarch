@@ -187,6 +187,12 @@
 								label="Treemap Chart"
 								supertip="Style a treemap chart following the COMPANY standards"
 								onAction="Treemap_onAction"/>
+							<button
+								id="ComplexMenuBoxWhisker"
+								image="i_chart_boxwhisker"
+								label="Box &amp; Whisker Chart"
+								supertip="Style a box &amp; whisker chart following the COMPANY standards"
+								onAction="BoxWhisker_onAction"/>
 						</menu>
 					</splitButton>
 				</group >
