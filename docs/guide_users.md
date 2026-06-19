@@ -48,12 +48,12 @@ Eight data colours are used for multi-series charts, applied in palette order:
 |---|---|---|
 | <img src="../icons/i_fill_teal.png" height="28"> | Teal | Primary teal-green |
 | <img src="../icons/i_fill_jasmine.png" height="28"> | Jasmine | Warm yellow |
-| <img src="../icons/i_fill_navy.png" height="28"> | Navy | Deep blue |
+| <img src="../icons/i_fill_baltic.png" height="28"> | Baltic | Deep blue |
 | <img src="../icons/i_fill_coral.png" height="28"> | Coral | Warm orange |
 | <img src="../icons/i_fill_sky.png" height="28"> | Sky | Light blue |
 | <img src="../icons/i_fill_cherry.png" height="28"> | Cherry | Deep red |
 | <img src="../icons/i_fill_blush.png" height="28"> | Blush | Soft pink |
-| <img src="../icons/i_fill_indigo.png" height="28"> | Indigo | Rich purple |
+| <img src="../icons/i_fill_violet.png" height="28"> | Violet | Rich purple |
 
 Steel and White are available as neutral fills. Any series beyond eight falls back to Steel.
 
@@ -69,8 +69,8 @@ The *Fill Colors* group applies a solid colour fill to the selected chart elemen
 
 | | | | | | | | | | |
 |---|---|---|---|---|---|---|---|---|---|
-| <img src="../icons/i_fill_teal.png" height="28"> | <img src="../icons/i_fill_jasmine.png" height="28"> | <img src="../icons/i_fill_navy.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_cherry.png" height="28"> | <img src="../icons/i_fill_blush.png" height="28"> | <img src="../icons/i_fill_indigo.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> |
-| Teal | Jasmine | Navy | Coral | Sky | Cherry | Blush | Indigo | Steel | White |
+| <img src="../icons/i_fill_teal.png" height="28"> | <img src="../icons/i_fill_jasmine.png" height="28"> | <img src="../icons/i_fill_baltic.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_cherry.png" height="28"> | <img src="../icons/i_fill_blush.png" height="28"> | <img src="../icons/i_fill_violet.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> |
+| Teal | Jasmine | Baltic | Coral | Sky | Cherry | Blush | Violet | Steel | White |
 
 ---
 
@@ -78,14 +78,14 @@ The *Fill Colors* group applies a solid colour fill to the selected chart elemen
 
 A colour ramp applies a single-hue sequential palette to all series of the active chart, ranging from light to dark. Select or activate a chart, then pick a ramp from the **Colour Ramps** split-button menu (the main button re-applies the last ramp used).
 
-Steps are assigned in spread order (6, 4, 8, 3, 9, 7, 2, 1, 10, 5) so that charts with fewer series still achieve maximum contrast.
+Steps are assigned in spread order (6, 2, 4, 3, 5, 7, 8, 1, 9, 10) so that charts with fewer series still achieve maximum contrast.
 
 | | Ramp | | Ramp |
 |---|---|---|---|
 | <img src="../icons/i_ramp_teal.png" height="28"> | Teal | <img src="../icons/i_ramp_sky.png" height="28"> | Sky |
 | <img src="../icons/i_ramp_jasmine.png" height="28"> | Jasmine | <img src="../icons/i_ramp_cherry.png" height="28"> | Cherry |
-| <img src="../icons/i_ramp_navy.png" height="28"> | Navy | <img src="../icons/i_ramp_blush.png" height="28"> | Blush |
-| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_indigo.png" height="28"> | Indigo |
+| <img src="../icons/i_ramp_baltic.png" height="28"> | Baltic | <img src="../icons/i_ramp_blush.png" height="28"> | Blush |
+| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_violet.png" height="28"> | Violet |
 
 Maximum 10 series for single-hue ramps.
 
@@ -99,7 +99,7 @@ A diverging ramp uses two hues: dark-to-light on the left side of the chart, lig
 | <img src="../icons/i_div_teal_coral.png" height="28"> | Teal — Coral | <img src="../icons/i_div_coral_blush.png" height="28"> | Coral — Blush |
 | <img src="../icons/i_div_teal_sky.png" height="28"> | Teal — Sky | <img src="../icons/i_div_coral_sky.png" height="28"> | Coral — Sky |
 | <img src="../icons/i_div_teal_blush.png" height="28"> | Teal — Blush | <img src="../icons/i_div_sky_cherry.png" height="28"> | Sky — Cherry |
-| <img src="../icons/i_div_jasmine_navy.png" height="28"> | Navy — Jasmine | | |
+| <img src="../icons/i_div_jasmine_baltic.png" height="28"> | Baltic — Jasmine | | |
 
 Maximum 21 series for diverging ramps (10 + grey centre + 10).
 
@@ -111,7 +111,7 @@ Maximum 21 series for diverging ramps (10 + grey centre + 10).
 |---|---|---|
 | <img src="../icons/i_menu_order.png" height="28"> | Toggle Palette Order | Switch series colour order between the two palette arrangements |
 | <img src="../icons/i_menu_invert.png" height="28"> | Invert Ramp | Reverse the current fill colour order across all series without re-applying a ramp — useful for flipping a ramp direction or a custom arrangement |
-| <img src="../icons/i_menu_labels.png" height="28"> | Label Last Point | Duplicate the chart and add series-name labels to the last data point of each series (line charts); narrows the plot area to make room |
+| <img src="../icons/i_menu_label_last.png" height="28"> | Label Last Point | Duplicate the chart and add series-name labels to the last data point of each series (line charts); narrows the plot area to make room |
 
 ---
 
