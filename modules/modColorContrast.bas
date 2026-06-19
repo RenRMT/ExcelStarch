@@ -9,8 +9,8 @@ Attribute VB_Name = "modColorContrast"
 '   ? RelativeLuminance(RGB(28, 103, 88))   ' -> value in [0, 1]
 '   ? ContrastColorForFill(RGB(28, 103, 88)) ' -> colorWhite or colorBrand3
 '
-' Depends only on constants: wcagLuminanceThreshold (modConfigCharts),
-' colorWhite and colorBrand3 (modConfigColors).
+' Depends only on constants: wcagLuminanceThreshold (modConfigDerived),
+' colorWhite and colorBrand3 (modConfig).
 Option Explicit
 
 

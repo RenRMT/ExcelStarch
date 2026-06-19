@@ -29,4 +29,4 @@ To distribute this add-in safely within your organization, see [docs/guide_deplo
 
 ## Customisation
 
-All brand-specific settings are isolated in `modConfig.bas` and `modConfigColors.bas` with an optional embedded logo om `modEmbeddedImages.bas`. The ribbon tab label is hardcoded in `CustomUI14.xml` — find-and-replace `COMPANY` to update it. See [docs/guide_branding.md](docs/guide_branding.md) for the step-by-step procedure and full constant reference.
+All brand-specific settings (colours and user-editable options) are isolated in `modConfig.bas`, with an optional embedded logo in `modEmbeddedImages.bas`. The ribbon tab label is hardcoded in `CustomUI14.xml` — find-and-replace `COMPANY` to update it. See [docs/guide_branding.md](docs/guide_branding.md) for the step-by-step procedure and full constant reference.

@@ -1,6 +1,6 @@
 # Configuring the Add-in for a Company Brand
 
-All brand-specific settings are isolated in three files: `modConfig.bas`, `modConfigColors.bas`, and `modEmbeddedImages.bas`. No other module needs to be touched for a standard white-label deployment.
+All brand-specific settings are isolated in two files: `modConfig.bas` (brand colours and all user-editable settings) and `modEmbeddedImages.bas` (the optional embedded logo). No other module needs to be touched for a standard white-label deployment.
 
 ---
 
@@ -68,16 +68,16 @@ A find-and-replace of `COMPANY` across the XML handles both.
 
 ---
 
-## 6 — Brand colours: `modConfigColors.bas`
+## 6 — Brand colours: the **Brand Colours** section of `modConfig.bas`
 
-This module holds three colour families, all stored as VBA `Long` values:
+The brand colours live at the top of `modConfig.bas`, under the `BRAND COLOURS` banner, in three colour families, all stored as VBA `Long` values:
 
 - **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
 - **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — platinum/steel/ash/white, used for fallback fills and axis/border styling.
 - **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
 
 ```vba
-' Data colours (example — see modConfigColors.bas for the full set)
+' Data colours (example — see the Brand Colours section of modConfig.bas for the full set)
 Public Const colorData1 As Long = 7833651      'Teal     RGB(51, 136, 119)
 Public Const colorData2 As Long = 7855615      'Jasmine  RGB(255, 221, 119)
 Public Const colorData3 As Long = 10181419     'Baltic   RGB(43, 91, 155)

@@ -1,6 +1,73 @@
-Attribute VB_Name = "modConfigCharts"
-
+Attribute VB_Name = "modConfigDerived"
 Option Explicit
+'==== Module: modConfigDerived ====
+' Computed constants and chart-engine defaults. These are derived from the user
+' settings in modConfig and ensure the chart layout responds correctly to any
+' changes made there. Do not edit these directly unless you are changing the chart
+' engine itself - adjust the source settings in modConfig instead.
+'
+' Contents:
+'   - Derived geometry (logo, title/plot/source bands) computed from modConfig.
+'   - Chart formatting defaults: axis enums, the ChartDefaults type, and the
+'     per-chart-type factory functions consumed by the chart pipeline.
+
+' +---------------------------------------------------------+
+' |  DERIVED CONSTANTS                                      |
+' |  Computed from modConfig. Do not edit directly.         |
+' +---------------------------------------------------------+
+'=== Logo geometry ===
+Public Const logoHeight As Double = chartHeight * logoHeightScale
+Public Const logoMarginBottom As Double = chartHeight * logoMarginBottomProp
+Public Const logoTop As Double = chartHeight - logoHeight - logoMarginBottom
+Public Const logoMarginRight As Double = chartWidth * logoMarginRightProp
+
+'=== Plot area bottom margin ===
+Public Const plotAreaBottomMargin As Double = chartHeight * plotAreaBottomMarginProp
+
+
+'=== Title area ===
+' Figure number box aligns with the top of the chart area (no canvas margin).
+Public Const figureBoxTop As Double = 0
+Public Const figureBoxHeight As Double = chartHeight * FigureBoxHeightProportion
+Public Const titleBoxTop As Double = figureBoxHeight
+Public Const titleBoxHeight As Double = chartHeight * titleBoxHeightProportion
+Public Const subtitleBoxTop As Double = titleBoxTop + titleBoxHeight
+Public Const subtitleBoxHeight As Double = chartHeight * subtitleBoxHeightProportion
+Public Const titleBoxWidth As Double = chartWidth * titleBoxWidthProportion
+Public Const titleBoxNudge As Double = chartWidth * titleBoxNudgeProportion
+Public Const calcTitlesHeight As Double = figureBoxHeight + titleBoxHeight + subtitleBoxHeight ' For calculation only
+' Pie/donut legend sits just below the subtitle box to avoid overlapping it.
+Public Const pieLegendTop As Double = subtitleBoxTop + subtitleBoxHeight + pieLegendGap
+
+'=== Plot area ===
+'Legend
+Public Const legendTop As Double = calcTitlesHeight
+Public Const legendLeftPad As Double = chartWidth * legendLeftPadProportion
+Public Const LegendHeight As Double = chartHeight * legendHeightProportion
+'Y axis
+Public Const yAxisLabelTop As Double = calcTitlesHeight + LegendHeight
+Public Const yAxisLabelHeight As Double = chartHeight * yAxisLabelHeightProportion
+Public Const yAxisLabelTop_noLegend As Double = calcTitlesHeight
+'X axis title (mirrors the Y strip; sits in a band just above the logo/source band)
+Public Const xAxisLabelHeight As Double = yAxisLabelHeight
+Public Const xAxisLabelTop As Double = chartHeight - logoHeight - plotAreaBottomMargin - xAxisLabelHeight
+'Plot area
+' Plot-area Top/Height are no longer fixed constants: they depend on which title
+' bands (y-title strip, x-title strip) and the legend are present, so they are
+' computed at runtime by PlotAreaTopFor / PlotAreaHeightFor in modChartBuilder.
+' Width/Left are still fixed.
+Public Const plotAreaWidth As Double = chartWidth
+Public Const plotAreaLeft As Double = chartWidth * plotAreaLeftProportion
+
+'=== Source box ===
+Public Const sourceBoxWidth As Double = chartWidth * sourceBoxWidthProportion
+Public Const sourceBoxLeftNudge As Double = chartWidth * sourceBoxNudgeProportion
+Public Const sourceBoxHeight As Double = chartHeight * sourceBoxHeightProportion
+
+'=== Export ===
+Public Const exportAppName As String = orgName & " Chart Styles"
+
+
 ' +---------------------------------------------------------+
 ' |  DEFAULT CHART FORMATTING                               |
 ' |  Controls pipeline defaults for new charts.             |
