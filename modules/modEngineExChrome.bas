@@ -1,5 +1,5 @@
-Attribute VB_Name = "modChartExChrome"
-'==== Module: modChartExChrome ====
+Attribute VB_Name = "modEngineExChrome"
+'==== Module: modEngineExChrome ====
 ' Worksheet-shape chrome for "chartex" charts (the Excel 2016+ family: treemap,
 ' sunburst, waterfall, funnel, box & whisker, histogram).
 '
@@ -12,7 +12,7 @@ Attribute VB_Name = "modChartExChrome"
 ' over the chart, and grouped with the ChartObject so the group exports as one image.
 '
 ' This is deliberately a separate pipeline from the classic in-chart chrome in
-' modChartBuilder (which is left untouched). The chrome is built from a white 600x600
+' modEngineBuilder (which is left untouched). The chrome is built from a white 600x600
 ' Canvas behind everything, then FigureBox, TitleBox, SubTitleBox, SourceBox and
 ' LogoImage on top of it. An optional YAxisTitle box is added for chartex types that
 ' have a value axis (e.g. box & whisker) via defaults.ShowYAxisTitle; types with no
@@ -133,7 +133,7 @@ End Sub
 '   SHAPE BUILDERS (worksheet-targeted, offset by chart position)
 ' ============================================================
 ' Bodies mirror the classic Create*Box / InsertSource / InsertLogo helpers in
-' modChartBuilder, but target ws.Shapes and add (baseLeft, baseTop) to every
+' modEngineBuilder, but target ws.Shapes and add (baseLeft, baseTop) to every
 ' position. baseName is the ChartObject name, used to make member names unique.
 
 ' A borderless white 600x600 rectangle behind the chart and chrome, so the whole
@@ -312,7 +312,7 @@ Fail:
 End Function
 
 
-' Worksheet equivalent of modChartBuilder.CreateYAxisLabelBox: a horizontal title box
+' Worksheet equivalent of modEngineBuilder.CreateYAxisLabelBox: a horizontal title box
 ' over the value axis. Only added for chartex types with a value axis (box & whisker)
 ' via defaults.ShowYAxisTitle. Mirrors the no-legend top position and italic styling
 ' of the classic box, offset to the canvas origin.

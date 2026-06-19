@@ -35,7 +35,7 @@ Private Sub BuildLollipopChart()
 
     For i = 1 To n
         Set srs = cht.SeriesCollection(i)
-        ' Delegate to modFormatSeries so palette toggle is respected
+        ' Delegate to modColorSeries so palette toggle is respected
         clr = GetPaletteColor(i)
 
         ' Hide the bar - fill and border both invisible

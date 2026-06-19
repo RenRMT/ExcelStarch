@@ -5,17 +5,17 @@ Attribute VB_Name = "modChartTreemap"
 ' Why a separate module
 ' ---------------------
 ' Treemap is a "chartex" type (Excel 2016+), a different object family from the
-' classic charts in modChartBuilder. It does NOT use ApplyChartPipeline: xlTreemap
+' classic charts in modEngineBuilder. It does NOT use ApplyChartPipeline: xlTreemap
 ' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/figure/
 ' source/logo) cannot live inside the chart and is built as grouped WORKSHEET shapes
-' by modChartExChrome instead. It has no axes or gridlines.
+' by modEngineExChrome instead. It has no axes or gridlines.
 '
 ' Tiles are points of a single series (like pie slices), so they are coloured
 ' per-point from the brand palette via the shared ApplySliceColors helper (Public in
-' modChartPie - reused here cross-module, exactly as modChartStyle does).
+' modChartPie - reused here cross-module, exactly as modEngineStyle does).
 '
 ' This module owns only the treemap BUILD pipeline; the worksheet chrome, grouping
-' and export live in modChartExChrome and modExport.
+' and export live in modEngineExChrome and modExport.
 Option Explicit
 
 
@@ -48,7 +48,7 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
 
     Dim pointscount As Long
 
-    ' Treemap chrome is built on the host worksheet (see modChartExChrome) because
+    ' Treemap chrome is built on the host worksheet (see modEngineExChrome) because
     ' xlTreemap rejects cht.Shapes.Add* with error 1004. That requires an embedded
     ' chart with a host worksheet - chart sheets are unsupported.
     If TypeName(cht.Parent) <> "ChartObject" Then

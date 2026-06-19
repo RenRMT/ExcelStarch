@@ -149,7 +149,7 @@ Private Sub BuildPieChartWithDefaults(cht As Chart, ByRef defaults As ChartDefau
 End Sub
 ```
 
-Use this approach if your chart type lacks axes, has a non-standard layout, or needs a fundamentally different element arrangement. Call `InsertLogo` and `InsertSource` from `modChartBuilder` directly — they are both `Public` and safe to call in isolation.
+Use this approach if your chart type lacks axes, has a non-standard layout, or needs a fundamentally different element arrangement. Call `InsertLogo` and `InsertSource` from `modEngineBuilder` directly — they are both `Public` and safe to call in isolation.
 
 ### Composition pattern: call an existing chart, then post-process
 
@@ -176,7 +176,7 @@ The Excel 2016+ "chartex" chart types — **treemap, sunburst, waterfall, funnel
 
 > `cht.Shapes.AddTextbox` and `cht.Shapes.AddPicture` raise **error 1004** on a chartex chart. A treemap (etc.) therefore **cannot own** the title/subtitle/figure/source/logo overlay boxes that every classic chart carries inside `cht.Shapes`.
 
-Because the chrome cannot live inside the chart, it is built as **grouped worksheet shapes** instead. The shared chrome pipeline is `modChartExChrome.bas`; each chartex type has a thin builder module that configures it (`modChartTreemap.bas` is the reference implementation). This is a genuinely **separate pipeline** from the classic in-chart one in `modChartBuilder` — not a partial pipeline or a composition. The two do not share code paths (only the geometry constants in `modConfig` and the logo decode in `modEmbeddedImages` are reused).
+Because the chrome cannot live inside the chart, it is built as **grouped worksheet shapes** instead. The shared chrome pipeline is `modEngineExChrome.bas`; each chartex type has a thin builder module that configures it (`modChartTreemap.bas` is the reference implementation). This is a genuinely **separate pipeline** from the classic in-chart one in `modEngineBuilder` — not a partial pipeline or a composition. The two do not share code paths (only the geometry constants in `modConfig` and the logo decode in `modEmbeddedImages` are reused).
 
 ```vba
 ' modChartTreemap.BuildTreemapChartWithDefaults (abridged)
@@ -184,15 +184,15 @@ If TypeName(cht.Parent) <> "ChartObject" Then MsgChartExNeedsEmbedded: Exit Sub 
 ChartExCanvasOrigin cht, originLeft, originTop                                    ' reuse canvas pos on re-run
 PositionChartExChart cht, originLeft, originTop, showY:=True, showX:=False, hasLegend:=False  ' plot band
 If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True          ' tiles, not series
-BuildChartExChrome cht, originLeft, originTop, defaults   ' worksheet shapes + group (modChartExChrome)
+BuildChartExChrome cht, originLeft, originTop, defaults   ' worksheet shapes + group (modEngineExChrome)
 ```
 
 **Worked example — box & whisker** (`modChartBoxWhisker.bas`, the second consumer) shows how a chartex type with axes differs from treemap: it sets `BoxWhiskerChartDefaults.ShowYAxisTitle = True` (it has a value axis), calls `PositionChartExChart(..., showY:=True, showX:=True, hasLegend:=False)` to reserve the in-chart category strip, leaves the native legend in place, and colours **per-series** via `FormatSeriesColors` (its boxes are real series) rather than the per-point `ApplySliceColors` treemap uses. Everything else — canvas, title/subtitle/figure/source/logo, grouping, export — is the shared chrome.
 
-**Implications you must account for when adding another chartex type.** Add a builder module modelled on `modChartTreemap` (or `modChartBoxWhisker` if it has axes), a `*ChartDefaults()` factory, and configure the shared `modChartExChrome` rather than forking it. The separate pipeline reaches into several subsystems that assume in-chart chrome:
+**Implications you must account for when adding another chartex type.** Add a builder module modelled on `modChartTreemap` (or `modChartBoxWhisker` if it has axes), a `*ChartDefaults()` factory, and configure the shared `modEngineExChrome` rather than forking it. The separate pipeline reaches into several subsystems that assume in-chart chrome:
 
 - **Coordinate model.** Classic chrome uses chart-relative coordinates (origin = chart top-left). Worksheet shapes use absolute sheet coordinates, so every position is offset by `cht.Parent.Left`/`.Top`. The chart is forced to `chartWidth × chartHeight` first so the same `modConfig` geometry constants apply.
-- **Per-type config.** `IsChartExType(ct)` (in `modChartToggles`) is the family predicate. Per-type differences are passed in, not branched on inside the chrome: `ChartDefaults.ShowYAxisTitle` adds the optional worksheet Y-axis title box (box & whisker `True`, treemap `False`), and `PositionChartExChart`'s `showY/showX/hasLegend` reserve the right plot-band edges. Tile-vs-series colouring is decided in the builder module.
+- **Per-type config.** `IsChartExType(ct)` (in `modEngineToggles`) is the family predicate. Per-type differences are passed in, not branched on inside the chrome: `ChartDefaults.ShowYAxisTitle` adds the optional worksheet Y-axis title box (box & whisker `True`, treemap `False`), and `PositionChartExChart`'s `showY/showX/hasLegend` reserve the right plot-band edges. Tile-vs-series colouring is decided in the builder module.
 - **Grouping is the contract.** The chrome shapes plus the `ChartObject` are grouped (`ws.Shapes.Range(names).Group`, named `ESTreemapGroup_<chartname>` — the literal prefix is kept for backward-compat under `chartExGroupPrefix`) so they move and export as one unit. Pass the member-name list as a **`Variant` array**, not `String()` — `Shapes.Range` raises type-mismatch otherwise.
 - **Re-run / re-style.** Re-running must ungroup, delete the prior chrome by name, and rebuild — otherwise chrome duplicates. The classic `SafeDeleteShape` only searches `cht.Shapes` and will **not** find worksheet chrome; use a worksheet-targeted delete (see `RemoveExistingChartExChrome` / `SafeDeleteSheetShape`).
 - **Export.** `Chart.Export` / `ExportAsFixedFormat` capture only the chart, so they **omit** worksheet chrome. `modExport` detects a chartex group selection (`IsChartExGroupName`) and rasterises the whole group to PNG via a temporary chart (`CopyPicture` → temp `ChartObject` → `Chart.Export`). This is **screen-resolution PNG only** — no SVG/PDF, and softer than the classic export.
@@ -200,7 +200,7 @@ BuildChartExChrome cht, originLeft, originTop, defaults   ' worksheet shapes + g
 - **Embedded charts only.** Chart sheets (`cht.Parent` is the `Workbook`) have no host worksheet for the shapes, and are rejected with `MsgChartExNeedsEmbedded`.
 - **Known prototype limitations.** Moving the chart after creation leaves chrome behind once the group is ungrouped; re-styling requires selecting the chart, not the group. Document these for any new chartex type that inherits the pipeline.
 
-> **Design note.** The pipeline was generalised from the original treemap-only prototype: the chrome module is `modChartExChrome`, gated on `IsChartExType(chartType)`, with per-type differences isolated behind the `ChartDefaults` struct and the `PositionChartExChart` arguments — mirroring the `*ChartDefaults()` factory pattern. Box & whisker is the second consumer. Keeping classic and chartex as two pipelines is deliberate: the worksheet+group approach is pure upside for chartex (which has no working in-chart path) but would be a regression for classic charts (which export crisply via `Chart.Export`).
+> **Design note.** The pipeline was generalised from the original treemap-only prototype: the chrome module is `modEngineExChrome`, gated on `IsChartExType(chartType)`, with per-type differences isolated behind the `ChartDefaults` struct and the `PositionChartExChart` arguments — mirroring the `*ChartDefaults()` factory pattern. Box & whisker is the second consumer. Keeping classic and chartex as two pipelines is deliberate: the worksheet+group approach is pure upside for chartex (which has no working in-chart path) but would be a regression for classic charts (which export crisply via `Chart.Export`).
 
 ---
 
@@ -305,4 +305,4 @@ Use it as a copy-paste starting point and modify only the chart type constant an
 
 ## Advanced: tag-based buttons (no new handler needed)
 
-If the new chart type can be parameterised from the ribbon XML — as fill colours and ramps are — you can reuse an existing `onAction` handler by encoding the variant in the button's `tag` attribute. For example, a hypothetical "area with opacity" variant could reuse `Format_onAction` with a custom tag. Study `modFormatFill.bas` `ApplyFillFromTag` to understand the tag parsing pattern before using this approach.
+If the new chart type can be parameterised from the ribbon XML — as fill colours and ramps are — you can reuse an existing `onAction` handler by encoding the variant in the button's `tag` attribute. For example, a hypothetical "area with opacity" variant could reuse `Format_onAction` with a custom tag. Study `modColorFill.bas` `ApplyFillFromTag` to understand the tag parsing pattern before using this approach.

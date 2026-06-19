@@ -15,7 +15,7 @@ Attribute VB_Name = "modChartPie"
 ' FormatTitle), InsertLogo, slice colouring.
 '
 ' Slice colouring lives here in ApplySliceColors (Public): treemap (modChartTreemap)
-' and the agnostic styler (modChartStyle) reuse it for their per-point colouring.
+' and the agnostic styler (modEngineStyle) reuse it for their per-point colouring.
 '
 ' Palette: 8 data colours (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
 ' Slices beyond 8 use colorNeutral2 (Steel).
@@ -87,7 +87,7 @@ End Sub
 '   SHARED PRIVATE HELPERS
 ' ============================================================
 
-' Public so the chart-type-agnostic styler (modChartStyle.ApplyChartStyle) can
+' Public so the chart-type-agnostic styler (modEngineStyle.ApplyChartStyle) can
 ' reuse per-slice colouring instead of duplicating the loop.
 ' silent: see InsertLogo - suppresses the failure message for the agnostic
 ' styler, where a chart type (e.g. treemap) may reject per-point colouring.
@@ -122,7 +122,7 @@ CleanFail:
 End Sub
 
 
-' Public so the chart-type-agnostic styler (modChartStyle.ApplyChartStyle) can
+' Public so the chart-type-agnostic styler (modEngineStyle.ApplyChartStyle) can
 ' reuse pie/donut square-plot sizing + title instead of the rectangular pipeline.
 Public Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail

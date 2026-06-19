@@ -1,5 +1,5 @@
-Attribute VB_Name = "modChartToggles"
-'==== Module: modChartToggles ====
+Attribute VB_Name = "modEngineToggles"
+'==== Module: modEngineToggles ====
 ' In-place toggle tools triggered from the Customisation ribbon group. Each
 ' cycles one chart property through a fixed sequence of states on the active
 ' chart (no duplication); they are intended for iterative adjustment.
@@ -16,11 +16,11 @@ Attribute VB_Name = "modChartToggles"
 '                       (selected series only, or all series if none selected)
 '
 ' IsPieChartType and IsChartExType are Public here because they are the chart-type
-' predicates shared with modChartStyle (ClassifyChart) and the chartex builders.
+' predicates shared with modEngineStyle (ClassifyChart) and the chartex builders.
 Option Explicit
 
 
-' Shared chart-type predicate. Public so modChartStyle.ClassifyChart can reuse it.
+' Shared chart-type predicate. Public so modEngineStyle.ClassifyChart can reuse it.
 Public Function IsPieChartType(ByVal ct As Long) As Boolean
     IsPieChartType = (ct = xlPie Or ct = xlDoughnut Or _
                       ct = xlPieEx Or ct = xlDoughnutExploded)
@@ -30,8 +30,8 @@ End Function
 ' Shared chart-type predicate for the Excel 2016+ "chartex" family (treemap,
 ' sunburst, waterfall, funnel, box & whisker, histogram). These store under a cx:
 ' schema with no userShapes slot, so they cannot own in-chart chrome and use the
-' separate worksheet-chrome pipeline (modChartExChrome) instead. Public so the
-' chartex builders and modChartStyle can route by it.
+' separate worksheet-chrome pipeline (modEngineExChrome) instead. Public so the
+' chartex builders and modEngineStyle can route by it.
 Public Function IsChartExType(ByVal ct As Long) As Boolean
     IsChartExType = (ct = xlTreemap Or ct = xlSunburst Or ct = xlWaterfall _
                   Or ct = xlFunnel Or ct = xlBoxwhisker Or ct = xlHistogram)
@@ -414,7 +414,7 @@ Public Sub ToggleAxisTitles()
 End Sub
 
 ' Creates/removes the axis-title boxes for the requested state and resizes the
-' plot area to match. Geometry comes from the pure helpers in modChartBuilder so
+' plot area to match. Geometry comes from the pure helpers in modEngineBuilder so
 ' all combinations of (showY, showX, legend) resolve from one place.
 Private Sub ApplyAxisTitleLayout(cht As Chart, ByVal showY As Boolean, ByVal showX As Boolean)
     On Error GoTo CleanFail

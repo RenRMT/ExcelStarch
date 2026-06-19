@@ -26,7 +26,7 @@ Public Const colorBrand3 As Long = 1644825     'Black        #191919  RGB(25, 25
 Public Const colorBrandLightGrey As Long = 15987699 'Light Grey #F3F3F3 RGB(243, 243, 243)
 ' colorBrand4 is the diverging-ramp neutral centre (#F9F9F9). This is intentionally
 ' a touch lighter than the brand Light Grey (#F3F3F3 above) so the centre series reads
-' as near-white. Used by modRamp.BuildDivergingRamp.
+' as near-white. Used by modColorRamp.BuildDivergingRamp.
 Public Const colorBrand4 As Long = 16382457    'Neutral centre #F9F9F9 RGB(249, 249, 249)
 
 '=== Neutral colors ===
@@ -34,7 +34,7 @@ Public Const colorBrand4 As Long = 16382457    'Neutral centre #F9F9F9 RGB(249, 
 Public Const colorNeutral1 As Long = 15527148  'Platinum RGB(236, 236, 236) #ECECEC
 Public Const colorNeutral2 As Long = 12105912  'Steel    RGB(184, 184, 184) #B8B8B8
 Public Const colorNeutral3 As Long = 10263708  'Ash      RGB(156, 156, 156) - reserved
-Public Const colorNeutral4 As Long = 16777215  'White    RGB(255, 255, 255) - used by name-lookup palette (modFormatFill)
+Public Const colorNeutral4 As Long = 16777215  'White    RGB(255, 255, 255) - used by name-lookup palette (modColorFill)
 Public Const colorWhite As Long = colorNeutral4  'Semantic alias - use this for axis/border white styling
 
 '=== Data colors (contrasting order) ===
