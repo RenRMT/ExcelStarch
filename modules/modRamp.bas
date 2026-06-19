@@ -2,13 +2,13 @@ Attribute VB_Name = "modRamp"
 '==== Module: modRamp ====
 ' Applies colour ramps to the data series of the active chart.
 '
-' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 6,4,8,3,9,7,2,1,10,5.
+' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 6,2,4,3,5,7,8,1,9,10.
 ' InvertColorRamp     - reverses the current fill colour assignment across all series.
 ' ApplyDivergingRamp  - two-hue diverging ramp: dark→light on the left, light→dark on
 '                       the right, with an optional grey centre for odd series counts.
 '
 ' Step selection for both single and diverging ramps follows the same priority sequence
-' [6,4,8,3,9,7,2,1,10,5]. For diverging ramps the selected steps are then sorted
+' [6,2,4,3,5,7,8,1,9,10]. For diverging ramps the selected steps are then sorted
 ' numerically (1 = lightest, 10 = darkest) before being assigned as a gradient.
 '
 ' Maximum series: 10 (single), 21 (diverging: 10 + grey + 10).
@@ -249,10 +249,10 @@ End Sub
 ' All returned arrays are 0-based Variants (from Array()); index with (k - 1) when
 ' walking a 1-based series/step counter.
 
-' The fixed step-selection priority [6,4,8,3,9,7,2,1,10,5]: which palette steps to use,
+' The fixed step-selection priority [6,2,4,3,5,7,8,1,9,10]: which palette steps to use,
 ' and in what preference order, as the series count grows.
 Private Function StepPriority() As Variant
-    StepPriority = Array(6, 4, 8, 3, 9, 7, 2, 1, 10, 5)
+    StepPriority = Array(6, 2, 4, 3, 5, 7, 8, 1, 9, 10)
 End Function
 
 ' Returns the first `count` priority steps, sorted ascending (1 = lightest ..
