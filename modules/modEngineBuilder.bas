@@ -1,7 +1,11 @@
-Attribute VB_Name = "modChartBuilder"
+Attribute VB_Name = "modEngineBuilder"
 Option Explicit
 
-' Shared formatting pipeline applied to every chart type.
+' Classic-Chart in-chart formatting pipeline: builds the title/logo/source chrome
+' inside cht.Shapes. ChartEx types (treemap, box & whisker, ...) cannot host in-chart
+' shapes and use the separate worksheet-chrome pipeline in modEngineExChrome instead.
+'
+' Shared formatting pipeline applied to every classic chart type.
 ' colorMode: "FILL" for bar/column charts; "LINE" for line/slope/scatter charts.
 ' defaults: ChartDefaults UDT containing all five formatting options.
 '

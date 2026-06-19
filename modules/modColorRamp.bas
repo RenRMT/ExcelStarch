@@ -1,5 +1,5 @@
-Attribute VB_Name = "modRamp"
-'==== Module: modRamp ====
+Attribute VB_Name = "modColorRamp"
+'==== Module: modColorRamp ====
 ' Applies colour ramps to the data series of the active chart.
 '
 ' ApplyColorRamp      - single-hue ramp, steps assigned in spread order 6,2,4,3,5,7,8,1,9,10.

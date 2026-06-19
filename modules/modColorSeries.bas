@@ -1,4 +1,4 @@
-Attribute VB_Name = "modFormatSeries"
+Attribute VB_Name = "modColorSeries"
 Option Explicit
 
 ' Palette order toggle. False = Contrasting (default), True = Rainbow.

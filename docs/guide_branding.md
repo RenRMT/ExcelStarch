@@ -110,7 +110,7 @@ The comment is documentation only and does not affect the value.
 
 ### Colour ramps
 
-Each of the eight hues has a 10-step sequential ramp (`rampA1`–`rampA10` through `rampH1`–`rampH10`, where 1 = lightest and 10 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales. As with all colour constants, **change values but not names** — they are referenced directly by `modRamp.bas`.
+Each of the eight hues has a 10-step sequential ramp (`rampA1`–`rampA10` through `rampH1`–`rampH10`, where 1 = lightest and 10 = darkest). If the brand has fewer signature hues, replace the unused ramp sets with monochrome or neutral scales. As with all colour constants, **change values but not names** — they are referenced directly by `modColorRamp.bas`.
 
 ---
 

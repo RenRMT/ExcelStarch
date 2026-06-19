@@ -1,5 +1,5 @@
-Attribute VB_Name = "modFormatFill"
-'==== Module: modFormatFill ====
+Attribute VB_Name = "modColorFill"
+'==== Module: modColorFill ====
 Option Explicit
 
 Private Const LASTUSED_KEY As String = "LastUsedFillTag"

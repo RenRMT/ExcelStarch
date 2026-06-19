@@ -1,7 +1,7 @@
-Attribute VB_Name = "modChartStyle"
-'==== Module: modChartStyle ====
+Attribute VB_Name = "modEngineStyle"
+'==== Module: modEngineStyle ====
 ' Post-creation styling tools that re-apply the house style to an existing
-' chart. Unlike the in-place toggles in modChartToggles, these (re)build chart
+' chart. Unlike the in-place toggles in modEngineToggles, these (re)build chart
 ' chrome and may duplicate the source chart.
 '
 ' Tools
@@ -12,7 +12,7 @@ Attribute VB_Name = "modChartStyle"
 '   ApplyChartStyle       - chart-type-agnostic styler: applies the house style
 '                           in place, to the extent each chart type allows
 '
-' IsPieChartType is shared with modChartToggles, where it lives as a Public
+' IsPieChartType is shared with modEngineToggles, where it lives as a Public
 ' function; it is called here unqualified (VBA flat namespace).
 Option Explicit
 

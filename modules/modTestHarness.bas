@@ -16,10 +16,10 @@ Attribute VB_Name = "modTestHarness"
 '
 ' Scope (high-ROI targets only - bugs here are both likely and invisible to eye):
 '   modColorContrast  RelativeLuminance, ContrastColorForFill   (WCAG maths)
-'   modRamp           OrderedRampSteps, DivergingSideCount/HasMiddle, ParseDivergingTag
-'   modFormatFill     ParseFillPayload, IsRemoveFillPayload, ColorFromName
-'   modFormatSeries   GetPaletteColor                          (palette-order map)
-'   modChartBuilder   PlotAreaTopFor, PlotAreaHeightFor        (plot-area geometry)
+'   modColorRamp           OrderedRampSteps, DivergingSideCount/HasMiddle, ParseDivergingTag
+'   modColorFill     ParseFillPayload, IsRemoveFillPayload, ColorFromName
+'   modColorSeries   GetPaletteColor                          (palette-order map)
+'   modEngineBuilder   PlotAreaTopFor, PlotAreaHeightFor        (plot-area geometry)
 '
 ' Trivial lookups (LoadPalette, chart-type classifiers, ChartDefaults factories)
 ' are deliberately NOT tested - a test there only re-states the constants.
@@ -74,7 +74,7 @@ End Sub
 
 
 ' ------------------------------------------------------------
-'   modRamp - step ordering
+'   modColorRamp - step ordering
 ' ------------------------------------------------------------
 
 Private Sub TestOrderedRampSteps()
@@ -132,7 +132,7 @@ End Sub
 
 
 ' ------------------------------------------------------------
-'   modFormatFill - payload/tag parsing
+'   modColorFill - payload/tag parsing
 ' ------------------------------------------------------------
 
 Private Sub TestParseFillPayload()
@@ -181,7 +181,7 @@ End Sub
 
 
 ' ------------------------------------------------------------
-'   modFormatSeries - palette order
+'   modColorSeries - palette order
 ' ------------------------------------------------------------
 
 Private Sub TestGetPaletteColor()
@@ -202,7 +202,7 @@ End Sub
 
 
 ' ------------------------------------------------------------
-'   modChartBuilder - plot-area geometry
+'   modEngineBuilder - plot-area geometry
 ' ------------------------------------------------------------
 
 Private Sub TestPlotAreaGeometry()

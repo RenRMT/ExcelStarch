@@ -5,7 +5,7 @@ Attribute VB_Name = "modChartBoxWhisker"
 ' Why a separate module
 ' ---------------------
 ' Box & whisker is a "chartex" type (Excel 2016+) and uses the worksheet-chrome
-' pipeline in modChartExChrome, not the classic in-chart pipeline: xlBoxwhisker
+' pipeline in modEngineExChrome, not the classic in-chart pipeline: xlBoxwhisker
 ' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/figure/
 ' source/logo + an optional Y-axis title) is built as grouped WORKSHEET shapes.
 '
@@ -48,7 +48,7 @@ End Sub
 Private Sub BuildBoxWhiskerChartWithDefaults(cht As Chart, ByRef defaults As ChartDefaults)
     On Error GoTo CleanFail
 
-    ' Chrome is built on the host worksheet (see modChartExChrome) because
+    ' Chrome is built on the host worksheet (see modEngineExChrome) because
     ' xlBoxwhisker rejects cht.Shapes.Add* with error 1004. That requires an embedded
     ' chart with a host worksheet - chart sheets are unsupported.
     If TypeName(cht.Parent) <> "ChartObject" Then

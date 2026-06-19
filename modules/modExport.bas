@@ -143,7 +143,7 @@ End Sub
 
 
 ' Chartex chrome (title/logo/source) is built as worksheet shapes grouped with the
-' chart (see modChartExChrome), so the chart-only Chart.Export omits it. This exports
+' chart (see modEngineExChrome), so the chart-only Chart.Export omits it. This exports
 ' the whole group as a PNG by rasterising it through a temporary chart.
 '
 ' Returns True if a chartex group was found and handled (or the user cancelled the
@@ -228,7 +228,7 @@ End Function
 
 
 Private Function IsChartExGroupName(ByVal nm As String) As Boolean
-    'chartExGroupPrefix is the single source of truth, defined in modChartExChrome.
+    'chartExGroupPrefix is the single source of truth, defined in modEngineExChrome.
     IsChartExGroupName = (InStr(1, nm, chartExGroupPrefix, vbTextCompare) = 1)
 End Function
 

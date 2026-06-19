@@ -54,7 +54,7 @@ Public Const xAxisLabelTop As Double = chartHeight - logoHeight - plotAreaBottom
 'Plot area
 ' Plot-area Top/Height are no longer fixed constants: they depend on which title
 ' bands (y-title strip, x-title strip) and the legend are present, so they are
-' computed at runtime by PlotAreaTopFor / PlotAreaHeightFor in modChartBuilder.
+' computed at runtime by PlotAreaTopFor / PlotAreaHeightFor in modEngineBuilder.
 ' Width/Left are still fixed.
 Public Const plotAreaWidth As Double = chartWidth
 Public Const plotAreaLeft As Double = chartWidth * plotAreaLeftProportion
@@ -96,7 +96,7 @@ Public Const defaultLegend As Boolean = False           ' False = no legend
 '=== ChartDefaults User-Defined Type ===
 'Bundles formatting options into a single parameter for chart pipeline.
 'Only Gridlines, AxisDisplay, and Legend are currently consumed by ApplyDefaultFormatting.
-'ShowYAxisTitle is consumed only by the chartex chrome (modChartExChrome) - it adds the
+'ShowYAxisTitle is consumed only by the chartex chrome (modEngineExChrome) - it adds the
 'optional worksheet Y-axis title box for chartex types with a value axis (box & whisker);
 'classic factories leave it False and ignore it.
 'AxisLines and AxisLabels are reserved for future use (phase 6+).
