@@ -30,7 +30,7 @@ Public Const colorData4 As Long = 7968767      'Coral   #FF9779 RGB(255, 151, 12
 Public Const colorData5 As Long = 16764040     'Sky     #88CCFF RGB(136, 204, 255)
 Public Const colorData6 As Long = 4996284      'Cherry  #BC3C4C RGB(188, 60, 76)
 Public Const colorData7 As Long = 14531583     'Blush   #FFBBDD RGB(255, 187, 221)
-Public Const colorData8 As Long = 11154312     'Indigo  #8833AA RGB(136, 51, 170)
+Public Const colorData8 As Long = 11154312     'Violet  #8833AA RGB(136, 51, 170)
 
 '== Color ramp ==
 ' Each ramp is a 10-step sequential palette (1 = lightest .. 10 = darkest).
@@ -58,7 +58,7 @@ Public Const rampB8 As Long = 4687257   '#998547 RGB(153, 133, 71)
 Public Const rampB9 As Long = 3168358   '#665830 RGB(102, 88, 48)
 Public Const rampB10 As Long = 1584179  '#332c18 RGB(51, 44, 24)
 
-' rampC = Navy
+' rampC = Baltic
 Public Const rampC1 As Long = 16117738  '#eaeff5 RGB(234, 239, 245)
 Public Const rampC2 As Long = 15458005  '#d5deeb RGB(213, 222, 235)
 Public Const rampC3 As Long = 14138794  '#aabdd7 RGB(170, 189, 215)
@@ -118,7 +118,7 @@ Public Const rampG8 As Long = 8745113   '#997085 RGB(153, 112, 133)
 Public Const rampG9 As Long = 5786470   '#664b58 RGB(102, 75, 88)
 Public Const rampG10 As Long = 2893107  '#33252c RGB(51, 37, 44)
 
-' rampH = Indigo
+' rampH = Violet
 Public Const rampH1 As Long = 16247795  '#f3ebf7 RGB(243, 235, 247)
 Public Const rampH2 As Long = 15652583  '#e7d6ee RGB(231, 214, 238)
 Public Const rampH3 As Long = 14527951  '#cfaddd RGB(207, 173, 221)

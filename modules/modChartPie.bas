@@ -17,7 +17,7 @@ Attribute VB_Name = "modChartPie"
 ' Slice colouring lives here in ApplySliceColors (Public): treemap (modChartTreemap)
 ' and the agnostic styler (modChartStyle) reuse it for their per-point colouring.
 '
-' Palette: 8 data colours (Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo).
+' Palette: 8 data colours (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
 ' Slices beyond 8 use colorNeutral2 (Steel).
 Option Explicit
 

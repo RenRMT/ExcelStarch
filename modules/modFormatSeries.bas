@@ -2,9 +2,9 @@ Attribute VB_Name = "modFormatSeries"
 Option Explicit
 
 ' Palette order toggle. False = Contrasting (default), True = Rainbow.
-' Contrasting: Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo
+' Contrasting: Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet
 '              = colorData1, colorData2, colorData3, colorData4, colorData5, colorData6, colorData7, colorData8
-' Rainbow:     Indigo, Navy, Sky, Teal, Jasmine, Blush, Coral, Cherry
+' Rainbow:     Violet, Baltic, Sky, Teal, Jasmine, Blush, Coral, Cherry
 '              = colorData8, colorData3, colorData5, colorData1, colorData2, colorData7, colorData4, colorData6
 Private m_useAltOrder As Boolean
 
