@@ -111,7 +111,7 @@ Maximum 21 series for diverging ramps (10 + grey centre + 10).
 |---|---|---|
 | <img src="../icons/i_menu_order.png" height="28"> | Toggle Palette Order | Switch series colour order between the two palette arrangements |
 | <img src="../icons/i_menu_invert.png" height="28"> | Invert Ramp | Reverse the current fill colour order across all series without re-applying a ramp — useful for flipping a ramp direction or a custom arrangement |
-| <img src="../icons/i_menu_label_last.png" height="28"> | Label Last Point | Duplicate the chart and add series-name labels to the last data point of each series (line charts); narrows the plot area to make room |
+| <img src="../icons/i_menu_label_last.png" height="28"> | Annotation | Add an editable annotation box to the chart. Select nothing for a box at the plot centre, a data point for a box beside it, or a series for a box near its last point. Runs stack, so you can add several |
 
 ---
 

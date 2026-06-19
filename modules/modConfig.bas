@@ -244,11 +244,14 @@ Public Const gridlineWeight As Double = 1
 Public Const axisLineWeight As Double = 1
 
 '=== Chart Actions settings ===
-'Label last point
-Public Const labelLastPointPlotWidthInset As Long = 66    ' narrowed for end labels on line charts
-Public Const labelLastPointPlotTop As Long = 105
-Public Const labelLastPointPlotWidthRatio As Double = 0.98
-Public Const labelLastPointTitleNudge As Long = -13
+'Annotation box
+Public Const annotationDefaultText As String = "Annotation"
+Public Const annotationBoxWidth As Double = 120
+Public Const annotationBoxHeight As Double = 30
+Public Const annotationOffsetX As Double = 8     ' box left = point + offset
+Public Const annotationOffsetY As Double = -8    ' box top  = point - offset (sit above)
+Public Const annotationFontSize As Double = axisFontSize   ' reuse existing axis size
+Public Const annotationFontColor As Long = axisFontColor   ' reuse existing axis colour
 
 
 ' === Box sizes ===

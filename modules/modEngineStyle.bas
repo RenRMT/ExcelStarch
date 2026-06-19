@@ -6,9 +6,12 @@ Attribute VB_Name = "modEngineStyle"
 '
 ' Tools
 ' -----
-'   LabelLastPointButton  - duplicates the chart and adds series-name labels to
-'                           the final data point of each series (line charts get
-'                           a narrowed plot area); preserves the original
+'   AnnotateButton        - adds an editable annotation text box to the active
+'                           chart. With nothing (or a background element)
+'                           selected the box lands at the plot-area centre; with
+'                           a data point selected it sits near that point; with a
+'                           whole series selected it sits near the series' last
+'                           point. Chart-type agnostic - no per-type layout.
 '   ApplyChartStyle       - chart-type-agnostic styler: applies the house style
 '                           in place, to the extent each chart type allows
 '
@@ -18,133 +21,155 @@ Option Explicit
 
 
 ' ============================================================
-'   LABEL LAST POINT
+'   ANNOTATION
 ' ============================================================
+' Adds an editable annotation text box to the active chart. Placement depends
+' on the current selection:
+'   - a single data Point        -> near that point
+'   - a whole Series             -> near the series' last point
+'   - nothing / background        -> centre of the plot area
+' The box is additive (named "AnnotationBox<n>"), so repeated runs stack rather
+' than overwrite, and the user can freely retype the default text.
 
-Private Sub BuildLabelLastPoint()
+Public Sub AnnotateButton()
+    BuildAnnotation
+End Sub
+
+Private Sub BuildAnnotation()
     On Error GoTo CleanFail
     AppFast
 
-    Dim ipts As Long
-    Dim Npts As Long
-    Dim bLabeled As Boolean
     Dim cht As Chart
-    Dim srs As Series
-    Dim shp As Shape
-    Dim iColor As Long
-    Dim lbl As DataLabel
-
-    If ActiveChart Is Nothing Then
+    Set cht = ResolveActiveChart()
+    If cht Is Nothing Then
         MsgNoActiveChart
         GoTo CleanExit
     End If
 
-    ' Duplicate the chart and capture new chart reference directly (no Select required)
-    Dim dupShp As Shape
-    Set dupShp = ActiveChart.Parent.Duplicate
-    Set cht = dupShp.Chart
+    ' Chart.Shapes.AddTextbox only works reliably on the ACTIVE chart - a ribbon
+    ' click deselects it, so re-activate first (mirrors ApplyChartStyle).
+    ActivateChart cht
 
-    ' Narrow plot area only on line charts to make room for end labels
-    With cht.PlotArea
-        If cht.chartType = xlLine Then
-            .Width = chartWidth - labelLastPointPlotWidthInset
-        End If
-        .Left = 0
-    End With
+    Dim pt As Point
+    Set pt = ResolveSelectedPoint()      ' Nothing => centre case
 
-    ' Nudge Y-axis label box upward when legend is present
-    If cht.hasLegend Then
-        For Each shp In cht.Shapes
-            If shp.name = "YAxisLabelBox" Then
-                shp.IncrementTop labelLastPointTitleNudge
-            End If
-        Next shp
+    Dim leftPos As Double, topPos As Double
+    If pt Is Nothing Then
+        GetPlotCenter cht, leftPos, topPos
+    ElseIf Not TryGetPointAnchor(pt, leftPos, topPos) Then
+        ' Unplotted point has no pixel anchor - fall back to centre.
+        GetPlotCenter cht, leftPos, topPos
     End If
 
-    ' Adjust plot area dimensions using direct object references (no Select required)
-    Dim plHeight As Double
-    Dim plWidth As Double
-    With cht.PlotArea
-        plHeight = .Height
-        plWidth = .Width
-        .Top = labelLastPointPlotTop
-        .Width = plWidth * labelLastPointPlotWidthRatio
-        .Height = plHeight
-    End With
+    AddAnnotationBox cht, leftPos, topPos
 
-    ' Remove legend (labels replace it)
-    If cht.hasLegend Then
-        cht.Legend.Delete
-    End If
-
-    ' Label the last valid point in each series
-    For Each srs In cht.SeriesCollection
-        bLabeled = False
-        With srs
-            Npts = 0
-            On Error Resume Next
-            Npts = .Points.Count
-            On Error GoTo 0
-
-            If Npts > 0 Then
-                For ipts = Npts To 1 Step -1
-                    On Error Resume Next
-                    If bLabeled Then
-                        srs.Points(ipts).HasDataLabel = False
-                    Else
-                        ' Clear any existing label first (linked labels resist reassignment)
-                        srs.Points(ipts).HasDataLabel = False
-                        srs.Points(ipts).ApplyDataLabels _
-                            ShowSeriesName:=True, ShowCategoryName:=False, _
-                            ShowValue:=False, AutoText:=False, LegendKey:=False
-                        bLabeled = (Err.Number = 0)
-                        ' Excel 2010+: no error on unplotted points but label is blank
-                        If bLabeled Then bLabeled = (Len(srs.Points(ipts).DataLabel.Text) > 0)
-                        If Not bLabeled Then srs.Points(ipts).HasDataLabel = False
-                    End If
-                    On Error GoTo 0
-
-                    If bLabeled Then
-                        Set lbl = srs.Points(ipts).DataLabel
-                        lbl.Font.Bold = msoTrue
-
-                        Select Case srs.chartType
-                            Case xlLine, xlLineStacked, xlLineStacked100, xlLineMarkers, xlLineMarkersStacked, xlLineMarkersStacked100
-                                lbl.Position = xlLabelPositionRight
-                                iColor = .Format.Line.ForeColor.RGB
-                            Case xlXYScatter, xlXYScatterLines, xlXYScatterLinesNoMarkers, xlXYScatterSmooth, xlXYScatterSmoothNoMarkers
-                                lbl.Position = xlLabelPositionRight
-                                iColor = .MarkerBackgroundColor
-                            Case xlColumnClustered, xlBarClustered
-                                lbl.Position = xlLabelPositionOutsideEnd
-                                iColor = .Format.Fill.ForeColor.RGB
-                            Case xlColumnStacked, xlColumnStacked100, xlBarStacked, xlBarStacked100, xlArea, xlAreaStacked, xlAreaStacked100
-                                lbl.Position = xlLabelPositionCenter
-                                iColor = .Format.Fill.ForeColor.RGB
-                        End Select
-
-                        lbl.Font.Color = iColor
-                        lbl.Font.Size = axisFontSize
-                    End If
-                Next ipts
-            End If
-
-            ' Required so label updates when series name changes
-            srs.DataLabels.AutoText = True
-        End With
-    Next srs
 CleanExit:
     AppRestore
     Exit Sub
 
 CleanFail:
     AppRestore
-    MsgError "BuildLabelLastPoint"
+    MsgError "BuildAnnotation"
 End Sub
 
-Sub LabelLastPointButton()
-    BuildLabelLastPoint
+' Returns the selected Point to anchor to, or Nothing for the plot-centre case.
+' A selected Series resolves to its last point. Mirrors the Series/Point
+' detection in modColorFill (GetFillTarget / IsSeriesOrPoint).
+Private Function ResolveSelectedPoint() As Point
+    If Selection Is Nothing Then Exit Function
+
+    Dim pt As Point
+    Dim srs As Series
+
+    On Error Resume Next
+    Set pt = Selection
+    If Err.Number = 0 And Not pt Is Nothing Then
+        Set ResolveSelectedPoint = pt
+        Err.Clear
+        On Error GoTo 0
+        Exit Function
+    End If
+    Err.Clear
+
+    Set srs = Selection
+    If Err.Number = 0 And Not srs Is Nothing Then
+        ' Series selected -> anchor on its last point.
+        If srs.Points.Count > 0 Then Set ResolveSelectedPoint = srs.Points(srs.Points.Count)
+    End If
+    Err.Clear
+    On Error GoTo 0
+End Function
+
+' Reads a data point's chart-relative pixel position by briefly borrowing its
+' DataLabel (a Point exposes no .Left/.Top). Any label we create is removed
+' again so the chart is left untouched. Returns False if the point is unplotted
+' or otherwise has no readable position.
+Private Function TryGetPointAnchor(pt As Point, ByRef leftPos As Double, ByRef topPos As Double) As Boolean
+    Dim hadLabel As Boolean
+    Dim lbl As DataLabel
+
+    On Error GoTo Fail
+    hadLabel = pt.HasDataLabel
+    If Not hadLabel Then pt.HasDataLabel = True
+
+    Set lbl = pt.DataLabel
+    leftPos = lbl.Left + annotationOffsetX
+    topPos = lbl.Top + annotationOffsetY
+
+    If Not hadLabel Then pt.HasDataLabel = False   ' restore: we added it
+    On Error GoTo 0
+    TryGetPointAnchor = True
+    Exit Function
+
+Fail:
+    ' Best-effort cleanup of a label we may have added before failing.
+    On Error Resume Next
+    If Not hadLabel Then pt.HasDataLabel = False
+    On Error GoTo 0
+    TryGetPointAnchor = False
+End Function
+
+' Top-left of an annotation box centred on the plotting region. Uses Inside*
+' so the box centres on the actual plot, not the plot-area frame.
+Private Sub GetPlotCenter(cht As Chart, ByRef leftPos As Double, ByRef topPos As Double)
+    With cht.PlotArea
+        leftPos = .InsideLeft + .InsideWidth / 2 - annotationBoxWidth / 2
+        topPos = .InsideTop + .InsideHeight / 2 - annotationBoxHeight / 2
+    End With
 End Sub
+
+' Creates the annotation text box at the given chart-relative position. The name
+' is suffixed with the next free index so repeated runs stack instead of
+' overwriting (so we deliberately do NOT SafeDeleteShape first).
+Private Sub AddAnnotationBox(cht As Chart, ByVal leftPos As Double, ByVal topPos As Double)
+    Dim shp As Shape
+    Set shp = cht.Shapes.AddTextbox( _
+                    Orientation:=msoTextOrientationHorizontal, _
+                    Left:=leftPos, Top:=topPos, _
+                    Width:=annotationBoxWidth, Height:=annotationBoxHeight)
+
+    With shp
+        .name = NextAnnotationName(cht)
+        .TextFrame2.TextRange.Text = annotationDefaultText
+        With .TextFrame2.TextRange.Font
+            .Size = annotationFontSize
+            .name = fontPrimary
+            .Fill.ForeColor.RGB = annotationFontColor
+            .Bold = msoFalse
+        End With
+    End With
+End Sub
+
+' Returns the next free "AnnotationBox<n>" name by scanning existing shapes.
+Private Function NextAnnotationName(cht As Chart) As String
+    Dim n As Long
+    n = 0
+    Dim shp As Shape
+    For Each shp In cht.Shapes
+        If Left$(shp.name, 13) = "AnnotationBox" Then n = n + 1
+    Next shp
+    NextAnnotationName = "AnnotationBox" & (n + 1)
+End Function
 
 
 ' ============================================================

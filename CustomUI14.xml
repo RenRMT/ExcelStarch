@@ -449,12 +449,12 @@
 						supertip="Reverse the fill colour order across all chart series."
 						onAction="InvertRamp_onAction"/>
 					<button
-						id="LabelLastPointButton"
+						id="AnnotateButton"
 						image="i_menu_label_last"
-						label="Label Last Point"
+						label="Annotation"
 						size="normal"
-						supertip="Add series names to the last point on the graph."
-						onAction="LabelLastPointButton_onAction"/>
+						supertip="Add an annotation box at the plot centre, or near a selected data point or series."
+						onAction="AnnotateButton_onAction"/>
 				</group>
 				<group id="Customisation" label="Toggles">
 					<button

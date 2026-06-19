@@ -64,7 +64,11 @@ Spot-check that re-running a builder while a chart is **selected/active** re-sty
 |---|---|---|
 | Toggle Palette Order | Coloured chart | Series colour order switches between the two arrangements |
 | Invert Ramp | Coloured chart | Fill colour order reverses across all series |
-| Label Last Point | Line chart with a legend | Chart duplicated; series-name labels on the last point; plot narrowed; legend removed on the copy |
+| Annotation | Chart active, nothing selected | "Annotation" box appears at the plot-area centre |
+| Annotation | A single data point selected | "Annotation" box appears beside that point |
+| Annotation | A whole series selected | "Annotation" box appears near the series' last point |
+| Annotation | Run twice in a row | Two boxes ("AnnotationBox1", "AnnotationBox2"); neither overwrites the other |
+| Annotation | No chart active | "Select a chart and try again." message; no crash |
 
 ---
 
