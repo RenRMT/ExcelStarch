@@ -18,6 +18,8 @@ Attribute VB_Name = "modTestHarness"
 '   modColorContrast  RelativeLuminance, ContrastColorForFill   (WCAG maths)
 '   modRamp           OrderedRampSteps, DivergingSideCount/HasMiddle, ParseDivergingTag
 '   modFormatFill     ParseFillPayload, IsRemoveFillPayload, ColorFromName
+'   modFormatSeries   GetPaletteColor                          (palette-order map)
+'   modChartBuilder   PlotAreaTopFor, PlotAreaHeightFor        (plot-area geometry)
 '
 ' Trivial lookups (LoadPalette, chart-type classifiers, ChartDefaults factories)
 ' are deliberately NOT tested - a test there only re-states the constants.
@@ -35,6 +37,8 @@ Public Sub RunAllTests()
     TestParseFillPayload
     TestIsRemoveFillPayload
     TestColorFromName
+    TestGetPaletteColor
+    TestPlotAreaGeometry
 
     Debug.Print "=== All tests passed ==="
 End Sub
@@ -80,8 +84,14 @@ Private Sub TestOrderedRampSteps()
     ' n=1: the single darkest priority step.
     AssertArrayEqual OrderedRampSteps(1), Array(6), "OrderedRampSteps(1)"
 
+    ' n=2: priority [6,2] -> sort asc [2,6] -> reverse (darkest first) [6,2].
+    AssertArrayEqual OrderedRampSteps(2), Array(6, 2), "OrderedRampSteps(2)"
+
     ' n=3: priority [6,2,4] -> sort asc [2,4,6] -> reverse (darkest first) [6,4,2].
     AssertArrayEqual OrderedRampSteps(3), Array(6, 4, 2), "OrderedRampSteps(3)"
+
+    ' n=5: priority [6,2,4,3,5] -> sort asc [2,3,4,5,6] -> reverse [6,5,4,3,2].
+    AssertArrayEqual OrderedRampSteps(5), Array(6, 5, 4, 3, 2), "OrderedRampSteps(5)"
 
     ' n=10: full set, darkest (10) to lightest (1).
     AssertArrayEqual OrderedRampSteps(10), Array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), "OrderedRampSteps(10)"
@@ -167,6 +177,58 @@ Private Sub TestColorFromName()
     Debug.Assert ColorFromName("BOGUS") = -1
 
     Debug.Print "  PASS: TestColorFromName"
+End Sub
+
+
+' ------------------------------------------------------------
+'   modFormatSeries - palette order
+' ------------------------------------------------------------
+
+Private Sub TestGetPaletteColor()
+    ' Default (Contrasting) order: slot i maps to colorData(i) for 1..8.
+    ' Note: the alt (Rainbow) branch depends on the module-level m_useAltOrder
+    ' flag, which only the object-model TogglePaletteOrder sets, so it is not
+    ' covered here - this exercises the default branch and the fallback.
+    Debug.Assert GetPaletteColor(1) = colorData1
+    Debug.Assert GetPaletteColor(3) = colorData3   ' Baltic slot - guards the recolour
+    Debug.Assert GetPaletteColor(8) = colorData8
+
+    ' Out-of-range indices fall back to the neutral (Steel).
+    Debug.Assert GetPaletteColor(9) = colorNeutral2
+    Debug.Assert GetPaletteColor(0) = colorNeutral2
+
+    Debug.Print "  PASS: TestGetPaletteColor"
+End Sub
+
+
+' ------------------------------------------------------------
+'   modChartBuilder - plot-area geometry
+' ------------------------------------------------------------
+
+Private Sub TestPlotAreaGeometry()
+    ' Assert against the formula composed from the named constants (not magic
+    ' numbers) so the test validates which bands are included per flag combo and
+    ' stays valid if a constant is retuned.
+
+    ' Top band = titles, plus legend strip and/or y-axis-label strip when shown.
+    Debug.Assert PlotAreaTopFor(False, False) = calcTitlesHeight
+    Debug.Assert PlotAreaTopFor(False, True) = calcTitlesHeight + LegendHeight
+    Debug.Assert PlotAreaTopFor(True, False) = calcTitlesHeight + yAxisLabelHeight + yAxisLabelPad
+    Debug.Assert PlotAreaTopFor(True, True) = _
+        calcTitlesHeight + LegendHeight + yAxisLabelHeight + yAxisLabelPad
+
+    ' Height = canvas less the top band, the x-title strip (when shown), and the
+    ' always-reserved bottom margin + logo. Check the composition identity holds.
+    Debug.Assert PlotAreaHeightFor(True, True, True) = _
+        chartHeight - PlotAreaTopFor(True, True) - xAxisLabelHeight _
+        - plotAreaBottomMargin - logoHeight
+    Debug.Assert PlotAreaHeightFor(False, False, False) = _
+        chartHeight - PlotAreaTopFor(False, False) - plotAreaBottomMargin - logoHeight
+
+    ' Sanity: the minimal-chrome plot area must still be positive.
+    Debug.Assert PlotAreaHeightFor(False, False, False) > 0
+
+    Debug.Print "  PASS: TestPlotAreaGeometry"
 End Sub
 
 
