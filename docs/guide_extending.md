@@ -1,6 +1,6 @@
 # Extending the Add-in with New Chart Types
 
-The add-in is designed so that adding a chart type is localised to a few places: a new `.bas` module, a `ChartDefaults` factory in `modConfigCharts.bas`, one line in `modRibbonHandlers.bas`, one button in `CustomUI14.xml`, and an icon image. Nothing else needs to change.
+The add-in is designed so that adding a chart type is localised to a few places: a new `.bas` module, a `ChartDefaults` factory in `modConfigDerived.bas`, one line in `modRibbonHandlers.bas`, one button in `CustomUI14.xml`, and an icon image. Nothing else needs to change.
 
 ---
 
@@ -23,7 +23,7 @@ Private Sub BuildXxxChart()
     ' 2. Run the shared formatting pipeline.
     '    Signature: ApplyChartPipeline cht, colorMode, defaults
     '    colorMode: "FILL" for bars/columns/area/pie, "LINE" for line/scatter
-    '    defaults:  a ChartDefaults struct from modConfigCharts
+    '    defaults:  a ChartDefaults struct from modConfigDerived
     ApplyChartPipeline cht, "FILL", XxxChartDefaults()
 
     ' 3. Apply chart-type-specific property overrides
@@ -74,7 +74,7 @@ Private Sub BuildXxxChart()
     Set cht = GetTargetChart(xlXxxClustered)   ' use the appropriate xlChartType constant
     If cht Is Nothing Then GoTo CleanExit
 
-    ApplyChartPipeline cht, "FILL", XxxChartDefaults()   ' defaults from modConfigCharts
+    ApplyChartPipeline cht, "FILL", XxxChartDefaults()   ' defaults from modConfigDerived
     Call RemoveShadow(cht)
 
     ' Chart-type-specific properties
@@ -99,7 +99,7 @@ Sub XxxChart()
 End Sub
 ```
 
-You will also need a `XxxChartDefaults()` factory in `modConfigCharts.bas` that returns a `ChartDefaults` struct describing which gridlines, axes, and legend this chart type should get. Copy an existing one (e.g. `ColumnChartDefaults`) as a starting point.
+You will also need a `XxxChartDefaults()` factory in `modConfigDerived.bas` that returns a `ChartDefaults` struct describing which gridlines, axes, and legend this chart type should get. Copy an existing one (e.g. `ColumnChartDefaults`) as a starting point.
 
 ### Which `xlChartType` constant to use
 
