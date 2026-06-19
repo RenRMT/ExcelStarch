@@ -74,13 +74,13 @@ This module holds three colour families, all stored as VBA `Long` values:
 
 - **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
 - **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — platinum/steel/ash/white, used for fallback fills and axis/border styling.
-- **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Navy, Coral, Sky, Cherry, Blush, Indigo).
+- **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
 
 ```vba
 ' Data colours (example — see modConfigColors.bas for the full set)
 Public Const colorData1 As Long = 7833651      'Teal     RGB(51, 136, 119)
 Public Const colorData2 As Long = 7855615      'Jasmine  RGB(255, 221, 119)
-Public Const colorData3 As Long = 7811874      'Navy     RGB(34, 51, 119)
+Public Const colorData3 As Long = 10181419     'Baltic   RGB(43, 91, 155)
 ```
 
 > Some brand/neutral constants (`colorBrand1`, `colorBrand2`, `colorBrandLightGrey`, `colorNeutral3`) are defined for completeness but not all are referenced in code — see the comments in the module. Note `colorBrand4` (#F9F9F9) is the diverging-ramp neutral centre and is intentionally lighter than the brand Light Grey (`colorBrandLightGrey`, #F3F3F3). **Do not rename any constant**; they are referenced by name across other modules. Change the *values* only.

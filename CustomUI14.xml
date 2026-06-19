@@ -232,10 +232,10 @@
 								onAction="Format_onAction"
 								tag="Fill:DATA2"/>
 							<button
-								id="NavyFill"
-								image="i_fill_navy"
-								label="Navy"
-								supertip="Navy fill color"
+								id="BalticFill"
+								image="i_fill_baltic"
+								label="Baltic"
+								supertip="Baltic fill color"
 								onAction="Format_onAction"
 								tag="Fill:DATA3"/>
 							<button
@@ -267,10 +267,10 @@
 								onAction="Format_onAction"
 								tag="Fill:DATA7"/>
 							<button
-								id="IndigoFill"
-								image="i_fill_indigo"
-								label="Indigo"
-								supertip="Indigo fill color"
+								id="VioletFill"
+								image="i_fill_violet"
+								label="Violet"
+								supertip="Violet fill color"
 								onAction="Format_onAction"
 								tag="Fill:DATA8"/>
 							<button
@@ -313,10 +313,10 @@
 								onAction="ApplyRamp_onAction"
 								tag="B"/>
 							<button
-								id="NavyRamp"
-								image="i_ramp_navy"
-								label="Navy"
-								supertip="Apply Navy colour ramp to chart series."
+								id="BalticRamp"
+								image="i_ramp_baltic"
+								label="Baltic"
+								supertip="Apply Baltic colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
 								tag="C"/>
 							<button
@@ -348,10 +348,10 @@
 								onAction="ApplyRamp_onAction"
 								tag="G"/>
 							<button
-								id="IndigoRamp"
-								image="i_ramp_indigo"
-								label="Indigo"
-								supertip="Apply Indigo colour ramp to chart series."
+								id="VioletRamp"
+								image="i_ramp_violet"
+								label="Violet"
+								supertip="Apply Violet colour ramp to chart series."
 								onAction="ApplyRamp_onAction"
 								tag="H"/>
 						</menu>
@@ -394,10 +394,10 @@
 								onAction="ApplyDivergingRamp_onAction"
 								tag="A|G"/>
 							<button
-								id="DivRamp_NavyJasmine"
-								image="i_div_jasmine_navy"
-								label="Navy — Jasmine"
-								supertip="Diverging ramp: Navy (dark to light) — Jasmine (light to dark)."
+								id="DivRamp_BalticJasmine"
+								image="i_div_jasmine_baltic"
+								label="Baltic — Jasmine"
+								supertip="Diverging ramp: Baltic (dark to light) — Jasmine (light to dark)."
 								onAction="ApplyDivergingRamp_onAction"
 								tag="C|B"/>
 							<button
@@ -450,7 +450,7 @@
 						onAction="InvertRamp_onAction"/>
 					<button
 						id="LabelLastPointButton"
-						image="i_menu_labels"
+						image="i_menu_label_last"
 						label="Label Last Point"
 						size="normal"
 						supertip="Add series names to the last point on the graph."

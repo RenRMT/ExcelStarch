@@ -74,14 +74,14 @@ End Sub
 ' ------------------------------------------------------------
 
 Private Sub TestOrderedRampSteps()
-    ' Priority is [6,4,8,3,9,7,2,1,10,5]; OrderedRampSteps takes the first n,
+    ' Priority is [6,2,4,3,5,7,8,1,9,10]; OrderedRampSteps takes the first n,
     ' sorts ascending, then reverses so the darkest step comes first.
 
     ' n=1: the single darkest priority step.
     AssertArrayEqual OrderedRampSteps(1), Array(6), "OrderedRampSteps(1)"
 
-    ' n=3: priority [6,4,8] -> sort asc [4,6,8] -> reverse (darkest first) [8,6,4].
-    AssertArrayEqual OrderedRampSteps(3), Array(8, 6, 4), "OrderedRampSteps(3)"
+    ' n=3: priority [6,2,4] -> sort asc [2,4,6] -> reverse (darkest first) [6,4,2].
+    AssertArrayEqual OrderedRampSteps(3), Array(6, 4, 2), "OrderedRampSteps(3)"
 
     ' n=10: full set, darkest (10) to lightest (1).
     AssertArrayEqual OrderedRampSteps(10), Array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), "OrderedRampSteps(10)"
