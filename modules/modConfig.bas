@@ -285,7 +285,7 @@ Public Const yAxisLabelPad As Double = 10
 '   from overlapping the logo. Adjust based on axis label height and desired spacing.
 Public Const logoFileType As String = "svg"
 Public Const logoHeightScale As Double = 0.1        ' logo height as fraction of chart height
-Public Const logoAspectRatio As Double = 1          ' logo width = aspectRatio x height
+Public Const logoAspectRatio As Double = 2.08          ' logo width = aspectRatio x height
 Public Const logoMarginRightProp As Double = 0.01 'chartWidth * 0.01
 Public Const logoMarginBottomProp As Double = 0.01 'chartHeight * 0.01
 Public Const plotAreaBottomMarginProp As Double = 0.03 ' clearance between x-axis labels and top logo, as fraction of chart height
