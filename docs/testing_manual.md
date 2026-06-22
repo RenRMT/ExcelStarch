@@ -49,11 +49,11 @@ Spot-check that re-running a builder while a chart is **selected/active** re-sty
 | Action | Preconditions | Expected |
 |---|---|---|
 | Data Colors (split body) | Chart selected | Applies the last-used fill colour |
-| A specific colour (Teal…White) | A single series selected | Only that series recolours |
+| A specific colour (Ocean…White) | A single series selected | Only that series recolours |
 | A specific colour | Chart selected, no series picked | All series take that colour |
-| Colour Ramps → Teal (A) | Fixture A chart (3 series) | Dark→light left-to-right within the hue |
+| Colour Ramps → Ocean (A) | Fixture A chart (3 series) | Dark→light left-to-right within the hue |
 | Colour Ramps → any | chart with **11** series | "Too many series" message (max 10 single-hue); no change |
-| Diverging Ramps → Teal—Jasmine (A\|B) | Fixture A chart, **odd** series count | Grey centre series; dark→light→…→light→dark across the two hues |
+| Diverging Ramps → Ocean—Coral (A\|B) | Fixture A chart, **odd** series count | Grey centre series; dark→light→…→light→dark across the two hues |
 | Diverging Ramps → any | chart with **22** series | "Too many series" message (max 21) |
 
 ---

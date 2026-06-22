@@ -72,18 +72,18 @@ A find-and-replace of `COMPANY` across the XML handles both.
 
 The brand colours live at the top of `modConfig.bas`, under the `BRAND COLOURS` banner, in three colour families, all stored as VBA `Long` values:
 
-- **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
-- **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — platinum/steel/ash/white, used for fallback fills and axis/border styling.
-- **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
+- **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a blue/black/grey set.
+- **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — silver/steel/ash/white, used for fallback fills and axis/border styling.
+- **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Ocean, Coral, Sky, Pine, Gold, Rust, Lavender, Steel).
 
 ```vba
 ' Data colours (example — see the Brand Colours section of modConfig.bas for the full set)
-Public Const colorData1 As Long = 7833651      'Teal     RGB(51, 136, 119)
-Public Const colorData2 As Long = 7855615      'Jasmine  RGB(255, 221, 119)
-Public Const colorData3 As Long = 10181419     'Baltic   RGB(43, 91, 155)
+Public Const colorData1 As Long = 12285696     'Ocean    RGB(0, 119, 187)
+Public Const colorData2 As Long = 6719743      'Coral    RGB(255, 136, 102)
+Public Const colorData3 As Long = 16764023     'Sky      RGB(119, 204, 255)
 ```
 
-> Some brand/neutral constants (`colorBrand1`, `colorBrand2`, `colorBrandLightGrey`, `colorNeutral3`) are defined for completeness but not all are referenced in code — see the comments in the module. Note `colorBrand4` (#F9F9F9) is the diverging-ramp neutral centre and is intentionally lighter than the brand Light Grey (`colorBrandLightGrey`, #F3F3F3). **Do not rename any constant**; they are referenced by name across other modules. Change the *values* only.
+> Some brand/neutral constants (`colorBrand1`, `colorBrand2`, `colorBrandLightGrey`, `colorNeutral3`) are defined for completeness but not all are referenced in code — see the comments in the module. Note `colorBrand4` (#F9F9F9) is the diverging-ramp neutral centre; in this palette it equals the brand Light Grey (`colorBrandLightGrey`, also #F9F9F9). **Do not rename any constant**; they are referenced by name across other modules. Change the *values* only.
 
 ### Converting an RGB value to a VBA Long
 
@@ -103,7 +103,7 @@ The easiest way is Excel's built-in `RGB()` function in the Immediate Window (Ct
 Paste that number as the value and keep the human-readable RGB as a comment:
 
 ```vba
-Public Const colorData1 As Long = 7833651  'Teal RGB(51, 136, 119)
+Public Const colorData1 As Long = 12285696  'Ocean RGB(0, 119, 187)
 ```
 
 The comment is documentation only and does not affect the value.

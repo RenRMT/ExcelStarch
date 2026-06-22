@@ -76,9 +76,9 @@ End Sub
 ' TogglePaletteOrder: confirms new palette state after toggle
 Public Sub MsgPaletteOrderToggled(ByVal altOrder As Boolean)
     If altOrder Then
-        MsgBox "Palette order: Violet, Baltic, Sky, Teal, Jasmine, Blush, Coral, Cherry (Rainbow)", vbInformation, "Palette Order"
+        MsgBox "Palette order: Ocean, Lavender, Sky, Pine, Gold, Coral, Rust, Steel (Rainbow)", vbInformation, "Palette Order"
     Else
-        MsgBox "Palette order: Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet (Contrasting, default)", vbInformation, "Palette Order"
+        MsgBox "Palette order: Ocean, Coral, Sky, Pine, Gold, Rust, Lavender, Steel (Contrasting, default)", vbInformation, "Palette Order"
     End If
 End Sub
 

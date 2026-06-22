@@ -81,7 +81,7 @@ Public Sub ApplyColorRamp(ByVal rampName As String)
 
     If rampName = "LASTUSED" Then
         rampName = GetLastUsedRampTag()
-        If rampName = "" Then rampName = "A"   ' default to Teal
+        If rampName = "" Then rampName = "A"   ' default to Ocean
     End If
 
     BuildColorRamp cht, rampName
@@ -99,7 +99,7 @@ Public Sub ApplyDivergingRampFromTag(ByVal tagValue As String)
 
     If tagValue = "LASTUSED" Then
         tagValue = GetLastUsedDivergingTag()
-        If tagValue = "" Then tagValue = "A|B"  ' default to Teal - Jasmine
+        If tagValue = "" Then tagValue = "A|B"  ' default to Ocean - Coral
     End If
 
     Dim leftRamp As String, rightRamp As String

@@ -28,7 +28,7 @@ Public Sub ApplyFillFromTag(ByVal tagValue As String)
     If payload = "LASTUSED" Then
         Dim lastTag As String: lastTag = GetLastUsedFillTag()
         If lastTag = "" Then
-            ' No prior selection - default to Teal
+            ' No prior selection - default to Ocean
             payload = "DATA1"
         Else
             payload = lastTag

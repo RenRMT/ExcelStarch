@@ -19,131 +19,134 @@ Option Explicit
 '=== Brand colors ===
 ' Note: colorBrand1, colorBrand2 are defined for completeness
 ' but are not currently referenced in code. Reserved for future ribbon buttons.
-Public Const colorBrand1 As Long = 5793564     'Primary Teal #1C6758  RGB(28, 103, 88)
-Public Const colorBrand2 As Long = 5394995     'Dark Teal    #335252  RGB(51, 82, 82)
-Public Const colorBrand3 As Long = 1644825     'Black        #191919  RGB(25, 25, 25)
-' Brand Light Grey (#F3F3F3) - reserved for future ribbon buttons.
-Public Const colorBrandLightGrey As Long = 15987699 'Light Grey #F3F3F3 RGB(243, 243, 243)
-' colorBrand4 is the diverging-ramp neutral centre (#F9F9F9). This is intentionally
-' a touch lighter than the brand Light Grey (#F3F3F3 above) so the centre series reads
-' as near-white. Used by modColorRamp.BuildDivergingRamp.
+Public Const colorBrand1 As Long = 10963739    'Primary Blue #1B4BA7 RGB(27, 75, 167)
+Public Const colorBrand2 As Long = 2888711     'Dark Blue    #07142C RGB(7, 20, 44)
+Public Const colorBrand3 As Long = 655874      'Black        #02020A RGB(2, 2, 10)
+' Brand Light Grey (#F9F9F9) - reserved for future ribbon buttons.
+Public Const colorBrandLightGrey As Long = 16382457 'Light Grey #F9F9F9 RGB(249, 249, 249)
+' colorBrand4 is the diverging-ramp neutral centre (#F9F9F9) so the centre series
+' reads as near-white. In this palette it equals the brand Light Grey above (both
+' #F9F9F9). Used by modColorRamp.BuildDivergingRamp.
 Public Const colorBrand4 As Long = 16382457    'Neutral centre #F9F9F9 RGB(249, 249, 249)
 
 '=== Neutral colors ===
 ' Note: colorNeutral3 is defined for completeness but not currently referenced in code.
-Public Const colorNeutral1 As Long = 15527148  'Platinum RGB(236, 236, 236) #ECECEC
-Public Const colorNeutral2 As Long = 12105912  'Steel    RGB(184, 184, 184) #B8B8B8
-Public Const colorNeutral3 As Long = 10263708  'Ash      RGB(156, 156, 156) - reserved
-Public Const colorNeutral4 As Long = 16777215  'White    RGB(255, 255, 255) - used by name-lookup palette (modColorFill)
+Public Const colorNeutral1 As Long = 14540253  'Silver RGB(221, 221, 221) #DDDDDD
+Public Const colorNeutral2 As Long = 12303291  'Steel  RGB(187, 187, 187) #BBBBBB
+Public Const colorNeutral3 As Long = 10263708  'Ash    RGB(156, 156, 156) - reserved
+Public Const colorNeutral4 As Long = 16777215  'White  RGB(255, 255, 255) - used by name-lookup palette (modColorFill)
 Public Const colorWhite As Long = colorNeutral4  'Semantic alias - use this for axis/border white styling
 
 '=== Data colors (contrasting order) ===
-Public Const colorData1 As Long = 7833651      'Teal    #338877 RGB(51, 136, 119)
-Public Const colorData2 As Long = 7855615      'Jasmine #FFDD77 RGB(255, 221, 119)
-Public Const colorData3 As Long = 10181419     'Baltic  #2B5B9B RGB(43, 91, 155)
-Public Const colorData4 As Long = 7968767      'Coral   #FF9779 RGB(255, 151, 121)
-Public Const colorData5 As Long = 16764040     'Sky     #88CCFF RGB(136, 204, 255)
-Public Const colorData6 As Long = 4996284      'Cherry  #BC3C4C RGB(188, 60, 76)
-Public Const colorData7 As Long = 14531583     'Blush   #FFBBDD RGB(255, 187, 221)
-Public Const colorData8 As Long = 11154312     'Violet  #8833AA RGB(136, 51, 170)
+' Slot 8 (Steel) is intentionally the same neutral grey as colorNeutral2 (the
+' >8-series fallback): the 8th categorical series reads as grey by design.
+Public Const colorData1 As Long = 12285696     'Ocean    #0077BB RGB(0, 119, 187)
+Public Const colorData2 As Long = 6719743      'Coral    #FF8866 RGB(255, 136, 102)
+Public Const colorData3 As Long = 16764023     'Sky      #77CCFF RGB(119, 204, 255)
+Public Const colorData4 As Long = 8952064      'Pine     #009988 RGB(0, 153, 136)
+Public Const colorData5 As Long = 3399167      'Gold     #FFDD33 RGB(255, 221, 51)
+Public Const colorData6 As Long = 17578        'Rust     #AA4400 RGB(170, 68, 0)
+Public Const colorData7 As Long = 15636906     'Lavender #AA99EE RGB(170, 153, 238)
+Public Const colorData8 As Long = 12303291     'Steel    #BBBBBB RGB(187, 187, 187)
 
 '== Color ramp ==
 ' Each ramp is a 10-step sequential palette (1 = lightest .. 10 = darkest).
-' rampA = Teal
-Public Const rampA1 As Long = 15856619  '#ebf3f1 RGB(235, 243, 241)
-Public Const rampA2 As Long = 15001558  '#d6e7e4 RGB(214, 231, 228)
-Public Const rampA3 As Long = 13225901  '#adcfc9 RGB(173, 207, 201)
-Public Const rampA4 As Long = 11384965  '#85b8ad RGB(133, 184, 173)
-Public Const rampA5 As Long = 9609308   '#5ca092 RGB(92, 160, 146)
-Public Const rampA6 As Long = 7833651   '#338877 RGB(51, 136, 119)
-Public Const rampA7 As Long = 6253865   '#296d5f RGB(41, 109, 95)
-Public Const rampA8 As Long = 4674079   '#1f5247 RGB(31, 82, 71)
-Public Const rampA9 As Long = 3159572   '#143630 RGB(20, 54, 48)
-Public Const rampA10 As Long = 1579786  '#0a1b18 RGB(10, 27, 24)
+' rampA = Ocean
+Public Const rampA1 As Long = 16314854  '#E6F1F8 RGB(230, 241, 248)
+Public Const rampA2 As Long = 15852748  '#CCE4F1 RGB(204, 228, 241)
+Public Const rampA3 As Long = 14993817  '#99C9E4 RGB(153, 201, 228)
+Public Const rampA4 As Long = 14069094  '#66ADD6 RGB(102, 173, 214)
+Public Const rampA5 As Long = 13210163  '#3392C9 RGB(51, 146, 201)
+Public Const rampA6 As Long = 12285696  '#0077BB RGB(0, 119, 187)
+Public Const rampA7 As Long = 9854720   '#005F96 RGB(0, 95, 150)
+Public Const rampA8 As Long = 7358208   '#004770 RGB(0, 71, 112)
+Public Const rampA9 As Long = 4927488   '#00304B RGB(0, 48, 75)
+Public Const rampA10 As Long = 2430976  '#001825 RGB(0, 24, 37)
 
-' rampB = Jasmine
-Public Const rampB1 As Long = 15858943  '#fffcf1 RGB(255, 252, 241)
-Public Const rampB2 As Long = 15005951  '#fff8e4 RGB(255, 248, 228)
-Public Const rampB3 As Long = 13234687  '#fff1c9 RGB(255, 241, 201)
-Public Const rampB4 As Long = 11398143  '#ffebad RGB(255, 235, 173)
-Public Const rampB5 As Long = 9626879   '#ffe492 RGB(255, 228, 146)
-Public Const rampB6 As Long = 7855615   '#FFDD77 RGB(255, 221, 119)
-Public Const rampB7 As Long = 6271436   '#ccb15f RGB(204, 177, 95)
-Public Const rampB8 As Long = 4687257   '#998547 RGB(153, 133, 71)
-Public Const rampB9 As Long = 3168358   '#665830 RGB(102, 88, 48)
-Public Const rampB10 As Long = 1584179  '#332c18 RGB(51, 44, 24)
+' rampB = Coral
+Public Const rampB1 As Long = 15791103  '#FFF3F0 RGB(255, 243, 240)
+Public Const rampB2 As Long = 14739455  '#FFE7E0 RGB(255, 231, 224)
+Public Const rampB3 As Long = 12767231  '#FFCFC2 RGB(255, 207, 194)
+Public Const rampB4 As Long = 10729727  '#FFB8A3 RGB(255, 184, 163)
+Public Const rampB5 As Long = 8757503   '#FFA085 RGB(255, 160, 133)
+Public Const rampB6 As Long = 6719743   '#FF8866 RGB(255, 136, 102)
+Public Const rampB7 As Long = 5402060   '#CC6D52 RGB(204, 109, 82)
+Public Const rampB8 As Long = 4018841   '#99523D RGB(153, 82, 61)
+Public Const rampB9 As Long = 2700902   '#663629 RGB(102, 54, 41)
+Public Const rampB10 As Long = 1317683  '#331B14 RGB(51, 27, 20)
 
-' rampC = Baltic
-Public Const rampC1 As Long = 16117738  '#eaeff5 RGB(234, 239, 245)
-Public Const rampC2 As Long = 15458005  '#d5deeb RGB(213, 222, 235)
-Public Const rampC3 As Long = 14138794  '#aabdd7 RGB(170, 189, 215)
-Public Const rampC4 As Long = 12819840  '#809dc3 RGB(128, 157, 195)
-Public Const rampC5 As Long = 11500629  '#557caf RGB(85, 124, 175)
-Public Const rampC6 As Long = 10181419  '#2B5B9B RGB(43, 91, 155)
-Public Const rampC7 As Long = 8145186   '#22497c RGB(34, 73, 124)
-Public Const rampC8 As Long = 6108954   '#1a375d RGB(26, 55, 93)
-Public Const rampC9 As Long = 4072465   '#11243e RGB(17, 36, 62)
-Public Const rampC10 As Long = 2036233  '#09121f RGB(9, 18, 31)
+' rampC = Sky
+Public Const rampC1 As Long = 16775921  '#F1FAFF RGB(241, 250, 255)
+Public Const rampC2 As Long = 16774628  '#E4F5FF RGB(228, 245, 255)
+Public Const rampC3 As Long = 16772041  '#C9EBFF RGB(201, 235, 255)
+Public Const rampC4 As Long = 16769197  '#ADE0FF RGB(173, 224, 255)
+Public Const rampC5 As Long = 16766610  '#92D6FF RGB(146, 214, 255)
+Public Const rampC6 As Long = 16764023  '#77CCFF RGB(119, 204, 255)
+Public Const rampC7 As Long = 13411167  '#5FA3CC RGB(95, 163, 204)
+Public Const rampC8 As Long = 10058311  '#477A99 RGB(71, 122, 153)
+Public Const rampC9 As Long = 6705712   '#305266 RGB(48, 82, 102)
+Public Const rampC10 As Long = 3352856  '#182933 RGB(24, 41, 51)
 
-' rampD = Coral
-Public Const rampD1 As Long = 15922687  '#fff5f2 RGB(255, 245, 242)
-Public Const rampD2 As Long = 15002367  '#ffeae4 RGB(255, 234, 228)
-Public Const rampD3 As Long = 13227519  '#ffd5c9 RGB(255, 213, 201)
-Public Const rampD4 As Long = 11518463  '#ffc1af RGB(255, 193, 175)
-Public Const rampD5 As Long = 9743615   '#ffac94 RGB(255, 172, 148)
-Public Const rampD6 As Long = 7968767   '#FF9779 RGB(255, 151, 121)
-Public Const rampD7 As Long = 6388172   '#cc7961 RGB(204, 121, 97)
-Public Const rampD8 As Long = 4807577   '#995b49 RGB(153, 91, 73)
-Public Const rampD9 As Long = 3161190   '#663c30 RGB(102, 60, 48)
-Public Const rampD10 As Long = 1580595  '#331e18 RGB(51, 30, 24)
+' rampD = Pine
+Public Const rampD1 As Long = 15988198  '#E6F5F3 RGB(230, 245, 243)
+Public Const rampD2 As Long = 15199180  '#CCEBE7 RGB(204, 235, 231)
+Public Const rampD3 As Long = 13620889  '#99D6CF RGB(153, 214, 207)
+Public Const rampD4 As Long = 12108390  '#66C2B8 RGB(102, 194, 184)
+Public Const rampD5 As Long = 10530099  '#33ADA0 RGB(51, 173, 160)
+Public Const rampD6 As Long = 8952064   '#009988 RGB(0, 153, 136)
+Public Const rampD7 As Long = 7174656   '#007A6D RGB(0, 122, 109)
+Public Const rampD8 As Long = 5397504   '#005C52 RGB(0, 92, 82)
+Public Const rampD9 As Long = 3554560   '#003D36 RGB(0, 61, 54)
+Public Const rampD10 As Long = 1777408  '#001F1B RGB(0, 31, 27)
 
-' rampE = Sky
-Public Const rampE1 As Long = 16775923  '#f3faff RGB(243, 250, 255)
-Public Const rampE2 As Long = 16774631  '#e7f5ff RGB(231, 245, 255)
-Public Const rampE3 As Long = 16772047  '#cfebff RGB(207, 235, 255)
-Public Const rampE4 As Long = 16769208  '#b8e0ff RGB(184, 224, 255)
-Public Const rampE5 As Long = 16766624  '#a0d6ff RGB(160, 214, 255)
-Public Const rampE6 As Long = 16764040  '#88CCFF RGB(136, 204, 255)
-Public Const rampE7 As Long = 13411181  '#6da3cc RGB(109, 163, 204)
-Public Const rampE8 As Long = 10058322  '#527a99 RGB(82, 122, 153)
-Public Const rampE9 As Long = 6705718   '#365266 RGB(54, 82, 102)
-Public Const rampE10 As Long = 3352859  '#1b2933 RGB(27, 41, 51)
+' rampE = Gold
+Public Const rampE1 As Long = 15465727  '#FFFCEB RGB(255, 252, 235)
+Public Const rampE2 As Long = 14088447  '#FFF8D6 RGB(255, 248, 214)
+Public Const rampE3 As Long = 11399679  '#FFF1AD RGB(255, 241, 173)
+Public Const rampE4 As Long = 8776703   '#FFEB85 RGB(255, 235, 133)
+Public Const rampE5 As Long = 6087935   '#FFE45C RGB(255, 228, 92)
+Public Const rampE6 As Long = 3399167   '#FFDD33 RGB(255, 221, 51)
+Public Const rampE7 As Long = 2732492   '#CCB129 RGB(204, 177, 41)
+Public Const rampE8 As Long = 2065817   '#99851F RGB(153, 133, 31)
+Public Const rampE9 As Long = 1333350   '#665814 RGB(102, 88, 20)
+Public Const rampE10 As Long = 666675   '#332C0A RGB(51, 44, 10)
 
-' rampF = Cherry
-Public Const rampF1 As Long = 15592696  '#f8eced RGB(248, 236, 237)
-Public Const rampF2 As Long = 14407922  '#f2d8db RGB(242, 216, 219)
-Public Const rampF3 As Long = 12038628  '#e4b1b7 RGB(228, 177, 183)
-Public Const rampF4 As Long = 9734871   '#d78a94 RGB(215, 138, 148)
-Public Const rampF5 As Long = 7365577   '#c96370 RGB(201, 99, 112)
-Public Const rampF6 As Long = 4996284   '#BC3C4C RGB(188, 60, 76)
-Public Const rampF7 As Long = 4010134   '#96303d RGB(150, 48, 61)
-Public Const rampF8 As Long = 3023985   '#71242e RGB(113, 36, 46)
-Public Const rampF9 As Long = 1972299   '#4b181e RGB(75, 24, 30)
-Public Const rampF10 As Long = 986150   '#260c0f RGB(38, 12, 15)
+' rampF = Rust
+Public Const rampF1 As Long = 15133943  '#F7ECE6 RGB(247, 236, 230)
+Public Const rampF2 As Long = 13425390  '#EEDACC RGB(238, 218, 204)
+Public Const rampF3 As Long = 10073309  '#DDB499 RGB(221, 180, 153)
+Public Const rampF4 As Long = 6721484   '#CC8F66 RGB(204, 143, 102)
+Public Const rampF5 As Long = 3369403   '#BB6933 RGB(187, 105, 51)
+Public Const rampF6 As Long = 17578     '#AA4400 RGB(170, 68, 0)
+Public Const rampF7 As Long = 13960     '#883600 RGB(136, 54, 0)
+Public Const rampF8 As Long = 10598     '#662900 RGB(102, 41, 0)
+Public Const rampF9 As Long = 6980      '#441B00 RGB(68, 27, 0)
+Public Const rampF10 As Long = 3618     '#220E00 RGB(34, 14, 0)
 
-' rampG = Blush
-Public Const rampG1 As Long = 16578815  '#fff8fc RGB(255, 248, 252)
-Public Const rampG2 As Long = 16314879  '#fff1f8 RGB(255, 241, 248)
-Public Const rampG3 As Long = 15852799  '#ffe4f1 RGB(255, 228, 241)
-Public Const rampG4 As Long = 15455999  '#ffd6eb RGB(255, 214, 235)
-Public Const rampG5 As Long = 14993919  '#ffc9e4 RGB(255, 201, 228)
-Public Const rampG6 As Long = 14531583  '#FFBBDD RGB(255, 187, 221)
-Public Const rampG7 As Long = 11638476  '#cc96b1 RGB(204, 150, 177)
-Public Const rampG8 As Long = 8745113   '#997085 RGB(153, 112, 133)
-Public Const rampG9 As Long = 5786470   '#664b58 RGB(102, 75, 88)
-Public Const rampG10 As Long = 2893107  '#33252c RGB(51, 37, 44)
+' rampG = Lavender
+Public Const rampG1 As Long = 16643575  '#F7F5FD RGB(247, 245, 253)
+Public Const rampG2 As Long = 16575470  '#EEEBFC RGB(238, 235, 252)
+Public Const rampG3 As Long = 16307933  '#DDD6F8 RGB(221, 214, 248)
+Public Const rampG4 As Long = 16106188  '#CCC2F5 RGB(204, 194, 245)
+Public Const rampG5 As Long = 15838651  '#BBADF1 RGB(187, 173, 241)
+Public Const rampG6 As Long = 15636906  '#AA99EE RGB(170, 153, 238)
+Public Const rampG7 As Long = 12483208  '#887ABE RGB(136, 122, 190)
+Public Const rampG8 As Long = 9395302   '#665C8F RGB(102, 92, 143)
+Public Const rampG9 As Long = 6241604   '#443D5F RGB(68, 61, 95)
+Public Const rampG10 As Long = 3153698  '#221F30 RGB(34, 31, 48)
 
-' rampH = Violet
-Public Const rampH1 As Long = 16247795  '#f3ebf7 RGB(243, 235, 247)
-Public Const rampH2 As Long = 15652583  '#e7d6ee RGB(231, 214, 238)
-Public Const rampH3 As Long = 14527951  '#cfaddd RGB(207, 173, 221)
-Public Const rampH4 As Long = 13403576  '#b885cc RGB(184, 133, 204)
-Public Const rampH5 As Long = 12278944  '#a05cbb RGB(160, 92, 187)
-Public Const rampH6 As Long = 11154312  '#8833AA RGB(136, 51, 170)
-Public Const rampH7 As Long = 8923501   '#6d2988 RGB(109, 41, 136)
-Public Const rampH8 As Long = 6692690   '#521f66 RGB(82, 31, 102)
-Public Const rampH9 As Long = 4461622   '#361444 RGB(54, 20, 68)
-Public Const rampH10 As Long = 2230811  '#1b0a22 RGB(27, 10, 34)
+' rampH = Steel (neutral grey ramp; defined for completeness, not exposed in the
+' ramp menu since Steel is a neutral rather than a sequential brand hue).
+Public Const rampH1 As Long = 16316664  '#F8F8F8 RGB(248, 248, 248)
+Public Const rampH2 As Long = 15856113  '#F1F1F1 RGB(241, 241, 241)
+Public Const rampH3 As Long = 15000804  '#E4E4E4 RGB(228, 228, 228)
+Public Const rampH4 As Long = 14079702  '#D6D6D6 RGB(214, 214, 214)
+Public Const rampH5 As Long = 13224393  '#C9C9C9 RGB(201, 201, 201)
+Public Const rampH6 As Long = 12303291  '#BBBBBB RGB(187, 187, 187)
+Public Const rampH7 As Long = 9868950   '#969696 RGB(150, 150, 150)
+Public Const rampH8 As Long = 7368816   '#707070 RGB(112, 112, 112)
+Public Const rampH9 As Long = 4934475   '#4B4B4B RGB(75, 75, 75)
+Public Const rampH10 As Long = 2434341  '#252525 RGB(37, 37, 37)
 
 
 ' +---------------------------------------------------------+

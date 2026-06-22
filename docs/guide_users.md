@@ -46,16 +46,16 @@ Eight data colours are used for multi-series charts, applied in palette order:
 
 | | Name | Description |
 |---|---|---|
-| <img src="../icons/i_fill_teal.png" height="28"> | Teal | Primary teal-green |
-| <img src="../icons/i_fill_jasmine.png" height="28"> | Jasmine | Warm yellow |
-| <img src="../icons/i_fill_baltic.png" height="28"> | Baltic | Deep blue |
+| <img src="../icons/i_fill_ocean.png" height="28"> | Ocean | Primary blue |
 | <img src="../icons/i_fill_coral.png" height="28"> | Coral | Warm orange |
 | <img src="../icons/i_fill_sky.png" height="28"> | Sky | Light blue |
-| <img src="../icons/i_fill_cherry.png" height="28"> | Cherry | Deep red |
-| <img src="../icons/i_fill_blush.png" height="28"> | Blush | Soft pink |
-| <img src="../icons/i_fill_violet.png" height="28"> | Violet | Rich purple |
+| <img src="../icons/i_fill_pine.png" height="28"> | Pine | Deep teal-green |
+| <img src="../icons/i_fill_gold.png" height="28"> | Gold | Warm yellow |
+| <img src="../icons/i_fill_rust.png" height="28"> | Rust | Burnt orange |
+| <img src="../icons/i_fill_lavender.png" height="28"> | Lavender | Soft purple |
+| <img src="../icons/i_neutral_steel.png" height="28"> | Steel | Neutral grey |
 
-Steel and White are available as neutral fills. Any series beyond eight falls back to Steel.
+White is available as a neutral fill. Any series beyond eight falls back to Steel.
 
 ### Palette order
 
@@ -69,8 +69,8 @@ The *Fill Colors* group applies a solid colour fill to the selected chart elemen
 
 | | | | | | | | | | |
 |---|---|---|---|---|---|---|---|---|---|
-| <img src="../icons/i_fill_teal.png" height="28"> | <img src="../icons/i_fill_jasmine.png" height="28"> | <img src="../icons/i_fill_baltic.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_cherry.png" height="28"> | <img src="../icons/i_fill_blush.png" height="28"> | <img src="../icons/i_fill_violet.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> |
-| Teal | Jasmine | Baltic | Coral | Sky | Cherry | Blush | Violet | Steel | White |
+| <img src="../icons/i_fill_ocean.png" height="28"> | <img src="../icons/i_fill_coral.png" height="28"> | <img src="../icons/i_fill_sky.png" height="28"> | <img src="../icons/i_fill_pine.png" height="28"> | <img src="../icons/i_fill_gold.png" height="28"> | <img src="../icons/i_fill_rust.png" height="28"> | <img src="../icons/i_fill_lavender.png" height="28"> | <img src="../icons/i_neutral_steel.png" height="28"> | <img src="../icons/i_fill_white.png" height="28"> | |
+| Ocean | Coral | Sky | Pine | Gold | Rust | Lavender | Steel | White | |
 
 ---
 
@@ -82,10 +82,10 @@ Steps are assigned in spread order (6, 2, 4, 3, 5, 7, 8, 1, 9, 10) so that chart
 
 | | Ramp | | Ramp |
 |---|---|---|---|
-| <img src="../icons/i_ramp_teal.png" height="28"> | Teal | <img src="../icons/i_ramp_sky.png" height="28"> | Sky |
-| <img src="../icons/i_ramp_jasmine.png" height="28"> | Jasmine | <img src="../icons/i_ramp_cherry.png" height="28"> | Cherry |
-| <img src="../icons/i_ramp_baltic.png" height="28"> | Baltic | <img src="../icons/i_ramp_blush.png" height="28"> | Blush |
-| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_violet.png" height="28"> | Violet |
+| <img src="../icons/i_ramp_ocean.png" height="28"> | Ocean | <img src="../icons/i_ramp_rust.png" height="28"> | Rust |
+| <img src="../icons/i_ramp_coral.png" height="28"> | Coral | <img src="../icons/i_ramp_lavender.png" height="28"> | Lavender |
+| <img src="../icons/i_ramp_sky.png" height="28"> | Sky | <img src="../icons/i_ramp_gold.png" height="28"> | Gold |
+| <img src="../icons/i_ramp_pine.png" height="28"> | Pine | | |
 
 Maximum 10 series for single-hue ramps.
 
@@ -95,11 +95,17 @@ A diverging ramp uses two hues: dark-to-light on the left side of the chart, lig
 
 | | Diverging ramp | | Diverging ramp |
 |---|---|---|---|
-| <img src="../icons/i_div_teal_jasmine.png" height="28"> | Teal — Jasmine | <img src="../icons/i_div_coral_cherry.png" height="28"> | Coral — Cherry |
-| <img src="../icons/i_div_teal_coral.png" height="28"> | Teal — Coral | <img src="../icons/i_div_coral_blush.png" height="28"> | Coral — Blush |
-| <img src="../icons/i_div_teal_sky.png" height="28"> | Teal — Sky | <img src="../icons/i_div_coral_sky.png" height="28"> | Coral — Sky |
-| <img src="../icons/i_div_teal_blush.png" height="28"> | Teal — Blush | <img src="../icons/i_div_sky_cherry.png" height="28"> | Sky — Cherry |
-| <img src="../icons/i_div_jasmine_baltic.png" height="28"> | Baltic — Jasmine | | |
+| <img src="../icons/i_div_ocean_coral.png" height="28"> | Ocean — Coral | <img src="../icons/i_div_coral_rust.png" height="28"> | Coral — Rust |
+| <img src="../icons/i_div_ocean_sky.png" height="28"> | Ocean — Sky | <img src="../icons/i_div_coral_lavender.png" height="28"> | Coral — Lavender |
+| <img src="../icons/i_div_ocean_pine.png" height="28"> | Ocean — Pine | <img src="../icons/i_div_sky_pine.png" height="28"> | Sky — Pine |
+| <img src="../icons/i_div_ocean_gold.png" height="28"> | Ocean — Gold | <img src="../icons/i_div_sky_gold.png" height="28"> | Sky — Gold |
+| <img src="../icons/i_div_ocean_rust.png" height="28"> | Ocean — Rust | <img src="../icons/i_div_sky_rust.png" height="28"> | Sky — Rust |
+| <img src="../icons/i_div_ocean_lavender.png" height="28"> | Ocean — Lavender | <img src="../icons/i_div_sky_lavender.png" height="28"> | Sky — Lavender |
+| <img src="../icons/i_div_coral_sky.png" height="28"> | Coral — Sky | <img src="../icons/i_div_pine_gold.png" height="28"> | Pine — Gold |
+| <img src="../icons/i_div_coral_pine.png" height="28"> | Coral — Pine | <img src="../icons/i_div_pine_rust.png" height="28"> | Pine — Rust |
+| <img src="../icons/i_div_coral_gold.png" height="28"> | Coral — Gold | <img src="../icons/i_div_pine_lavender.png" height="28"> | Pine — Lavender |
+| <img src="../icons/i_div_gold_rust.png" height="28"> | Gold — Rust | <img src="../icons/i_div_gold_lavender.png" height="28"> | Gold — Lavender |
+| <img src="../icons/i_div_lavender_rust.png" height="28"> | Lavender — Rust | | |
 
 Maximum 21 series for diverging ramps (10 + grey centre + 10).
 

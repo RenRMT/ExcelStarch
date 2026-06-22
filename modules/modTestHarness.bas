@@ -190,7 +190,7 @@ Private Sub TestGetPaletteColor()
     ' flag, which only the object-model TogglePaletteOrder sets, so it is not
     ' covered here - this exercises the default branch and the fallback.
     Debug.Assert GetPaletteColor(1) = colorData1
-    Debug.Assert GetPaletteColor(3) = colorData3   ' Baltic slot - guards the recolour
+    Debug.Assert GetPaletteColor(3) = colorData3   ' Sky slot - guards the recolour
     Debug.Assert GetPaletteColor(8) = colorData8
 
     ' Out-of-range indices fall back to the neutral (Steel).
