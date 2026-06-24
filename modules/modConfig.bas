@@ -237,6 +237,7 @@ Public Const pieplotAreaLeft As Long = 131
 Public Const pieplotAreaTop As Long = 53
 Public Const piePlotTopRatio As Double = 0.75   ' vertical centering ratio
 Public Const pieLegendGap As Double = 6          ' gap between subtitle box and legend
+Public Const donutHoleSize_percent As Long = 50  ' donut hole size %; valid 10-90. Excel's AddChart2 default is 75.
 ' Note: pieLegendTop is a derived value in modConfigDerived, since it derives
 ' from subtitleBoxTop/subtitleBoxHeight (VBA Const cannot forward-reference).
 
