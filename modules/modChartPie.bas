@@ -146,6 +146,13 @@ Public Sub SetRoundChartSizeAndTitle(cht As Chart, ByRef defaults As ChartDefaul
 
     FormatTitle cht
 
+    ' Donut charts: override Excel's AddChart2 default hole (75%) with the configured size.
+    ' DoughnutHoleSize lives on the ChartGroup, not the Series (a Series call raises 438).
+    ' Guard on the doughnut subtypes only - the property is invalid on pie.
+    If cht.chartType = xlDoughnut Or cht.chartType = xlDoughnutExploded Then
+        cht.ChartGroups(1).DoughnutHoleSize = donutHoleSize_percent
+    End If
+
     plotSize = IIf(cht.hasLegend, pieplotAreaSize_legend, pieplotAreaSize_noLegend)
     With cht.PlotArea
         .Width = plotSize
