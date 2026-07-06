@@ -26,16 +26,14 @@ Public Const plotAreaBottomMargin As Double = chartHeight * plotAreaBottomMargin
 
 
 '=== Title area ===
-' Figure number box aligns with the top of the chart area (no canvas margin).
-Public Const figureBoxTop As Double = 0
-Public Const figureBoxHeight As Double = chartHeight * FigureBoxHeightProportion
-Public Const titleBoxTop As Double = figureBoxHeight
+' Title box aligns with the top of the chart area (no canvas margin).
+Public Const titleBoxTop As Double = 0
 Public Const titleBoxHeight As Double = chartHeight * titleBoxHeightProportion
 Public Const subtitleBoxTop As Double = titleBoxTop + titleBoxHeight
 Public Const subtitleBoxHeight As Double = chartHeight * subtitleBoxHeightProportion
 Public Const titleBoxWidth As Double = chartWidth * titleBoxWidthProportion
 Public Const titleBoxNudge As Double = chartWidth * titleBoxNudgeProportion
-Public Const calcTitlesHeight As Double = figureBoxHeight + titleBoxHeight + subtitleBoxHeight ' For calculation only
+Public Const calcTitlesHeight As Double = titleBoxHeight + subtitleBoxHeight ' For calculation only
 ' Pie/donut legend sits just below the subtitle box to avoid overlapping it.
 Public Const pieLegendTop As Double = subtitleBoxTop + subtitleBoxHeight + pieLegendGap
 

@@ -26,13 +26,12 @@ Each chart group is a **split button**: clicking the large button body applies t
 >
 > **Complex** charts (**Treemap** and **Box &amp; Whisker**, Excel 2016+) are a different kind of chart and are **not interchangeable** with the standard types — you cannot switch a column or pie into one and back the way you can swap between the other families. A treemap shows hierarchical rectangular tiles coloured from the brand palette, with tile labels instead of a legend; a box &amp; whisker shows a coloured box and whiskers per category with a value axis. Because Excel will not place text or images inside these charts, their title, subtitle, logo and source line (and, for box &amp; whisker, the y-axis title) sit alongside the chart as a **grouped** set of shapes. In practice that means: to re-style one, click the chart itself (not the surrounding group); to export it, select the group and use **Chart Export** (saves a PNG). They must be embedded charts on a worksheet, not full chart sheets.
 
-The pipeline applies automatically: chart size, font, axis styling, gridlines, series colours, title/subtitle text boxes, figure and y-axis labels, logo, and a source/notes placeholder.
+The pipeline applies automatically: chart size, font, axis styling, gridlines, series colours, title/subtitle text boxes, y-axis labels, logo, and a source/notes placeholder.
 
 ### Editing placeholder text
 
 After creating a chart, click into the text boxes to replace the placeholder text. The default placeholders also document the intended font sizes and colours:
 
-- **Figure box** — "Figure XX (optional)"
 - **Title box** — "Title in 28pt sentence case"
 - **Subtitle box** — "Subtitle in 22pt sentence case"
 - **Y-axis label** — "Y axis title (unit)"

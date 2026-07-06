@@ -6,7 +6,7 @@ Attribute VB_Name = "modChartBoxWhisker"
 ' ---------------------
 ' Box & whisker is a "chartex" type (Excel 2016+) and uses the worksheet-chrome
 ' pipeline in modEngineExChrome, not the classic in-chart pipeline: xlBoxwhisker
-' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/figure/
+' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/
 ' source/logo + an optional Y-axis title) is built as grouped WORKSHEET shapes.
 '
 ' Unlike treemap, box & whisker DOES have a value axis and a category axis. Native
@@ -126,7 +126,7 @@ Private Sub BuildBoxWhiskerChartWithDefaults(cht As Chart, ByRef defaults As Cha
         On Error GoTo CleanFail
     Next s
 
-    ' Title/subtitle/figure/source/logo + white canvas + worksheet Y-axis title as
+    ' Title/subtitle/source/logo + white canvas + worksheet Y-axis title as
     ' grouped worksheet shapes, laid out from the same canvas origin.
     ' defaults.ShowYAxisTitle is True for box & whisker (it has a value axis).
     BuildChartExChrome cht, originLeft, originTop, defaults

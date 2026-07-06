@@ -13,7 +13,7 @@ Attribute VB_Name = "modEngineExChrome"
 '
 ' This is deliberately a separate pipeline from the classic in-chart chrome in
 ' modEngineBuilder (which is left untouched). The chrome is built from a white 600x600
-' Canvas behind everything, then FigureBox, TitleBox, SubTitleBox, SourceBox and
+' Canvas behind everything, then TitleBox, SubTitleBox, SourceBox and
 ' LogoImage on top of it. An optional YAxisTitle box is added for chartex types that
 ' have a value axis (e.g. box & whisker) via defaults.ShowYAxisTitle; types with no
 ' value axis (treemap, sunburst, funnel) leave it off. The text boxes are transparent
@@ -91,34 +91,33 @@ Public Sub BuildChartExChrome(cht As Chart, ByVal baseLeft As Double, ByVal base
     Dim baseName As String
     baseName = cht.Parent.name
 
-    ' Up to 7 chrome shapes: Canvas + Figure/Title/SubTitle/Source/Logo + optional
+    ' Up to 6 chrome shapes: Canvas + Title/SubTitle/Source/Logo + optional
     ' YAxisTitle. Members that are not built stay vbNullString and are skipped at group
-    ' time, so a chart without a Y-axis title (e.g. treemap) groups exactly 6.
-    Dim chromeNames(1 To 7) As String
+    ' time, so a chart without a Y-axis title (e.g. treemap) groups exactly 5.
+    Dim chromeNames(1 To 6) As String
     Dim shp As Shape
 
     ' White canvas first so it sits at the back of the z-order; everything else
     ' (chart series + chrome) renders on top of it.
     Set shp = AddChartExCanvas(ws, baseName, baseLeft, baseTop): chromeNames(1) = shp.name
 
-    Set shp = AddChartExFigureBox(ws, baseName, baseLeft, baseTop): chromeNames(2) = shp.name
-    Set shp = AddChartExTitleBox(ws, baseName, baseLeft, baseTop): chromeNames(3) = shp.name
-    Set shp = AddChartExSubtitleBox(ws, baseName, baseLeft, baseTop): chromeNames(4) = shp.name
-    Set shp = AddChartExSourceBox(ws, baseName, baseLeft, baseTop): chromeNames(5) = shp.name
+    Set shp = AddChartExTitleBox(ws, baseName, baseLeft, baseTop): chromeNames(2) = shp.name
+    Set shp = AddChartExSubtitleBox(ws, baseName, baseLeft, baseTop): chromeNames(3) = shp.name
+    Set shp = AddChartExSourceBox(ws, baseName, baseLeft, baseTop): chromeNames(4) = shp.name
 
     ' Logo may fail to decode; build the other shapes regardless.
     Set shp = AddChartExLogo(ws, baseName, baseLeft, baseTop)
     If shp Is Nothing Then
-        chromeNames(6) = vbNullString
+        chromeNames(5) = vbNullString
     Else
-        chromeNames(6) = shp.name
+        chromeNames(5) = shp.name
     End If
 
     ' Optional value-axis title for chartex types that have one (box & whisker).
     If defaults.ShowYAxisTitle Then
-        Set shp = AddChartExYAxisTitle(ws, baseName, baseLeft, baseTop): chromeNames(7) = shp.name
+        Set shp = AddChartExYAxisTitle(ws, baseName, baseLeft, baseTop): chromeNames(6) = shp.name
     Else
-        chromeNames(7) = vbNullString
+        chromeNames(6) = vbNullString
     End If
 
     GroupChartExChrome ws, cht, chromeNames
@@ -158,30 +157,6 @@ Private Function AddChartExCanvas(ws As Worksheet, ByVal baseName As String, ByV
     End With
 
     Set AddChartExCanvas = shp
-End Function
-
-
-Private Function AddChartExFigureBox(ws As Worksheet, ByVal baseName As String, ByVal baseLeft As Double, ByVal baseTop As Double) As Shape
-    Dim shp As Shape
-    Set shp = ws.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=baseLeft, Top:=baseTop + figureBoxTop, _
-                    Width:=titleBoxWidth, Height:=figureBoxHeight)
-
-    With shp
-        .name = baseName & "_FigureBox"
-        .Fill.Visible = msoFalse
-        .Line.Visible = msoFalse
-        .TextFrame2.TextRange.Text = figureBoxDefaultText
-        With .TextFrame2.TextRange.Font
-            .Size = figureFontSize
-            .name = fontPrimary
-            .Fill.ForeColor.RGB = figureFontColor
-            .Bold = msoFalse
-        End With
-    End With
-
-    Set AddChartExFigureBox = shp
 End Function
 
 
@@ -352,12 +327,12 @@ Private Function GroupChartExChrome(ws As Worksheet, cht As Chart, ByRef chromeN
 
     ' Build the member-name list: the ChartObject's own shape + each chrome shape that
     ' was actually created (logo and the optional Y-axis title may be absent). Upper
-    ' bound 8 = ChartObject + canvas + 4 text boxes + logo + optional Y-axis title.
+    ' bound 7 = ChartObject + canvas + 3 text boxes + logo + optional Y-axis title.
     ' Typed as Variant because Shapes.Range expects its index packaged in a Variant - a
     ' typed String() array can raise type-mismatch (error 13) on some Excel builds.
     Dim names() As Variant
     Dim n As Long
-    ReDim names(1 To 8)
+    ReDim names(1 To 7)
 
     n = n + 1: names(n) = cht.Parent.name
 
@@ -404,7 +379,8 @@ Private Sub RemoveExistingChartExChrome(cht As Chart)
     End If
     Set grp = Nothing
 
-    ' Delete the prefixed chrome members by name.
+    ' Delete the prefixed chrome members by name. "_FigureBox" is no longer
+    ' created; deleting it cleans up chrome built by older versions.
     SafeDeleteSheetShape ws, baseName & "_Canvas"
     SafeDeleteSheetShape ws, baseName & "_FigureBox"
     SafeDeleteSheetShape ws, baseName & "_TitleBox"

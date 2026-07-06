@@ -276,6 +276,8 @@ Function FormatTitle(cht As Chart) As Boolean
     On Error GoTo Fail
 
     'Delete existing title-related boxes
+    '"FigureBox" is no longer created; deleting it cleans up charts styled by
+    'older versions, whose figure box would otherwise overlap the title.
     SafeDeleteShape cht, "FigureBox"
     SafeDeleteShape cht, "TitleBox"
     SafeDeleteShape cht, "SubTitleBox"
@@ -285,7 +287,6 @@ Function FormatTitle(cht As Chart) As Boolean
     If cht.HasTitle Then cht.ChartTitle.Delete
 
     'Create all title boxes
-    CreateFigureBox cht
     CreateTitleBox cht
     CreateSubtitleBox cht
     CreateYAxisLabelBox cht, cht.hasLegend
@@ -296,27 +297,6 @@ Function FormatTitle(cht As Chart) As Boolean
 Fail:
     FormatTitle = False
 End Function
-
-
-Private Sub CreateFigureBox(cht As Chart)
-    Dim shp As Shape
-    Set shp = cht.Shapes.AddTextbox( _
-                    Orientation:=msoTextOrientationHorizontal, _
-                    Left:=0, Top:=figureBoxTop, Width:=titleBoxWidth, Height:=figureBoxHeight)
-
-    With shp
-        .name = "FigureBox"
-        .TextFrame2.TextRange.Text = figureBoxDefaultText
-        With .TextFrame2.TextRange.Font
-            .Size = figureFontSize
-            .name = fontPrimary
-            .Fill.ForeColor.RGB = figureFontColor
-            .Bold = msoFalse
-        End With
-        .Top = .Top - titleBoxNudge
-        .Left = .Left - titleBoxNudge
-    End With
-End Sub
 
 
 Private Sub CreateTitleBox(cht As Chart)
