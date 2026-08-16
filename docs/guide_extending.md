@@ -174,7 +174,7 @@ This pattern is appropriate for chart styles that are visual transforms of an ex
 
 The Excel 2016+ "chartex" chart types — **treemap, sunburst, waterfall, funnel, box & whisker, histogram** — are a different object family from the classic charts above. They are not just axis-less; they are stored in the file under a different schema (`cx:` chartex) that has **no `userShapes` slot**. The practical consequence for this add-in is decisive:
 
-> `cht.Shapes.AddTextbox` and `cht.Shapes.AddPicture` raise **error 1004** on a chartex chart. A treemap (etc.) therefore **cannot own** the title/subtitle/figure/source/logo overlay boxes that every classic chart carries inside `cht.Shapes`.
+> `cht.Shapes.AddTextbox` and `cht.Shapes.AddPicture` raise **error 1004** on a chartex chart. A treemap (etc.) therefore **cannot own** the title/subtitle/source/logo overlay boxes that every classic chart carries inside `cht.Shapes`.
 
 Because the chrome cannot live inside the chart, it is built as **grouped worksheet shapes** instead. The shared chrome pipeline is `modEngineExChrome.bas`; each chartex type has a thin builder module that configures it (`modChartTreemap.bas` is the reference implementation). This is a genuinely **separate pipeline** from the classic in-chart one in `modEngineBuilder` — not a partial pipeline or a composition. The two do not share code paths (only the geometry constants in `modConfig` and the logo decode in `modEmbeddedImages` are reused).
 
@@ -187,7 +187,7 @@ If pointscount > 0 Then ApplySliceColors cht, pointscount, silent:=True         
 BuildChartExChrome cht, originLeft, originTop, defaults   ' worksheet shapes + group (modEngineExChrome)
 ```
 
-**Worked example — box & whisker** (`modChartBoxWhisker.bas`, the second consumer) shows how a chartex type with axes differs from treemap: it sets `BoxWhiskerChartDefaults.ShowYAxisTitle = True` (it has a value axis), calls `PositionChartExChart(..., showY:=True, showX:=True, hasLegend:=False)` to reserve the in-chart category strip, leaves the native legend in place, and colours **per-series** via `FormatSeriesColors` (its boxes are real series) rather than the per-point `ApplySliceColors` treemap uses. Everything else — canvas, title/subtitle/figure/source/logo, grouping, export — is the shared chrome.
+**Worked example — box & whisker** (`modChartBoxWhisker.bas`, the second consumer) shows how a chartex type with axes differs from treemap: it sets `BoxWhiskerChartDefaults.ShowYAxisTitle = True` (it has a value axis), calls `PositionChartExChart(..., showY:=True, showX:=True, hasLegend:=False)` to reserve the in-chart category strip, leaves the native legend in place, and colours **per-series** via `FormatSeriesColors` (its boxes are real series) rather than the per-point `ApplySliceColors` treemap uses. Everything else — canvas, title/subtitle/source/logo, grouping, export — is the shared chrome.
 
 **Implications you must account for when adding another chartex type.** Add a builder module modelled on `modChartTreemap` (or `modChartBoxWhisker` if it has axes), a `*ChartDefaults()` factory, and configure the shared `modEngineExChrome` rather than forking it. The separate pipeline reaches into several subsystems that assume in-chart chrome:
 

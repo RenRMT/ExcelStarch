@@ -165,7 +165,6 @@ Public Const chartHeight As Double = 600        ' 20cm canvas height
 ' all chart text elements come pre-filled with placeholder text.
 ' use this text to convey standards relating to chart text,
 ' and to show the standard font colors for these texts.
-Public Const figureBoxDefaultText As String = "Figure XX (optional)"
 Public Const titleDefaultText    As String = "Title in 28pt sentence case"
 Public Const subtitleDefaultText As String = "Subtitle in 22pt sentence case"
 Public Const yAxisDefaultText    As String = "Y axis title (unit)"
@@ -193,7 +192,6 @@ Public Const fontPrimaryItalic As String = "Calibri Italic"
 ' - generalFontSize: is currently not used for anything but kept for compatibility
 Public Const titleFontSize As Double = 28
 Public Const subTitleFontSize As Double = 22
-Public Const figureFontSize As Double = 18
 Public Const axisFontSize As Double = 18
 Public Const sourceTextFontSize As Double = 14
 Public Const generalFontSize As Double = 18
@@ -203,7 +201,6 @@ Public Const generalFontSize As Double = 18
 ' - generalFontColor: is currently not used for anything but kept for compatibility
 Public Const titleFontColor As Long = colorBrand1
 Public Const subTitleFontColor As Long = colorBrand2
-Public Const figureFontColor As Long = colorBrand3
 
 Public Const axisFontColor As Long = colorBrand3
 Public Const legendFontColor As Long = colorBrand3
@@ -257,7 +254,6 @@ Public Const annotationFontColor As Long = axisFontColor   ' reuse existing axis
 
 ' === Box sizes ===
 ' Box sizes expressed as proportion of chart width / height
-Public Const FigureBoxHeightProportion As Double = 0.04
 Public Const titleBoxHeightProportion As Double = 0.07
 Public Const subtitleBoxHeightProportion As Double = 0.05
 Public Const yAxisLabelHeightProportion As Double = 0.04

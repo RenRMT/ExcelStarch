@@ -6,7 +6,7 @@ Attribute VB_Name = "modChartTreemap"
 ' ---------------------
 ' Treemap is a "chartex" type (Excel 2016+), a different object family from the
 ' classic charts in modEngineBuilder. It does NOT use ApplyChartPipeline: xlTreemap
-' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/figure/
+' rejects cht.Shapes.Add* with error 1004, so its chrome (title/subtitle/
 ' source/logo) cannot live inside the chart and is built as grouped WORKSHEET shapes
 ' by modEngineExChrome instead. It has no axes or gridlines.
 '
@@ -129,7 +129,7 @@ Private Sub BuildTreemapChartWithDefaults(cht As Chart, ByRef defaults As ChartD
         On Error GoTo CleanFail
     End If
 
-    ' Title/subtitle/figure/source/logo + white canvas as grouped worksheet shapes,
+    ' Title/subtitle/source/logo + white canvas as grouped worksheet shapes,
     ' laid out from the same canvas origin. defaults.ShowYAxisTitle is False for treemap
     ' (no value axis), so no Y-axis title box is added.
     BuildChartExChrome cht, originLeft, originTop, defaults

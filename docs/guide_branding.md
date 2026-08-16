@@ -25,7 +25,7 @@ Public Const fontPrimaryItalic As String = "Calibri Italic"
 
 Replace with the brand's chart font. `fontPrimary` is applied to all chart text. `fontPrimaryItalic` is used for the y-axis label and x-axis title placeholder — set it to the same value as `fontPrimary` if you don't want italics. If the font is missing on the machine, Excel silently substitutes a fallback.
 
-Font sizes are also in `modConfig.bas` (`titleFontSize`, `subTitleFontSize`, `figureFontSize`, `axisFontSize`, `sourceTextFontSize`). The placeholder text strings (`titleDefaultText`, `subtitleDefaultText`, etc.) reference these sizes, so update both together if you change them.
+Font sizes are also in `modConfig.bas` (`titleFontSize`, `subTitleFontSize`, `axisFontSize`, `sourceTextFontSize`). The placeholder text strings (`titleDefaultText`, `subtitleDefaultText`, etc.) reference these sizes, so update both together if you change them.
 
 ---
 
@@ -72,7 +72,7 @@ A find-and-replace of `COMPANY` across the XML handles both.
 
 The brand colours live at the top of `modConfig.bas`, under the `BRAND COLOURS` banner, in three colour families, all stored as VBA `Long` values:
 
-- **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, figure/axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
+- **Brand colours** (`colorBrand1`–`colorBrand4`, plus `colorBrandLightGrey`) — used for chart text (title, subtitle, axis labels) and the diverging-ramp neutral centre. The defaults are a teal/black/grey set.
 - **Neutral colours** (`colorNeutral1`–`colorNeutral4`, plus the `colorWhite` alias) — platinum/steel/ash/white, used for fallback fills and axis/border styling.
 - **Data colours** (`colorData1`–`colorData8`) — the eight categorical hues for multi-series charts (Teal, Jasmine, Baltic, Coral, Sky, Cherry, Blush, Violet).
 
